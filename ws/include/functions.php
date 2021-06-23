@@ -27,7 +27,7 @@ function require_logged_user_JWT() {
         print_error(401, 'Missing authentication token');
     }
     try {
-        $logged_user = JWT::decode($token, JWT_SECRET_KEY);
+        $logged_user = JWT::decode($token, JWT_SECRET_KEY, array_keys(JWT::$supported_algs));
         if (!$logged_user) {
             print_error(401, 'User must be logged for this page');
         }
