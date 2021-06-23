@@ -9,3 +9,5 @@ require 'vendor/autoload.php';
 
 include("config.php");
 include("functions.php");
+include("class_schemi.php");
+include("class_regole.php");

@@ -123,6 +123,10 @@ ALTER TABLE `codifiche`
   ADD PRIMARY KEY (`ID_CODIFICA`),
   ADD KEY `ID_SCHEMA` (`ID_SCHEMA`);
 
+ALTER TABLE `codifiche`
+  MODIFY `ID_CODIFICA` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
 --
 -- Indici per le tabelle `codifiche_dati`
 --
@@ -136,6 +140,9 @@ ALTER TABLE `codifiche_dati`
 ALTER TABLE `schemi_codifica`
   ADD PRIMARY KEY (`ID_SCHEMA`);
 
+ALTER TABLE `schemi_codifica`
+  MODIFY `ID_SCHEMA` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
 --
 -- Indici per le tabelle `schemi_options`
 --
