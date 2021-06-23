@@ -6,10 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./codifica.component.css']
 })
 export class CodificaComponent implements OnInit {
-
-  constructor() { }
-
   ngOnInit(): void {
   }
-
 }
