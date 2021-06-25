@@ -9,10 +9,10 @@ class SchemiManager {
         $sql1 = "SELECT * ";
         $sql = "FROM schemi_codifica x ";
 
-        $sql .= " ORDER BY x.id_schema";
+        $sql .= " ORDER BY x.titolo";
         $count = select_single_value($sql0 . $sql);
-        $aree = select_list($sql1 . $sql);        
-        return [$aree, $count];
+        $objects = select_list($sql1 . $sql);        
+        return [$objects, $count];
     }
     
     function getById($id_schema) {
