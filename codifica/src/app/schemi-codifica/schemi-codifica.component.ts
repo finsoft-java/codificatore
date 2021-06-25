@@ -31,6 +31,7 @@ export class SchemiCodificaComponent implements OnInit {
   ];
   myDataArray = [{ id: 1, titolo: 'a' }, { id: 2, titolo: 'b' }];
   displayedColumns: string[] = ['id', 'titolo'];
+  // commento
 
   constructor(private svc: SchemiCodificaRegoleService, private alertSvc: AlertService) {
     this.service = svc;
