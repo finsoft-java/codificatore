@@ -21,6 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -61,6 +62,7 @@ import { SchemiCodificaFormComponent } from './schemi-codifica-form/schemi-codif
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatRadioModule,
     MatNativeDateModule,
     MatPaginatorModule,
     MatSortModule,

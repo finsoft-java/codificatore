@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ColumnDefinition } from '../mat-edit-table';
 import { SchemaCodificaRegole } from '../_models';
@@ -14,6 +15,7 @@ export class SchemiCodificaComponent implements OnInit {
   service: SchemiCodificaRegoleService;
   datePipe: DatePipe = new DatePipe('en-US');
   alert: AlertService;
+  routerFrontend: Router;
   columns: ColumnDefinition<SchemaCodificaRegole>[] = [
     {
       title: 'ID',
@@ -33,10 +35,12 @@ export class SchemiCodificaComponent implements OnInit {
   displayedColumns: string[] = ['id', 'titolo'];
   // commento
 
-  constructor(private svc: SchemiCodificaRegoleService, private alertSvc: AlertService) {
+  constructor(private svc: SchemiCodificaRegoleService, private alertSvc: AlertService, private router: Router) {
     this.service = svc;
     this.alert = alertSvc;
+    this.routerFrontend = router;
   }
+
   setError(errore: any) {
     console.log(errore);
     this.alert.error(errore);

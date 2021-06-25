@@ -1,0 +1,34 @@
+.schema-form {
+
+}
+
+.mat-form-field {
+    width: 98%;
+    margin-left: 10px;
+}
+
+.schema-type-label {
+    margin: 20px 0 0 10px;
+}
+
+.mat-radio-group {
+    margin: 10px 0;
+}
+
+.mat-radio-button {
+    margin:0 10px;
+}
+
+.text-area  {
+    height: 60px;
+}
+
+.next-section {
+    max-width: 80px;
+    float: right;
+    margin: 0 10px 20px 0;
+}
+
+.last-section {
+    margin: 0 0 10px -15px;
+}

@@ -1,1 +1,37 @@
-<p>regole-codifica-form works!</p>
+<h3>{{this.header}}</h3>
+<div class="first-section">
+    <div [formGroup]="schemiCodificaForm" class="schema-form" *ngIf="currentSection===1">
+        <mat-form-field appearance="standard">
+          <mat-label>Titolo</mat-label>
+          <input matInput >
+        </mat-form-field>
+        <label class="schema-type-label">Tipologia di Schema</label>
+        <mat-radio-group
+        aria-labelledby="Tipologia Schema"
+        [formControl]="schemaTypeControl">
+            <mat-radio-button value="P">
+                Pubblico
+            </mat-radio-button>
+            <mat-radio-button value="I">
+                interno
+            </mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field appearance="standard">
+            <mat-label>Template Codice</mat-label>
+            <textarea matInput class="text-area"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+            <mat-label>Template Descrizione</mat-label>
+            <textarea matInput class="text-area"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+            <mat-label>Javascript</mat-label>
+            <textarea matInput class="text-area"></textarea>
+        </mat-form-field>
+        <button (click)="nextSection()"class="next-section" mat-raised-button color="primary">Avanti</button>  
+    </div> 
+    <button (click)="lastSection()" class="last-section" mat-button color="primary" *ngIf="currentSection!==1">Prima sezione</button>
+</div>
+<div class="secondSection" *ngIf="currentSection===2">
+    <p>It Works</p>
+</div>
