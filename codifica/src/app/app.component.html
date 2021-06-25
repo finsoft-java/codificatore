@@ -1,48 +1,97 @@
 <mat-drawer-container class="example-container" autosize>
-    <mat-drawer #drawer class="example-sidenav" mode="side">
-        <nav style="padding:15px;">
-            <button mat-menu-item (click)="routerFrontend.navigate(['codifica']); drawer.toggle()">
-                <span>Codifica</span>
-            </button>
-            <button mat-menu-item (click)="routerFrontend.navigate(['ricerca']); drawer.toggle()">
-                <span>Ricerca codice</span>
-            </button>
-            <button mat-menu-item (click)="routerFrontend.navigate(['ricerca-avanzata']); drawer.toggle()">
-                <span>Ricerca avanzata</span>
-            </button>
-            <button mat-menu-item (click)="routerFrontend.navigate(['regole-codifica']); drawer.toggle()">
-                <span>Regole di codifica</span>
-            </button>
-            <button mat-menu-item (click)="logout(); drawer.toggle()">
-                <span>Logout</span>
-            </button>
-        </nav>
-    </mat-drawer>
+  <!-- <mat-drawer #drawer class="example-sidenav" mode="side">
+    <nav style="padding: 15px">
+      <button
+        mat-menu-item
+        (click)="routerFrontend.navigate(['codifica']); drawer.toggle()"
+      >
+        <span>Codifica</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="routerFrontend.navigate(['ricerca']); drawer.toggle()"
+      >
+        <span>Ricerca codice</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="routerFrontend.navigate(['ricerca-avanzata']); drawer.toggle()"
+      >
+        <span>Ricerca avanzata</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="routerFrontend.navigate(['regole-codifica']); drawer.toggle()"
+      >
+        <span>Regole di codifica</span>
+      </button>
+      <button mat-menu-item (click)="logout(); drawer.toggle()">
+        <span>Logout</span>
+      </button>
+    </nav>
+  </mat-drawer> -->
 
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation" *ngIf="!menuDisabled">
-        <div class="container">
-            <div class="navbar-header">
-                <nav style="padding:15px;">
-                    <div class="example-sidenav-content">
-                      <button mat-icon-button (click)="drawer.toggle()" aria-label="Example icon-button with a menu">
-                        <mat-icon>menu</mat-icon>
-                      </button>
-                    </div>
-                </nav>
-            </div>
-        </div>
+  <div
+    class="navbar navbar-default navbar-fixed-top"
+    role="navigation"
+    *ngIf="!menuDisabled"
+  >
+    <div class="container">
+      <div class="navbar-header">
+        <nav style="padding: 15px 0">
+          <!--<div class="example-sidenav-content">-->
+          <div>
+            <button
+              mat-button
+              (click)="routerFrontend.navigate(['codifica'])"
+              aria-label="Example icon-button with a menu"
+            >
+              <span>Codifica</span>
+            </button>
+            <button
+              mat-button
+              (click)="routerFrontend.navigate(['ricerca'])"
+              aria-label="Example icon-button with a menu"
+            >
+              <span>Ricerca codice</span>
+            </button>
+            <button
+              mat-button
+              (click)="routerFrontend.navigate(['ricerca-avanzata'])"
+              aria-label="Example icon-button with a menu"
+            >
+              <span>Ricerca avanzata</span>
+            </button>
+            <button
+              mat-button
+              (click)="routerFrontend.navigate(['schemi-codifica'])"
+              aria-label="Example icon-button with a menu"
+            >
+              <span>Schemi di codifica</span>
+            </button>
+            <button
+              mat-button
+              (click)="logout()"
+              aria-label="Example icon-button with a menu"
+            >
+              <span>Logout</span>
+            </button>
+          </div>
+        </nav>
+      </div>
     </div>
-    <div class="content" role="main">
-        <div class="container">
-            <alert></alert>
-            <router-outlet></router-outlet>
+  </div>
+  <div class="content" role="main">
+    <div class="container">
+      <alert></alert>
+      <router-outlet></router-outlet>
     </div>
-<!--
+    <!--
 <footer style="background-color: black;color:#fff;padding:30px;">
     <div class="container">
         Finsoft 2021
     </div>
 </footer>
 -->
-</div>
+  </div>
 </mat-drawer-container>
