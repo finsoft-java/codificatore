@@ -4,15 +4,25 @@ $regoleManager = new RegoleManager();
 
 class RegoleManager {
     
-    function getAll() {
+    function getAll($idSchema = null) {
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT * ";
         $sql = "FROM schemi_regole x ";
-
-        $sql .= " ORDER BY x.ID_SCHEMA DESC";
+        if ($idSchema != null) {
+            $sql .= "WHERE ID_SCHEMA=$idSchema ";
+        }
+        $sql .= "ORDER BY x.ID_SCHEMA, x.ORD_PRESENTAZIONE ";
         $count = select_single_value($sql0 . $sql);
-        $aree = select_list($sql1 . $sql);        
-        return [$aree, $count];
+        $objects = select_list($sql1 . $sql);
+
+        foreach($objects as $o) {
+            $sql = "SELECT * from schemi_options WHERE ID_SCHEMA=$o->ID_SCHEMA' and NOM_VARIABILE='$o->NOM_VARIABILE'  ";
+            $o["OPTIONS"] = select_list($sql);
+
+            $sql = "SELECT ID_SOTTO_SCHEMA from schemi_sottoschemi WHERE ID_SCHEMA=$o->ID_SCHEMA' and NOM_VARIABILE='$o->NOM_VARIABILE'  ";
+            $o["SOTTOSCHEMA"] = select_value($sql);
+        }
+        return [$objects, $count];
     }
     
     function getById($id_schema, $nomVariabile) {
