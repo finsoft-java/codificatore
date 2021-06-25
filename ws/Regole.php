@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['value' => $object]);
     
     } else {
-        [$list, $count] = $regoleManager->getAll();
+        // $idSchema may be null or not
+        [$list, $count] = $regoleManager->getAll($idSchema);
           
         header('Content-Type: application/json');
         echo json_encode(['data' => $list, 'count' => $count]);

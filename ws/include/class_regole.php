@@ -4,12 +4,14 @@ $regoleManager = new RegoleManager();
 
 class RegoleManager {
     
-    function getAll() {
+    function getAll($idSchema = null) {
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT * ";
         $sql = "FROM schemi_regole x ";
-
-        $sql .= " ORDER BY x.ID_SCHEMA DESC";
+        if ($idSchema != null) {
+            $sql .= "WHERE ID_SCHEMA=$idSchema ";
+        }
+        $sql .= "ORDER BY x.ID_SCHEMA DESC ";
         $count = select_single_value($sql0 . $sql);
         $aree = select_list($sql1 . $sql);        
         return [$aree, $count];
