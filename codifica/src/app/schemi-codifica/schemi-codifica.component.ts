@@ -6,11 +6,11 @@ import { AlertService } from '../_services/alert.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 
 @Component({
-  selector: 'app-regole-codifica',
-  templateUrl: './regole-codifica.component.html',
-  styleUrls: ['./regole-codifica.component.css']
+  selector: 'app-schemi-codifica',
+  templateUrl: './schemi-codifica.component.html',
+  styleUrls: ['./schemi-codifica.component.css']
 })
-export class RegoleCodificaComponent implements OnInit {
+export class SchemiCodificaComponent implements OnInit {
   service: SchemiCodificaRegoleService;
   datePipe: DatePipe = new DatePipe('en-US');
   alert: AlertService;
@@ -29,6 +29,8 @@ export class RegoleCodificaComponent implements OnInit {
       width: '50%'
     }
   ];
+  myDataArray = [{ id: 1, titolo: 'a' }, { id: 2, titolo: 'b' }];
+  displayedColumns: string[] = ['id', 'titolo'];
 
   constructor(private svc: SchemiCodificaRegoleService, private alertSvc: AlertService) {
     this.service = svc;

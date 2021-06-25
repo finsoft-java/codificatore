@@ -29,10 +29,10 @@ import { MatEditTableComponent } from './mat-edit-table/mat-edit-table.component
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { CodificaComponent } from './codifica/codifica.component';
-import { RegoleCodificaComponent } from './regole-codifica/regole-codifica.component';
+import { SchemiCodificaComponent } from './schemi-codifica/schemi-codifica.component';
 import { RicercaComponent } from './ricerca/ricerca.component';
 import { RicercaAvanzataComponent } from './ricerca-avanzata/ricerca-avanzata.component';
-import { RegoleCodificaFormComponent } from './regole-codifica-form/regole-codifica-form.component';
+import { SchemiCodificaFormComponent } from './schemi-codifica-form/schemi-codifica-form.component';
 
 @NgModule({
   declarations: [
@@ -41,10 +41,10 @@ import { RegoleCodificaFormComponent } from './regole-codifica-form/regole-codif
     AlertComponent,
     LoginComponent,
     CodificaComponent,
-    RegoleCodificaComponent,
+    SchemiCodificaComponent,
     RicercaComponent,
     RicercaAvanzataComponent,
-    RegoleCodificaFormComponent
+    SchemiCodificaFormComponent
   ],
   imports: [
     HttpClientModule,
