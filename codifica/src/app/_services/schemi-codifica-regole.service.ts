@@ -8,11 +8,11 @@ import { ListBean, ValueBean, SchemaCodificaRegole } from '../_models';
 @Injectable({
   providedIn: 'root'
 })
-export class SchemiCodificaRegoleService implements HttpCrudService<SchemaCodificaRegole> {
+export class SchemiCodificaRegoleService {
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<ListBean<SchemaCodificaRegole>> {
-    return this.http.get<ListBean<SchemaCodificaRegole>>(environment.wsUrl + 'Regole.php');
+  getAll(idSchema: number): Observable<ListBean<SchemaCodificaRegole>> {
+    return this.http.get<ListBean<SchemaCodificaRegole>>(environment.wsUrl + `Regole.php?idSchema=${idSchema}`);
   }
 
   getById(idSchema: number, nomVariabile: string): Observable<ValueBean<SchemaCodificaRegole>> {

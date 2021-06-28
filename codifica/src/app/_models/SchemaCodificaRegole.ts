@@ -1,3 +1,5 @@
+import { SchemaCodifica } from './SchemaCodifica';
+import { SchemaCodificaOptions } from './SchemaCodificaOptions';
 
 export interface SchemaCodificaRegole {
   ID_SCHEMA: number;
@@ -11,4 +13,6 @@ export interface SchemaCodificaRegole {
   NUM_DECIMALI: number;
   MIN: number;
   MAX: number;
+  OPTIONS?: SchemaCodificaOptions[];
+  SOTTOSCHEMA?: SchemaCodifica;
 }
