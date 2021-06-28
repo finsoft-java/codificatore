@@ -19,6 +19,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   typeSelected: string ='Tipo';
   elencoOptionsSelected: string = '';
   sottoschemaOptionsSelected: string = '';
+  id: number = -1;
   schemaCodificaForm = this.fb.group({
     ID_SCHEMA: [-1, [Validators.required]],
     TITOLO: ['', [Validators.required]],
@@ -62,14 +63,14 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const { id } = params; // uguale a const id = params.id
-      this.header = id ? 'Modifica Schema: ' + id : 'Nuovo Schema';
+      this.id = params.id; // uguale a const id = params.id
+      this.header = this.id ? 'Modifica Schema: ' + this.id : 'Nuovo Schema';
     });
-    this.getRegoleEsistenti();
+    if (this.id > 0) this.getRegoleEsistenti(this.id);
   }
 
-  getRegoleEsistenti(): void {
-    this.schemiCodificaRegoleService.getAll()
+  getRegoleEsistenti(id: number): void {
+    this.schemiCodificaRegoleService.getAll(id)
       .subscribe(
         data => {
           this.schemaCodificaRegole = data.data;
