@@ -1,4 +1,42 @@
-<p>codifica works!</p>
+<h3>Codifica nuovo codice</h3>
 
-Questo è il component in cui l'utente sceglie uno schema di codifica, poi risponde a tutte le domande previste
-dalle regole di codifica, e alla fine ottiene un codice e una descrizione
+Selezionare lo schema di codifica:
+<mat-select placeholder="Schema di codifica" [(ngModel)]="schemaScelto" (selectionChange)="onSelect($event)" name="schema" [disabled]="schemaScelto !== undefined">
+    <mat-option *ngFor="let schema of schemi" [value]="schema">
+        {{schema.TITOLO}}
+    </mat-option>
+</mat-select>
+
+Questo bottone dovrebbe stare a destra:
+<button (click)="reset()" mat-button color="secondary" [disabled]="schemaScelto === undefined">Reset</button>
+
+<div *ngIf="schemaScelto !== undefined">
+    <div *ngIf="regoleSchemaScelto.length == 0">
+        Nessuna regola configurata.
+    </div>
+
+    <div *ngFor="let r of regoleSchemaScelto">
+        <div *ngIf="r.TIPO =='text'">
+            <mat-form-field appearance="standard">
+                <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
+                <input matInput name="Rule_{{r.NOM_VARIABILE}}">
+            </mat-form-field>
+        </div>
+        <div *ngIf="r.TIPO =='number'">
+            <mat-form-field appearance="standard">
+                <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
+                <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}">
+            </mat-form-field>
+        </div>
+        <div *ngIf="r.TIPO =='elenco'">
+            <mat-form-field appearance="standard">
+                <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
+                <mat-select name="Rule_{{r.NOM_VARIABILE}}">
+                    <mat-option *ngFor="let opt of r.OPTIONS" [value]="opt.VALUE_OPTION">
+                        {{opt.ETICHETTA}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
