@@ -19,13 +19,13 @@ Questo bottone dovrebbe stare a destra:
         <div *ngIf="r.TIPO =='text'">
             <mat-form-field appearance="standard">
                 <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
-                <input matInput name="Rule_{{r.NOM_VARIABILE}}">
+                <input matInput name="Rule_{{r.NOM_VARIABILE}}" [maxLength]="r.MAXLENGTH" [pattern]="r.PATTERN_REGEXP">
             </mat-form-field>
         </div>
         <div *ngIf="r.TIPO =='number'">
             <mat-form-field appearance="standard">
                 <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
-                <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}">
+                <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}" [min]="r.MIN" [max]="r.MAX">
             </mat-form-field>
         </div>
         <div *ngIf="r.TIPO =='elenco'">
@@ -37,6 +37,16 @@ Questo bottone dovrebbe stare a destra:
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+        </div>
+    </div>
+
+    <!-- Calcolo CODICE e DESCRIZIONE in tempo reale-->
+    <div *ngIf="calcoloCompletato" style="background-color: green;">
+        <div>
+            Codice: {{codiceCalcolato}} 
+        </div>
+        <div>
+            Descrizione: {{descrizioneCalcolata}} 
         </div>
     </div>
 </div>
