@@ -1,13 +1,13 @@
-.schema-form {
-
-}
-
 .mat-form-field {
     width: 98%;
     margin-left: 10px;
 }
 
-.schema-type-label {
+.schema-type-label{
+    margin: 20px 0 0 10px;
+}
+
+.variable-required{
     margin: 20px 0 0 10px;
 }
 
@@ -19,16 +19,19 @@
     margin:0 10px;
 }
 
-.text-area  {
-    height: 60px;
+.text-area-sm  {
+    height: 30px;
 }
 
-.next-section {
-    max-width: 80px;
-    float: right;
-    margin: 0 10px 20px 0;
+.text-area-lg  {
+    height: 80px;
 }
 
-.last-section {
-    margin: 0 0 10px -15px;
+.mat-accordion .mat-expansion-panel {
+    margin-left: 1%;
+    width: 98%;
+}
+
+.second-section {
+    margin-top: 20px;
 }

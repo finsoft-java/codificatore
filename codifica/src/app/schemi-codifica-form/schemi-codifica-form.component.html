@@ -1,37 +1,153 @@
-<h3>{{this.header}}</h3>
-<div class="first-section">
-    <div [formGroup]="schemiCodificaForm" class="schema-form" *ngIf="currentSection===1">
-        <mat-form-field appearance="standard">
-          <mat-label>Titolo</mat-label>
-          <input matInput >
-        </mat-form-field>
-        <label class="schema-type-label">Tipologia di Schema</label>
-        <mat-radio-group
-        aria-labelledby="Tipologia Schema"
-        [formControl]="schemaTypeControl">
-            <mat-radio-button value="P">
-                Pubblico
-            </mat-radio-button>
-            <mat-radio-button value="I">
-                interno
-            </mat-radio-button>
-        </mat-radio-group>
-        <mat-form-field appearance="standard">
-            <mat-label>Template Codice</mat-label>
-            <textarea matInput class="text-area"></textarea>
-        </mat-form-field>
-        <mat-form-field appearance="standard">
-            <mat-label>Template Descrizione</mat-label>
-            <textarea matInput class="text-area"></textarea>
-        </mat-form-field>
-        <mat-form-field appearance="standard">
-            <mat-label>Javascript</mat-label>
-            <textarea matInput class="text-area"></textarea>
-        </mat-form-field>
-        <button (click)="nextSection()"class="next-section" mat-raised-button color="primary">Avanti</button>  
-    </div> 
-    <button (click)="lastSection()" class="last-section" mat-button color="primary" *ngIf="currentSection!==1">Prima sezione</button>
-</div>
-<div class="secondSection" *ngIf="currentSection===2">
-    <p>It Works</p>
-</div>
+<!-- <h3>{{this.header}}</h3>
+<mat-stepper orientation="vertical">
+    <mat-step label="Dati Iniziali" [stepControl]="schemiCodificaForm"> -->
+        <div>
+            <h2>Dati Iniziali</h2>
+            <form [formGroup]="schemaCodificaForm" class="schema-form">
+                <mat-form-field appearance="standard">
+                    <mat-label>Titolo</mat-label>
+                    <input formControlName="TITOLO" type="text" matInput >
+                </mat-form-field>
+                <label class="schema-type-label">Tipologia di Schema</label>
+                <mat-radio-group
+                aria-labelledby="Tipologia Schema"
+                formControlName="TIPOLOGIA">
+                    <mat-radio-button value="P">
+                        Pubblico
+                    </mat-radio-button>
+                    <mat-radio-button value="I">
+                        Interno
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field appearance="standard">
+                    <mat-label>Template Codice</mat-label>
+                    <textarea matInput formControlName="TPL_CODICE" class="text-area-sm"></textarea>
+                    <mat-hint ngNonBindable>Tipicamente {{costruttore.toUppercase()}} - {{nparte}}</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Template Descrizione</mat-label>
+                    <textarea matInput formControlName="TPL_DESCRIZIONE" class="text-area-lg"></textarea>
+                    <mat-hint ngNonBindable>Es. Cilindro {{tipo_prod}} - {{tipo_eff}} - alesaggio {{alesaggio}} - corsa {{corsa}} - {{ril_pos}} - {{tipo_stelo}} - {{ammort}}</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Javascript Prerender</mat-label>
+                    <textarea matInput formControlName="PRE_RENDER_JS" class="text-area-lg"></textarea>
+                    <mat-hint>Questa funzione permette di “manipolare” il contenuto degli attributi (es. per abbreviare)
+                         ed eventualmente per interrompere l’esecuzione in caso di parametri incompatibili. (opzionale)</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Descrizione dello schema</mat-label>
+                    <textarea formControlName="DESCRIZIONE" matInput class="text-area-lg"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Note interne</mat-label>
+                    <textarea matInput formControlName="NOTE_INTERNE" class="text-area-lg"></textarea>
+                    <mat-hint>Non appariranno all'utente.</mat-hint>
+                </mat-form-field>
+                <!-- <button mat-button matStepperNext>Next</button> -->
+            </form> 
+        </div>
+    <!-- </mat-step>
+    <mat-step label="regole di Codifica" [stepControl]="parsingRules"> -->
+        <div class="second-section">
+            <h2>Regole di Codifica</h2>
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let schemaRule of schemaCodificaRegole">
+                </mat-expansion-panel>
+            </mat-accordion>
+            <div>
+                 <h5>Nuova Regola</h5>
+                <form [formGroup]="parsingRules" class="schema-form">
+                    <mat-checkbox formControlName="REQUIRED" class="variable-required">Variabile obbligatoria nello schema corrente</mat-checkbox>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Nome variabile</mat-label>
+                        <input formControlName="NOM_VARIABILE" type="text" matInput >
+                        <mat-hint>Es: "tipo_prod"</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Etichetta</mat-label>
+                        <input formControlName="ETICHETTA" type="text" matInput >
+                    </mat-form-field>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Tipo della visualizzazione</mat-label>
+                        <mat-select formControlName="TIPO" name="types">
+                            <mat-option *ngFor="let type of types" [value]="type">
+                            {{type}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div [ngStyle]="{'display': this.f2.TIPO.value == 'Numero'?'':'none'}">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Numero di Decimali</mat-label>
+                            <input formControlName="NUM_DECIMALI" type="number" matInput >
+                        </mat-form-field>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Max</mat-label>
+                            <input formControlName="MAX" type="number" matInput >
+                        </mat-form-field>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Min</mat-label>
+                            <input formControlName="MIN" type="number" matInput >
+                        </mat-form-field>
+                    </div>
+                    <div [ngStyle]="{'display': this.f2.TIPO.value == 'testo'?'':'none'}">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Lunghezza massima</mat-label>
+                            <input formControlName="MAXLENGTH" type="number" matInput >
+                        </mat-form-field>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Espressione regolare</mat-label>
+                            <input formControlName="PATTERN_REGEXP" type="text" matInput >
+                        </mat-form-field>
+                    </div>
+                    <!-- <div [ngStyle]="{'display': TIPO == 'elenco'?'':'none'}">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Schema</mat-label>
+                            <mat-select [(ngModel)]="elencoOptionsSelected" name="types">
+                                <mat-option  value="a">
+                                a
+                                </mat-option>
+                                <mat-option  value="b">
+                                b
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div [ngStyle]="{'display': TIPO == 'Sottoschema'?'':'none'}">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Schema</mat-label>
+                            <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
+                                <mat-option  value="a">
+                                a
+                                </mat-option>
+                                <mat-option  value="b">
+                                b
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div [ngStyle]="{'display': Elenco == 'Case'?'':'none'}">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Schema</mat-label>
+                            <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
+                                <mat-option  value="a">
+                                a
+                                </mat-option>
+                                <mat-option  value="b">
+                                b
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div> -->
+                </form>
+            </div>
+        </div>
+        <div>
+            <input hidden="true" id="input-file-id" multiple type="file" />
+            <label for="input-file-id" class="mat-focus-indicator upload-image mat-raised-button mat-button-base mat-primary ">Choose Files</label>
+        </div>
+        <!-- <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+    </mat-step>
+</mat-stepper> -->
+
