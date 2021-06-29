@@ -15,6 +15,10 @@ export class CodificaComponent implements OnInit {
   schemi: SchemaCodifica[] = [];
   schemaScelto?: SchemaCodifica;
   regoleSchemaScelto: SchemaCodificaRegole[] = [];
+  calcoloCompletato = false;
+  codiceCalcolato = '';
+  descrizioneCalcolata = '';
+  parametri = [];
 
   ngOnInit(): void {
     this.svc.getAll().subscribe(response => {
@@ -37,5 +41,8 @@ export class CodificaComponent implements OnInit {
   reset() {
     this.schemaScelto = undefined;
     this.regoleSchemaScelto = [];
+    this.codiceCalcolato = '';
+    this.descrizioneCalcolata = '';
+    this.calcoloCompletato = false;
   }
 }
