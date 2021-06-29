@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { SchemaCodifica, SchemaCodificaRegole } from '../_models';
@@ -20,15 +21,13 @@ export class CodificaComponent implements OnInit {
   schemi: SchemaCodifica[] = [];
   schemaScelto?: SchemaCodifica;
   regoleSchemaScelto: SchemaCodificaRegole[] = [];
-  calcoloCompletato = false;
+  calcoloCompletato = true; // FIXME la dovrebbe settare l'interfaccia
   codiceCalcolato = '';
   descrizioneCalcolata = '';
   parametri: IHash = {};
 
   ngOnInit(): void {
-    // ***TODO*** CARICARE SOLO GLI SCHEMI VALIDI
-
-    this.svc.getAll().subscribe(response => {
+    this.svc.getAllValidi().subscribe(response => {
       this.schemi = response.data;
     });
   }
@@ -36,11 +35,14 @@ export class CodificaComponent implements OnInit {
   /**
    * Quando l'utente sceglie lo schema, aggiorniamo l'intera pagina e disabilitiamo la scelta dello schema.
    */
-  onSelect(event: MatSelectChange) {
+  onSelectSchema(event: MatSelectChange) {
     const schemaScelto = event.value;
     if (schemaScelto !== undefined && schemaScelto !== null) {
       this.regoleSvc.getAll(schemaScelto.ID_SCHEMA).subscribe(response => {
         this.regoleSchemaScelto = response.data;
+        this.regoleSchemaScelto.forEach(r => {
+          this.parametri[r.NOM_VARIABILE] = '';
+        });
       });
     }
   }
@@ -51,72 +53,48 @@ export class CodificaComponent implements OnInit {
     this.codiceCalcolato = '';
     this.descrizioneCalcolata = '';
     this.calcoloCompletato = false;
+    this.parametri = {};
   }
 
   onChangeInputRule(nomVariabile: string, evt: Event) {
     this.parametri[nomVariabile] = (<HTMLInputElement>evt.target).value;
-    console.log(this.parametri);
     this.componiCodiceDescrizione();
   }
 
   onChangeSelectRule(nomVariabile: string, evt: MatSelectChange) {
     this.parametri[nomVariabile] = evt.value;
-    console.log(this.parametri);
     this.componiCodiceDescrizione();
   }
 
-  componiCodice(): boolean {
-    if (!this.schemaScelto) return false;
-    if (!this.schemaScelto!.TPL_CODICE) return false;
+  /**
+   * Compone una stringa template con i parametri presenti in this.parametri
+   * @returns rendered template
+   */
+  componi(template: string): string {
+    if (!template) return '';
 
-    let codice = this.schemaScelto!.TPL_CODICE;
+    const matches = template.match(/{{[^}]*}}/g);
 
-    const matches = codice.match(/{{\s*[\w]+\s*}}/g);
-    console.log(matches);
-    let completed = true;
+    let result = template;
     if (matches != null) {
       matches.forEach(m => {
-        const name = m.substring(2, m.length - 2);
-        if (!(name in this.parametri)) {
-          completed = false;
-          codice = codice.replace(m, '');
-        } else {
-          codice = codice.replace(m, this.parametri[name]);
-        }
+        let formula = '';
+        Object.keys(this.parametri).forEach(p => {
+          formula += `var ${p}='${this.parametri[p]}';`;
+        });
+        formula += m.substring(2, m.length - 2);
+        const repl = eval(formula);
+        result = result.replace(m, repl || '');
       });
     }
 
-    this.codiceCalcolato = codice;
-    return completed;
-  }
-
-  componiDescrizione(): boolean {
-    if (!this.schemaScelto) return false;
-    if (!this.schemaScelto!.TPL_DESCRIZIONE) return false;
-
-    let descrizione = this.schemaScelto!.TPL_DESCRIZIONE;
-
-    const matches = descrizione.match(/{{\s*[\w]+\s*}}/g);
-    console.log(matches);
-    let completed = true;
-    if (matches != null) {
-      matches.forEach(m => {
-        const name = m.substring(2, m.length - 2);
-        if (!(name in this.parametri)) {
-          completed = false;
-          descrizione = descrizione.replace(m, '');
-        } else {
-          descrizione = descrizione.replace(m, this.parametri[name]);
-        }
-      });
-    }
-
-    this.descrizioneCalcolata = descrizione;
-    return completed;
+    return result;
   }
 
   componiCodiceDescrizione() {
     if (!this.schemaScelto) return;
-    this.calcoloCompletato = this.componiCodice() && this.componiDescrizione();
+
+    this.codiceCalcolato = this.componi(this.schemaScelto!.TPL_CODICE);
+    this.descrizioneCalcolata = this.componi(this.schemaScelto!.TPL_DESCRIZIONE);
   }
 }

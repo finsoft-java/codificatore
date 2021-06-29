@@ -4,12 +4,14 @@ $schemiManager = new SchemiManager();
 
 class SchemiManager {
     
-    function getAll() {
+    function getAll($soloValidi=false) {
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT * ";
         $sql = "FROM schemi_codifica x ";
-
-        $sql .= " ORDER BY x.titolo";
+        if ($soloValidi) {
+            $sql .= "WHERE IS_VALID='Y'";
+        }
+        $sql .= "ORDER BY x.titolo";
         $count = select_single_value($sql0 . $sql);
         $objects = select_list($sql1 . $sql);        
         return [$objects, $count];
