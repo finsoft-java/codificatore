@@ -19,19 +19,19 @@ Questo bottone dovrebbe stare a destra:
         <div *ngIf="r.TIPO =='text'">
             <mat-form-field appearance="standard">
                 <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
-                <input matInput name="Rule_{{r.NOM_VARIABILE}}" [maxLength]="r.MAXLENGTH" [pattern]="r.PATTERN_REGEXP">
+                <input matInput name="Rule_{{r.NOM_VARIABILE}}" [maxLength]="r.MAXLENGTH" [pattern]="r.PATTERN_REGEXP" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
             </mat-form-field>
         </div>
         <div *ngIf="r.TIPO =='number'">
             <mat-form-field appearance="standard">
                 <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
-                <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}" [min]="r.MIN" [max]="r.MAX">
+                <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}" [min]="r.MIN" [max]="r.MAX" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
             </mat-form-field>
         </div>
         <div *ngIf="r.TIPO =='elenco'">
             <mat-form-field appearance="standard">
                 <mat-label>Regola {{r.NOM_VARIABILE}}</mat-label>
-                <mat-select name="Rule_{{r.NOM_VARIABILE}}">
+                <mat-select name="Rule_{{r.NOM_VARIABILE}}" (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE,$event)">
                     <mat-option *ngFor="let opt of r.OPTIONS" [value]="opt.VALUE_OPTION">
                         {{opt.ETICHETTA}}
                     </mat-option>

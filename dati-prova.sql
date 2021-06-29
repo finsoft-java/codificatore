@@ -1,5 +1,5 @@
 INSERT INTO `schemi_codifica` (`TITOLO`, `DESCRIZIONE`, `TIPOLOGIA`, `TPL_CODICE`, `TPL_DESCRIZIONE`, `PRE_RENDER_JS`, `IS_VALID`, `IMMAGINE`, `NOTE_INTERNE`) VALUES
-('prova', 'prova', 'P', 'xxx', 'yyy', NULL, 'Y', NULL, NULL),
+('prova', 'prova', 'P', 'XX_{{NOME}}', 'Nome {{NOME}} Eta {{AGE}} capelli {{capelli}}', NULL, 'Y', NULL, NULL),
 ('prova2', 'prova2', 'P', 'xxx', 'yyy', NULL, 'Y', NULL, NULL);
 
 INSERT INTO `schemi_regole` (`ID_SCHEMA`, `NOM_VARIABILE`, `ORD_PRESENTAZIONE`, `ETICHETTA`, `REQUIRED`, `TIPO`, `MAXLENGTH`, `PATTERN_REGEXP`, `NUM_DECIMALI`, `MIN`, `MAX`) VALUES
