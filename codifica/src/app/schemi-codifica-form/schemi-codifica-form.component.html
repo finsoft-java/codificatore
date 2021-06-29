@@ -51,11 +51,97 @@
     <mat-step label="regole di Codifica" [stepControl]="parsingRules"> -->
         <div class="second-section">
             <h2>Regole di Codifica</h2>
-            <mat-accordion>
-                <mat-expansion-panel *ngFor="let schemaRule of schemaCodificaRegole">
-                </mat-expansion-panel>
-            </mat-accordion>
-            <div>
+            <form [formGroup]="schemaCodificaRegole" class="schema-form">
+                <mat-accordion formArrayName="regole">
+                    <mat-expansion-panel *ngFor="let schemaRule of regole.controls; let i = index;">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{schemaRule.get('NOM_VARIABILE')?.value}}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                        <div [formGroupName]="i">
+                            <mat-checkbox formControlName="REQUIRED" class="variable-required"></mat-checkbox>
+                            <mat-form-field appearance="standard">
+                                <mat-label>Nome variabile</mat-label>
+                                <input formControlName="NOM_VARIABILE" type="text" matInput >
+                            <mat-hint>Es: "tipo_prod"</mat-hint>
+                            </mat-form-field>
+                            <mat-form-field appearance="standard">
+                                <mat-label>Etichetta</mat-label>
+                                <input formControlName="ETICHETTA" type="text" matInput >
+                            </mat-form-field>
+                            <mat-form-field appearance="standard">
+                                <mat-label>Tipo della visualizzazione</mat-label>
+                                <mat-select formControlName="TIPO" name="types">
+                                    <mat-option *ngFor="let type of types" [value]="type.value">
+                                    {{type.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div [ngStyle]="{'display': schemaRule.get('TIPO')?.value == 'number'?'':'none'}">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Numero di Decimali</mat-label>
+                                    <input formControlName="NUM_DECIMALI" type="number" matInput >
+                                </mat-form-field>
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Max</mat-label>
+                                    <input formControlName="MAX" type="number" matInput >
+                                </mat-form-field>
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Min</mat-label>
+                                    <input formControlName="MIN" type="number" matInput >
+                                </mat-form-field>
+                            </div>
+                            <div [ngStyle]="{'display': schemaRule.get('TIPO')?.value == 'text'?'':'none'}">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Lunghezza massima</mat-label>
+                                    <input formControlName="MAXLENGTH" type="number" matInput >
+                                </mat-form-field>
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Espressione regolare</mat-label>
+                                    <input formControlName="PATTERN_REGEXP" type="text" matInput >
+                                </mat-form-field>
+                            </div>
+                            <div [ngStyle]="{'display': schemaRule.get('TIPO')?.value == 'elenco'?'':'none'}"> 
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Schema</mat-label>
+                                    <mat-select formControlName="OPTIONS" name="options">
+                                        
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!--<div [ngStyle]="{'display': TIPO == 'Sottoschema'?'':'none'}">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Schema</mat-label>
+                                    <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
+                                        <mat-option  value="a">
+                                        a
+                                        </mat-option>
+                                        <mat-option  value="b">
+                                        b
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div [ngStyle]="{'display': Elenco == 'Case'?'':'none'}">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Schema</mat-label>
+                                    <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
+                                        <mat-option  value="a">
+                                        a
+                                        </mat-option>
+                                        <mat-option  value="b">
+                                        b
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div> -->
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </form> 
+            <button mat-raised-button color="primary" class="spaced-button" (click)="openNewRuleForm()">Aggiungi Regola</button>       
+            <div *ngIf="this.newRuleFormOpened">
                  <h5>Nuova Regola</h5>
                 <form [formGroup]="parsingRules" class="schema-form">
                     <mat-checkbox formControlName="REQUIRED" class="variable-required">Variabile obbligatoria nello schema corrente</mat-checkbox>
@@ -100,7 +186,7 @@
                             <input formControlName="PATTERN_REGEXP" type="text" matInput >
                         </mat-form-field>
                     </div>
-                    <!-- <div [ngStyle]="{'display': TIPO == 'elenco'?'':'none'}">
+                    <!-- <div [ngStyle]="{'display': TIPO == 'elenco'?'':'none'}"> 
                         <mat-form-field appearance="standard">
                             <mat-label>Schema</mat-label>
                             <mat-select [(ngModel)]="elencoOptionsSelected" name="types">
@@ -142,10 +228,10 @@
                 </form>
             </div>
         </div>
-        <div>
+        <!-- <div>
             <input hidden="true" id="input-file-id" multiple type="file" />
             <label for="input-file-id" class="mat-focus-indicator upload-image mat-raised-button mat-button-base mat-primary ">Choose Files</label>
-        </div>
+        </div> -->
         <!-- <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext>Next</button>
     </mat-step>

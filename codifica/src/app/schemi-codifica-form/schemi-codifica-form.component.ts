@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SchemaCodificaRegole } from '../_models';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
@@ -14,11 +14,18 @@ import { AlertService } from '../_services/alert.service';
 export class SchemiCodificaFormComponent implements OnInit {
   header: string = '';
   selectedSchemaType: string = '';
-  types: String[]= ['Tipo', 'Numero', 'Testo', 'Elenco', 'Sottoschema', 'Case'];
+  types: any[]= [
+    { label: 'Tipo', value: '' },
+    { label: 'Numero', value: 'number' },
+    { label: 'Testo', value: 'text' },
+    { label: 'Elenco', value: 'elenco' },
+    { label: 'Sottoschema', value: ' sottoschema' },
+    { label: 'Case', value: 'case' }];
   currentSection: number = 1;
   typeSelected: string ='Tipo';
   elencoOptionsSelected: string = '';
   sottoschemaOptionsSelected: string = '';
+  newRuleFormOpened: boolean = true;
   id: number = -1;
   schemaCodificaForm = this.fb.group({
     ID_SCHEMA: [-1, [Validators.required]],
@@ -31,7 +38,11 @@ export class SchemiCodificaFormComponent implements OnInit {
     IS_VALID: ['', [Validators.required]],
     NOTE_INTERNE: ''
   });
-  schemaCodificaRegole: SchemaCodificaRegole[]= [];
+
+  schemaCodificaRegole: FormGroup = this.fb.group({
+    test: 'lala',
+    regole: this.fb.array([])
+  });
 
   parsingRules = this.fb.group({
     ID_SCHEMA: [-1, [Validators.required]],
@@ -50,6 +61,10 @@ export class SchemiCodificaFormComponent implements OnInit {
   get f1() { return this.schemaCodificaForm.controls; }
 
   get f2() { return this.parsingRules.controls; }
+
+  get regole() {
+    return this.schemaCodificaRegole.get('regole') as FormArray;
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -73,7 +88,9 @@ export class SchemiCodificaFormComponent implements OnInit {
     this.schemiCodificaRegoleService.getAll(id)
       .subscribe(
         data => {
-          this.schemaCodificaRegole = data.data;
+          const rules: FormGroup[] = data.data.map(rule => this.fb.group(rule));
+          this.schemaCodificaRegole = this.fb.group({ regole: this.fb.array(rules) });
+          this.newRuleFormOpened = !(data.data.length > 0);
           console.log(this.schemaCodificaRegole);
         },
         error => {
@@ -90,5 +107,9 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   logForm(): void {
     console.log(this.schemaCodificaForm.controls);
+  }
+
+  openNewRuleForm(): void {
+    this.newRuleFormOpened = true;
   }
 }
