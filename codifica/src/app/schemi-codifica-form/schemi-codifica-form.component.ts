@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SchemaCodificaRegole } from '../_models';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
@@ -31,7 +31,11 @@ export class SchemiCodificaFormComponent implements OnInit {
     IS_VALID: ['', [Validators.required]],
     NOTE_INTERNE: ''
   });
-  schemaCodificaRegole: SchemaCodificaRegole[]= [];
+
+  schemaCodificaRegole: FormGroup = this.fb.group({
+    test: 'lala',
+    regole: this.fb.array([])
+  });
 
   parsingRules = this.fb.group({
     ID_SCHEMA: [-1, [Validators.required]],
@@ -50,6 +54,10 @@ export class SchemiCodificaFormComponent implements OnInit {
   get f1() { return this.schemaCodificaForm.controls; }
 
   get f2() { return this.parsingRules.controls; }
+
+  get regole() {
+    return this.schemaCodificaRegole.get('regole') as FormArray;
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -73,7 +81,8 @@ export class SchemiCodificaFormComponent implements OnInit {
     this.schemiCodificaRegoleService.getAll(id)
       .subscribe(
         data => {
-          this.schemaCodificaRegole = data.data;
+          const rules: FormGroup[] = data.data.map(rule => this.fb.group(rule));
+          this.schemaCodificaRegole = this.fb.group({ regole: this.fb.array(rules) });
           console.log(this.schemaCodificaRegole);
         },
         error => {

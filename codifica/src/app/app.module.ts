@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -59,6 +60,7 @@ import { SchemiCodificaFormComponent } from './schemi-codifica-form/schemi-codif
     MatCardModule,
     MatInputModule,
     MatButtonModule,
+    MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
