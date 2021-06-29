@@ -57,8 +57,8 @@ export class SchemiCodificaFormComponent implements OnInit {
     private alertService: AlertService,
     public fb: FormBuilder,
     public schemaCodificaService: SchemiCodificaService,
-    public schemiCodificaRegoleService: SchemiCodificaRegoleService)
-  {
+    public schemiCodificaRegoleService: SchemiCodificaRegoleService
+  ) {
   }
 
   ngOnInit(): void {
