@@ -12,4 +12,3 @@ include("functions.php");
 include("class_schemi.php");
 include("class_regole.php");
 include("class_codifica.php");
-include("class_opzioni.php");

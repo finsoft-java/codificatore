@@ -2,9 +2,9 @@ import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ColumnDefinition } from '../mat-edit-table';
-import { SchemaCodificaRegole } from '../_models';
+import { SchemaCodifica } from '../_models';
 import { AlertService } from '../_services/alert.service';
-import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
+import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 
 @Component({
   selector: 'app-schemi-codifica',
@@ -12,30 +12,16 @@ import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole
   styleUrls: ['./schemi-codifica.component.css']
 })
 export class SchemiCodificaComponent implements OnInit {
-  service: SchemiCodificaRegoleService;
+  service: SchemiCodificaService;
   datePipe: DatePipe = new DatePipe('en-US');
   alert: AlertService;
   routerFrontend: Router;
-  columns: ColumnDefinition<SchemaCodificaRegole>[] = [
-    {
-      title: 'ID',
-      data: 'ID_SCHEMA',
-      type: 'number',
-      width: '30%',
-      disabled: true
-    },
-    {
-      title: 'Titolo',
-      data: 'TITOLO',
-      type: 'text',
-      width: '50%'
-    }
-  ];
-  myDataArray = [{ id: 1, titolo: 'a' }, { id: 2, titolo: 'b' }];
-  displayedColumns: string[] = ['id', 'titolo'];
+  schemaCodificaList: SchemaCodifica[] = [];
+
+  displayedColumns: string[] = ['TITOLO', 'DESCRIZIONE', 'TIPOLOGIA'];
   // commento
 
-  constructor(private svc: SchemiCodificaRegoleService, private alertSvc: AlertService, private router: Router) {
+  constructor(private svc: SchemiCodificaService, private alertSvc: AlertService, private router: Router) {
     this.service = svc;
     this.alert = alertSvc;
     this.routerFrontend = router;
@@ -46,5 +32,21 @@ export class SchemiCodificaComponent implements OnInit {
     this.alert.error(errore);
   }
   ngOnInit(): void {
+    this.service.getAll()
+      .subscribe(
+        response => {
+          this.schemaCodificaList = response.data;
+          console.log(this.schemaCodificaList);
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertSvc.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertSvc.error(error);
+          }
+          // this.loading = false;
+        }
+      );
   }
 }

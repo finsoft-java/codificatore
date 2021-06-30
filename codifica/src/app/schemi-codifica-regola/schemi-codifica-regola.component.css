@@ -1,0 +1,54 @@
+.mat-form-field {
+    width: 98%;
+    margin-left: 10px;
+}
+
+.mat-checkbox {
+    margin-left: 10px;
+    vertical-align: sub;
+}
+
+.checkbox-label {
+    margin-left: 10px;
+}
+
+.addOptionInput {
+    width: 60%;
+    margin: 0;
+}
+
+.save-button,
+.clear-button {
+    margin-left: 10px;
+    background-color: transparent;
+    border: none;
+}
+
+.save-button .mat-icon {
+    color: lightgreen;
+}
+
+.save-button:hover {
+    background-color: lightgreen;
+}
+
+.save-button:hover > .mat-icon {
+    color: white;
+}
+
+.clear-button .mat-icon {
+    color: indianred;
+}
+
+.clear-button:hover {
+    background-color: indianred;
+}
+
+.clear-button:hover > .mat-icon {
+    color: white;
+}
+
+.save-button .mat-icon,
+.clear-button .mat-icon {
+    vertical-align: bottom;
+}

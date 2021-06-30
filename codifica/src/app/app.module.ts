@@ -35,6 +35,7 @@ import { SchemiCodificaComponent } from './schemi-codifica/schemi-codifica.compo
 import { RicercaComponent } from './ricerca/ricerca.component';
 import { RicercaAvanzataComponent } from './ricerca-avanzata/ricerca-avanzata.component';
 import { SchemiCodificaFormComponent } from './schemi-codifica-form/schemi-codifica-form.component';
+import { SchemiCodificaRegolaComponent } from './schemi-codifica-regola/schemi-codifica-regola.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { SchemiCodificaFormComponent } from './schemi-codifica-form/schemi-codif
     SchemiCodificaComponent,
     RicercaComponent,
     RicercaAvanzataComponent,
-    SchemiCodificaFormComponent
+    SchemiCodificaFormComponent,
+    SchemiCodificaRegolaComponent
   ],
   imports: [
     HttpClientModule,

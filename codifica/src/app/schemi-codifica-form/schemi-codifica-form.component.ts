@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SchemaCodificaRegole } from '../_models';
+import { SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
+import { SchemiCodificaOpzioniService } from '../_services/schemi-codifica-opzioni.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { AlertService } from '../_services/alert.service';
@@ -15,18 +16,18 @@ export class SchemiCodificaFormComponent implements OnInit {
   header: string = '';
   selectedSchemaType: string = '';
   types: any[]= [
-    { label: 'Tipo', value: '' },
-    { label: 'Numero', value: 'number' },
     { label: 'Testo', value: 'text' },
+    { label: 'Numero', value: 'number' },
     { label: 'Elenco', value: 'elenco' },
-    { label: 'Sottoschema', value: ' sottoschema' },
-    { label: 'Case', value: 'case' }];
+    { label: 'Sottoschema', value: 'sottoschema' }];
   currentSection: number = 1;
   typeSelected: string ='Tipo';
+  schemaOptionsList: SchemaCodificaOptions[] = [];
   elencoOptionsSelected: string = '';
   sottoschemaOptionsSelected: string = '';
   newRuleFormOpened: boolean = true;
   id: number = -1;
+
   schemaCodificaForm = this.fb.group({
     ID_SCHEMA: [-1, [Validators.required]],
     TITOLO: ['', [Validators.required]],
@@ -39,10 +40,9 @@ export class SchemiCodificaFormComponent implements OnInit {
     NOTE_INTERNE: ''
   });
 
-  schemaCodificaRegole: FormGroup = this.fb.group({
-    test: 'lala',
-    regole: this.fb.array([])
-  });
+  schemaCodificaRegole2: SchemaCodificaRegole[] = [];
+
+  schemaCodificaRegole: FormGroup = this.fb.group({ regole: [] });
 
   parsingRules = this.fb.group({
     ID_SCHEMA: [-1, [Validators.required]],
@@ -62,17 +62,14 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   get f2() { return this.parsingRules.controls; }
 
-  get regole() {
-    return this.schemaCodificaRegole.get('regole') as FormArray;
-  }
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private alertService: AlertService,
     public fb: FormBuilder,
     public schemaCodificaService: SchemiCodificaService,
-    public schemiCodificaRegoleService: SchemiCodificaRegoleService
+    public schemiCodificaRegoleService: SchemiCodificaRegoleService,
+    public schemiCodificaOpzioniService: SchemiCodificaOpzioniService
   ) {
   }
 
@@ -81,17 +78,18 @@ export class SchemiCodificaFormComponent implements OnInit {
       this.id = params.id; // uguale a const id = params.id
       this.header = this.id ? 'Modifica Schema: ' + this.id : 'Nuovo Schema';
     });
-    if (this.id > 0) this.getRegoleEsistenti(this.id);
+    if (this.id > 0) {
+      this.getRegoleEsistenti(this.id);
+    }
   }
 
   getRegoleEsistenti(id: number): void {
     this.schemiCodificaRegoleService.getAll(id)
       .subscribe(
-        data => {
-          const rules: FormGroup[] = data.data.map(rule => this.fb.group(rule));
-          this.schemaCodificaRegole = this.fb.group({ regole: this.fb.array(rules) });
-          this.newRuleFormOpened = !(data.data.length > 0);
-          console.log(this.schemaCodificaRegole);
+        response => {
+          this.schemaCodificaRegole2 = response.data;
+          this.schemaCodificaRegole = this.fb.group({ regole: response.data });
+          this.newRuleFormOpened = !(response.data.length > 0);
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -100,7 +98,7 @@ export class SchemiCodificaFormComponent implements OnInit {
             // Ad esempio: Impossibile conettersi al server PHP
             this.alertService.error(error);
           }
-          //this.loading = false;
+          // this.loading = false;
         }
       );
   }
