@@ -22,7 +22,7 @@ export class RicercaComponent implements OnInit {
   parametri: IHash = {};
 
   ngOnInit(): void {
-    this.svc.getAllValidi().subscribe(response => {
+    this.svc.getValidiPubblici().subscribe(response => {
       this.schemi = response.data;
     });
   }

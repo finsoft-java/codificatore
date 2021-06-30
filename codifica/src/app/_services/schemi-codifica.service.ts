@@ -15,8 +15,12 @@ export class SchemiCodificaService implements HttpCrudService<SchemaCodifica> {
     return this.http.get<ListBean<SchemaCodifica>>(environment.wsUrl + 'Schemi.php');
   }
 
-  getAllValidi(): Observable<ListBean<SchemaCodifica>> {
-    return this.http.get<ListBean<SchemaCodifica>>(environment.wsUrl + 'Schemi.php?soloValidi=true');
+  getValidiPubblici(): Observable<ListBean<SchemaCodifica>> {
+    return this.http.get<ListBean<SchemaCodifica>>(environment.wsUrl + 'Schemi.php?soloValidi=true&tipo=P');
+  }
+
+  getValidiInterni(): Observable<ListBean<SchemaCodifica>> {
+    return this.http.get<ListBean<SchemaCodifica>>(environment.wsUrl + 'Schemi.php?soloValidi=true&tipo=I');
   }
 
   getById(idSchema: number): Observable<ValueBean<SchemaCodifica>> {

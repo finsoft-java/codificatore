@@ -12,6 +12,7 @@ require_logged_user_JWT();
 
 $idSchema = isset($_GET['idSchema']) ? $con->escape_string($_GET['idSchema']) : null;
 $soloValidi = isset($_GET['soloValidi']) ? $con->escape_string($_GET['soloValidi']) : false;
+$tipo = isset($_GET['tipo']) ? $con->escape_string($_GET['tipo']) : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['value' => $object]);
     
     } else {
-        [$list, $count] = $schemiManager->getAll($soloValidi);
+        [$list, $count] = $schemiManager->getAll($soloValidi, $tipo);
           
         header('Content-Type: application/json');
         echo json_encode(['data' => $list, 'count' => $count]);
