@@ -64,7 +64,8 @@
                 </mat-accordion>
             </form> 
             <button *ngIf="!this.newRuleFormOpened" mat-raised-button color="primary" class="spaced-button" (click)="openNewRuleForm()">Aggiungi Regola</button>       
-            <div *ngIf="this.newRuleFormOpened">
+            <div *ngIf="this.newRuleFormOpened" style="margin: 20px 0 0 2px">
+                <button (click)="this.newRuleFormOpened=!this.newRuleFormOpened " class="clear-button"><mat-icon class="mat-icon">clear</mat-icon></button>
                  <h5>Nuova Regola</h5>
                 <form [formGroup]="parsingRules" class="schema-form">
                     <mat-checkbox formControlName="REQUIRED" class="variable-required">Variabile obbligatoria nello schema corrente</mat-checkbox>

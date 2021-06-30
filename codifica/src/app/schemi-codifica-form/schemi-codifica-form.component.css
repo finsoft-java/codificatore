@@ -4,7 +4,7 @@
 }
 
 .schema-type-label, .spaced-button{
-    margin: 20px 0 0 10px;
+    margin-top: 20px;
 }
 
 .variable-required{
@@ -27,11 +27,27 @@
     height: 80px;
 }
 
-.mat-accordion .mat-expansion-panel {
+.second-section {
+    margin-top: 20px;
     margin-left: 1%;
     width: 98%;
 }
 
-.second-section {
-    margin-top: 20px;
+.clear-button {
+    float: right;
+    background-color: transparent;
+    border: none;
+}
+
+.clear-button .mat-icon {
+    color: indianred;
+    vertical-align: middle;
+}
+
+.clear-button:hover {
+    background-color: indianred;
+}
+
+.clear-button:hover > .mat-icon {
+    color: white;
 }
