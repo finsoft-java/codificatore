@@ -1,16 +1,17 @@
-<h3>Codifica nuovo codice</h3>
+<h3 class="page-header">Codifica nuovo codice</h3>
 
 Selezionare lo schema di codifica:
-<mat-select placeholder="Schema di codifica" [(ngModel)]="schemaScelto" (selectionChange)="onSelectSchema($event)" name="schema" [disabled]="schemaScelto !== undefined">
-    <mat-option *ngFor="let schema of schemi" [value]="schema">
-        {{schema.TITOLO}}
-    </mat-option>
-</mat-select>
+<mat-form-field class="select-schema">
+    <mat-select placeholder="Schema di codifica" [(ngModel)]="schemaScelto" (selectionChange)="onSelectSchema($event)" name="schema" [disabled]="schemaScelto !== undefined">
+        <mat-option *ngFor="let schema of schemi" [value]="schema">
+            {{schema.TITOLO}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
 
-Questo bottone dovrebbe stare a destra:
-<button (click)="reset()" mat-button color="secondary" [disabled]="schemaScelto === undefined">Reset</button>
+<button (click)="reset()" mat-raised-button color="secondary" [ngStyle]="{'float': 'right', 'margin-bottom': '15px'}" [disabled]="schemaScelto === undefined">Reset</button>
 
-<div *ngIf="schemaScelto !== undefined">
+<div class="schema-main-section" *ngIf="schemaScelto !== undefined">
     <div *ngIf="regoleSchemaScelto.length == 0">
         Nessuna regola configurata.
     </div>
@@ -48,12 +49,12 @@ Questo bottone dovrebbe stare a destra:
     </div>
 
     <!-- Calcolo CODICE e DESCRIZIONE in tempo reale-->
-    <div *ngIf="calcoloCompletato" style="background-color: green;">
-        <div>
-            Codice: {{codiceCalcolato}} 
-        </div>
-        <div>
-            Descrizione: {{descrizioneCalcolata}} 
-        </div>
+    <div *ngIf="calcoloCompletato && regoleSchemaScelto.length > 0" style="background-color: lightgreen; margin-top: 20px;">
+        <p style="padding: 15px; padding-bottom: 0;">
+            <b>Codice</b>: {{codiceCalcolato}} 
+        </p>
+        <p style="padding: 15px;">
+            <b>Descrizione</b>: {{descrizioneCalcolata}} 
+        </p>
     </div>
 </div>

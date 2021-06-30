@@ -1,5 +1,5 @@
 <div formclass="regola-container">
-    <label class="checkbox-label">Variabile Obbligatoria </label>
+    <label class="rule-label">Variabile Obbligatoria </label>
     <mat-checkbox [(ngModel)]="regola.REQUIRED" class="variable-required"></mat-checkbox>
     <mat-form-field appearance="standard">
         <mat-label>Nome variabile</mat-label>
@@ -42,7 +42,8 @@
             <input  [(ngModel)]="regola.PATTERN_REGEXP" type="text" matInput >
         </mat-form-field>
     </div>
-    <div [ngStyle]="{'display': regola.TIPO == 'elenco'?'':'none'}"> 
+    <div [ngStyle]="{'display': regola.TIPO == 'elenco'?'':'none'}">
+        <label class="rule-label"> Opzioni</label> 
         <button mat-raised-button color="primary" [ngStyle] ="{float:'right'}" (click)="addOption()">Aggiungi Opzione</button>
         <table mat-table [ngStyle] ="{width:'100%'}" [dataSource]="regola.OPTIONS?regola.OPTIONS:[]" #regoleTable>
             <ng-container matColumnDef="ETICHETTA">

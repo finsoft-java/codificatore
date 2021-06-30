@@ -52,7 +52,7 @@ export class CodificaComponent implements OnInit {
     this.regoleSchemaScelto = [];
     this.codiceCalcolato = '';
     this.descrizioneCalcolata = '';
-    this.calcoloCompletato = false;
+    //this.calcoloCompletato = false;
     this.parametri = {};
   }
 
@@ -74,6 +74,7 @@ export class CodificaComponent implements OnInit {
     if (!template) return '';
 
     const matches = template.match(/{{[^}]*}}/g);
+    console.log(this.parametri);
 
     let result = template;
     if (matches != null) {
