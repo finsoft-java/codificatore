@@ -18,12 +18,11 @@ export class CodificaComponent implements OnInit {
 
   schemi: SchemaCodifica[] = [];
   schemaScelto?: SchemaCodifica;
-  regoleSchemaScelto: SchemaCodificaRegole[] = [];
   calcoloCompletato = true; // FIXME la dovrebbe settare l'interfaccia
   codiceCalcolato = '';
   descrizioneCalcolata = '';
-  parametri: IHash = {};
   codificaSalvata?: Codifica;
+  datiCodifica: IHash[] = []; // Contiene tutti i parametri di tutti i sottoschemi
 
   ngOnInit(): void {
     this.svc.getValidiPubblici().subscribe(response => {
@@ -36,66 +35,13 @@ export class CodificaComponent implements OnInit {
    */
   onSelectSchema(event: MatSelectChange) {
     const schemaScelto = event.value;
-    if (schemaScelto !== undefined && schemaScelto !== null) {
-      this.regoleSvc.getAll(schemaScelto.ID_SCHEMA).subscribe(response => {
-        this.regoleSchemaScelto = response.data;
-        this.regoleSchemaScelto.forEach(r => {
-          this.parametri[r.NOM_VARIABILE] = '';
-        });
-      });
-    }
   }
 
   reset() {
     this.schemaScelto = undefined;
-    this.regoleSchemaScelto = [];
     this.codiceCalcolato = '';
     this.descrizioneCalcolata = '';
     // this.calcoloCompletato = false;
-    this.parametri = {};
-  }
-
-  onChangeInputRule(nomVariabile: string, evt: Event) {
-    this.parametri[nomVariabile] = (<HTMLInputElement>evt.target).value;
-    this.componiCodiceDescrizione();
-  }
-
-  onChangeSelectRule(nomVariabile: string, evt: MatSelectChange) {
-    this.parametri[nomVariabile] = evt.value;
-    this.componiCodiceDescrizione();
-  }
-
-  /**
-   * Compone una stringa template con i parametri presenti in this.parametri
-   * @returns rendered template
-   */
-  componi(template: string): string {
-    if (!template) return '';
-
-    const matches = template.match(/{{[^}]*}}/g);
-    console.log(this.parametri);
-
-    let result = template;
-    if (matches != null) {
-      matches.forEach(m => {
-        let formula = '';
-        Object.keys(this.parametri).forEach(p => {
-          formula += `var ${p}='${this.parametri[p]}';`;
-        });
-        formula += m.substring(2, m.length - 2);
-        const repl = eval(formula);
-        result = result.replace(m, repl || '');
-      });
-    }
-
-    return result;
-  }
-
-  componiCodiceDescrizione() {
-    if (!this.schemaScelto) return;
-
-    this.codiceCalcolato = this.componi(this.schemaScelto!.TPL_CODICE);
-    this.descrizioneCalcolata = this.componi(this.schemaScelto!.TPL_DESCRIZIONE);
   }
 
   /**
@@ -109,13 +55,19 @@ export class CodificaComponent implements OnInit {
       DESCRIZIONE: this.descrizioneCalcolata,
       DATI: []
     };
-    const dati: CodificaDati[] = Object.keys(this.parametri).map(p => ({
-      ID_CODIFICA: null,
-      ID_SCHEMA: this.schemaScelto!.ID_SCHEMA,
-      NOM_VARIABILE: p,
-      VALORE: this.parametri[p]
-    }));
-    c.DATI!.push(...dati);
+    console.log(this.datiCodifica);
+    this.datiCodifica.forEach((parametri, idSchema) => {
+      Object.keys(parametri).forEach(nomeParametro => {
+        const d: CodificaDati = {
+          ID_CODIFICA: null,
+          ID_SCHEMA: idSchema,
+          NOM_VARIABILE: nomeParametro,
+          VALORE: parametri[nomeParametro]
+        };
+        c.DATI!.push(d);
+      });
+    });
+    console.log('SAVING', c);
 
     this.codSvc.create(c).subscribe(response => {
       this.codificaSalvata = response.value;

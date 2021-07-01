@@ -12,44 +12,17 @@ Selezionare lo schema di codifica:
 <button (click)="reset()" mat-raised-button color="secondary" [ngStyle]="{'float': 'right', 'margin-bottom': '15px'}" [disabled]="schemaScelto === undefined">Reset</button>
 
 <div class="schema-main-section" *ngIf="schemaScelto !== undefined">
-    <div *ngIf="regoleSchemaScelto.length == 0">
-        Nessuna regola configurata.
-    </div>
-
-    <div *ngFor="let r of regoleSchemaScelto">
-        <div *ngIf="r.TIPO =='text'">
-            <mat-form-field appearance="standard">
-                <mat-label>{{r.NOM_VARIABILE}}</mat-label>
-                <input matInput name="Rule_{{r.NOM_VARIABILE}}" [required]="r.REQUIRED=='Y'" [maxLength]="r.MAXLENGTH" [pattern]="r.PATTERN_REGEXP" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
-                <mat-hint>{{r.ETICHETTA}}</mat-hint>
-            </mat-form-field>
-        </div>
-        <div *ngIf="r.TIPO =='number'">
-            <mat-form-field appearance="standard">
-                <mat-label>{{r.NOM_VARIABILE}}</mat-label>
-                <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}" [required]="r.REQUIRED=='Y'" [min]="r.MIN" [max]="r.MAX" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
-                <mat-hint>{{r.ETICHETTA}}</mat-hint>
-            </mat-form-field>
-        </div>
-        <div *ngIf="r.TIPO =='elenco'">
-            <mat-form-field appearance="standard">
-                <mat-label>{{r.NOM_VARIABILE}}</mat-label>
-                <mat-select name="Rule_{{r.NOM_VARIABILE}}" [required]="r.REQUIRED=='Y'" (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE,$event)">
-                    <mat-option *ngFor="let opt of r.OPTIONS" [value]="opt.VALUE_OPTION">
-                        {{opt.ETICHETTA}}
-                    </mat-option>
-                </mat-select>
-                <mat-hint>{{r.ETICHETTA}}</mat-hint>
-            </mat-form-field>
-        </div>
-        <div *ngIf="r.TIPO =='sottoschema'">
-            <h5>{{r.ETICHETTA}}</h5>
-             (TODO: QUI DOVREBBE APPARIRE UN SUBFORM RELATIVO AL SOTTOSCHEMA)
-        </div>
-    </div>
+    
+    <app-codifica-subform
+        [idSchema]="schemaScelto.ID_SCHEMA"
+        (changeCodice)="codiceCalcolato = $event"
+        (changeDescrizione)="descrizioneCalcolata = $event"
+        (changeDatiCodifica)="datiCodifica = $event"
+        >
+    </app-codifica-subform>
 
     <!-- Calcolo CODICE e DESCRIZIONE in tempo reale-->
-    <div *ngIf="calcoloCompletato && regoleSchemaScelto.length > 0" style="background-color: lightgreen; margin-top: 20px;">
+    <div *ngIf="calcoloCompletato" style="background-color: lightgreen; margin-top: 20px;">
         <p style="padding: 15px; padding-bottom: 0;">
             <b>Codice</b>: {{codiceCalcolato}} 
         </p>
