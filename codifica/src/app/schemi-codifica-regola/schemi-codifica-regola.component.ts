@@ -33,11 +33,10 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.regola);
   }
 
-  log() {
-    console.log(this.regola);
+  onChangeRequired(event: any) {
+    this.regola.REQUIRED = event.source.checked ? 'Y' : 'n';
   }
 
   addOption() {
