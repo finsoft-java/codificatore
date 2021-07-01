@@ -1,7 +1,8 @@
 /* eslint-disable no-eval */
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { SchemaCodifica, SchemaCodificaRegole } from '../_models';
+import { Codifica, CodificaDati, SchemaCodifica, SchemaCodificaRegole } from '../_models';
+import { CodificaService } from '../_services/codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 
@@ -16,7 +17,9 @@ export interface IHash {
   styleUrls: ['./codifica.component.css']
 })
 export class CodificaComponent implements OnInit {
-  constructor(private svc: SchemiCodificaService, private regoleSvc: SchemiCodificaRegoleService) { }
+  constructor(private svc: SchemiCodificaService,
+    private regoleSvc: SchemiCodificaRegoleService,
+    private codSvc: CodificaService) { }
 
   schemi: SchemaCodifica[] = [];
   schemaScelto?: SchemaCodifica;
@@ -25,6 +28,7 @@ export class CodificaComponent implements OnInit {
   codiceCalcolato = '';
   descrizioneCalcolata = '';
   parametri: IHash = {};
+  codificaSalvata?: Codifica;
 
   ngOnInit(): void {
     this.svc.getValidiPubblici().subscribe(response => {
@@ -52,7 +56,7 @@ export class CodificaComponent implements OnInit {
     this.regoleSchemaScelto = [];
     this.codiceCalcolato = '';
     this.descrizioneCalcolata = '';
-    //this.calcoloCompletato = false;
+    // this.calcoloCompletato = false;
     this.parametri = {};
   }
 
@@ -97,5 +101,30 @@ export class CodificaComponent implements OnInit {
 
     this.codiceCalcolato = this.componi(this.schemaScelto!.TPL_CODICE);
     this.descrizioneCalcolata = this.componi(this.schemaScelto!.TPL_DESCRIZIONE);
+  }
+
+  /**
+   * Da richiamare a calcolo completato
+   */
+  salvaCodifica() {
+    const c: Codifica = {
+      ID_CODIFICA: null,
+      ID_SCHEMA: this.schemaScelto!.ID_SCHEMA,
+      CODICE: this.codiceCalcolato,
+      DESCRIZIONE: this.descrizioneCalcolata,
+      DATI: []
+    };
+    const dati: CodificaDati[] = Object.keys(this.parametri).map(p => ({
+      ID_CODIFICA: null,
+      ID_SCHEMA: this.schemaScelto!.ID_SCHEMA,
+      NOM_VARIABILE: p,
+      VALORE: this.parametri[p]
+    }));
+    c.DATI!.push(...dati);
+
+    this.codSvc.create(c).subscribe(response => {
+      this.codificaSalvata = response.value;
+      console.log('Codifica was saved;', this.codificaSalvata);
+    });
   }
 }
