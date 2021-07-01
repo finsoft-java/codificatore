@@ -56,5 +56,6 @@ Selezionare lo schema di codifica:
         <p style="padding: 15px;">
             <b>Descrizione</b>: {{descrizioneCalcolata}} 
         </p>
+        <button (click)="salvaCodifica()" mat-raised-button color="primary" [disabled]="codificaSalvata !== undefined">Salva</button>
     </div>
 </div>
