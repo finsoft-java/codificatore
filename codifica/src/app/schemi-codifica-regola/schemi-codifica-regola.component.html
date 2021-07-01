@@ -1,10 +1,14 @@
 <div formclass="regola-container">
-    <label class="rule-label">Variabile Obbligatoria </label>
+    <label class="rule-label">Obbligatoria</label>
     <mat-checkbox [checked]="regola.REQUIRED==='Y'" (change)="onChangeRequired($event)" class="variable-required"></mat-checkbox>
     <mat-form-field appearance="standard">
         <mat-label>Nome variabile</mat-label>
         <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput required >
         <mat-hint>Es: "tipo_prod"</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+        <mat-label>Ordine presentazione</mat-label>
+        <input formControlName="ORD_PRESENTAZIONE" type="number" matInput >
     </mat-form-field>
     <mat-form-field appearance="standard">
         <mat-label>Etichetta</mat-label>

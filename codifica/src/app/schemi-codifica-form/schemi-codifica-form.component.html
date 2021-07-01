@@ -8,10 +8,10 @@
                     <mat-label>Titolo</mat-label>
                     <input formControlName="TITOLO" type="text" matInput >
                 </mat-form-field>
-                <label class="schema-type-label">Tipologia di Schema</label>
                 <mat-radio-group
                 aria-labelledby="Tipologia Schema"
                 formControlName="TIPOLOGIA">
+                    <label class="schema-type-label">Tipologia di Schema</label>
                     <mat-radio-button value="P">
                         Pubblico
                     </mat-radio-button>
@@ -19,6 +19,11 @@
                         Interno
                     </mat-radio-button>
                 </mat-radio-group>
+                <mat-form-field appearance="standard">
+                    <mat-label>Descrizione</mat-label>
+                    <textarea formControlName="DESCRIZIONE" matInput class="text-area-lg"></textarea>
+                    <mat-hint>Apparirà all'utente come "hint".</mat-hint>
+                </mat-form-field>
                 <mat-form-field appearance="standard">
                     <mat-label>Template Codice</mat-label>
                     <textarea matInput formControlName="TPL_CODICE" class="text-area-sm"></textarea>
@@ -30,19 +35,14 @@
                     <mat-hint ngNonBindable>Es. Cilindro {{tipo_prod}} - {{tipo_eff}} - alesaggio {{alesaggio}} - corsa {{corsa}} - {{ril_pos}} - {{tipo_stelo}} - {{ammort}}</mat-hint>
                 </mat-form-field>
                 <mat-form-field appearance="standard">
-                    <mat-label>Javascript Prerender</mat-label>
-                    <textarea matInput formControlName="PRE_RENDER_JS" class="text-area-lg"></textarea>
-                    <mat-hint>Questa funzione permette di “manipolare” il contenuto degli attributi (es. per abbreviare)
-                         ed eventualmente per interrompere l’esecuzione in caso di parametri incompatibili. (opzionale)</mat-hint>
-                </mat-form-field>
-                <mat-form-field appearance="standard">
-                    <mat-label>Descrizione dello schema</mat-label>
-                    <textarea formControlName="DESCRIZIONE" matInput class="text-area-lg"></textarea>
-                </mat-form-field>
-                <mat-form-field appearance="standard">
                     <mat-label>Note interne</mat-label>
                     <textarea matInput formControlName="NOTE_INTERNE" class="text-area-lg"></textarea>
                     <mat-hint>Non appariranno all'utente.</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Javascript Prerender</mat-label>
+                    <textarea matInput formControlName="PRE_RENDER_JS" class="text-area-lg"></textarea>
+                    <mat-hint>Questa funzione JavaScript permette di alterare il comportamento standard della codifica</mat-hint>
                 </mat-form-field>
                 <!-- <button mat-button matStepperNext>Next</button> -->
             </form> 
@@ -68,11 +68,15 @@
                 <button (click)="this.newRuleFormOpened=!this.newRuleFormOpened " class="clear-button"><mat-icon class="mat-icon">clear</mat-icon></button>
                  <h5>Nuova Regola</h5>
                 <form [formGroup]="parsingRules" class="schema-form">
-                    <mat-checkbox formControlName="REQUIRED" class="variable-required">Variabile obbligatoria nello schema corrente</mat-checkbox>
+                    <mat-checkbox formControlName="REQUIRED" class="variable-required">Obbligatoria</mat-checkbox>
                     <mat-form-field appearance="standard">
                         <mat-label>Nome variabile</mat-label>
                         <input formControlName="NOM_VARIABILE" type="text" matInput >
                         <mat-hint>Es: "tipo_prod"</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Ordine presentazione</mat-label>
+                        <input formControlName="ORD_PRESENTAZIONE" type="number" matInput >
                     </mat-form-field>
                     <mat-form-field appearance="standard">
                         <mat-label>Etichetta</mat-label>
