@@ -11,7 +11,7 @@ Selezionare lo schema di codifica:
 
 <button (click)="reset()" mat-raised-button color="secondary" [ngStyle]="{'float': 'right', 'margin-bottom': '15px'}" [disabled]="schemaScelto === undefined">Reset</button>
 
-<div class="schema-main-section" *ngIf="schemaScelto !== undefined">
+<div *ngIf="schemaScelto !== undefined">
     <div *ngIf="regoleSchemaScelto.length == 0">
         Nessuna regola configurata.
     </div>
