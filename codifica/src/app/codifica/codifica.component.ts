@@ -1,15 +1,10 @@
 /* eslint-disable no-eval */
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { Codifica, CodificaDati, SchemaCodifica, SchemaCodificaRegole } from '../_models';
+import { Codifica, CodificaDati, IHash, SchemaCodifica, SchemaCodificaRegole } from '../_models';
 import { CodificaService } from '../_services/codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
-
-// normale array associativo di Javascript
-export interface IHash {
-  [details: string]: string;
-}
 
 @Component({
   selector: 'app-codifica',
