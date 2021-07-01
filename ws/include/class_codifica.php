@@ -21,26 +21,30 @@ class CodificaManager {
         return select_single($sql);
     }
 
-/*    function crea($json_data) {
-
-        $sql = insert("codifiche", ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
-                                "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
-                                "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE),
-                                "ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
-                                "REQUIRED" => $con->escape_string($json_data->REQUIRED),
-                                "TIPO" => $con->escape_string($json_data->TIPO),
-                                "MAXLENGTH" => $con->escape_string($json_data->MAXLENGTH),
-                                "PATTERN_REGEXP" => $con->escape_string($json_data->PATTERN_REGEXP),
-                                "NUM_DECIMALI" => $con->escape_string($json_data->NUM_DECIMALI),
-                                "MIN" => $con->escape_string($json_data->MIN),
-                                "MAX" => $con->escape_string($json_data->MAX)
+    function crea($json_data) {
+        $loggedUser = ''; // TODO
+        $sql = insert("codifiche", ["ID_CODIFICA" => $con->escape_string($json_data->ID_CODIFICA),
+                                "ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
+                                "CODICE" => $con->escape_string($json_data->CODICE),
+                                "DESCRIZIONE" => $con->escape_string($json_data->DESCRIZIONE),
+                                "UTENTE_CODIFICATORE" => $loggedUser
                                 ]);
         execute_update($sql);
+        if (isset($json_data->DATI)) {
+            foreach($json_data->DATI as $D) {
+                $sql = insert("codifiche_dati", ["ID_CODIFICA" => $con->escape_string($json_data->ID_CODIFICA),
+                                        "ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
+                                        "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
+                                        "VALORE" => $con->escape_string($json_data->VALORE)
+                                        ]);
+                execute_update($sql);
+            }
+        }
         return $this->getById($json_data->ID_CODIFICA);
     }
-*/
+
     function elimina($idCodifica) {
-        $sql = "DELETE FROM codifiche WHERE ID_CODIFICA = $idCodifica' ";
+        $sql = "DELETE FROM codifiche WHERE ID_CODIFICA = $idCodifica ";
         execute_update($sql);
     }
 

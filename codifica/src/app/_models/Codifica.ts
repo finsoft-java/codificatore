@@ -1,3 +1,4 @@
+import { CodificaDati } from './CodificaDati';
 
 export interface Codifica {
   ID_CODIFICA: number;
@@ -5,4 +6,5 @@ export interface Codifica {
   CODICE: string;
   DESCRIZIONE: string;
   UTENTE_CODIFICATORE: string;
+  DATI?: CodificaDati[];
 }
