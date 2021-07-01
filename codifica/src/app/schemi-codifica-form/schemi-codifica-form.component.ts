@@ -80,8 +80,28 @@ export class SchemiCodificaFormComponent implements OnInit {
     });
     if (this.id > 0) {
       this.getRegoleEsistenti(this.id);
+      this.getSchemaEsistente(this.id);
     }
   }
+
+  getSchemaEsistente(id: number): void {
+    this.schemaCodificaService.getById(id)
+      .subscribe(
+        response => {
+          this.schemaCodificaForm = this.fb.group(response.value);
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertService.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertService.error(error);
+          }
+          // this.loading = false;
+        }
+      );
+  }
+
 
   getRegoleEsistenti(id: number): void {
     this.schemiCodificaRegoleService.getAll(id)
@@ -90,6 +110,7 @@ export class SchemiCodificaFormComponent implements OnInit {
           this.schemaCodificaRegole2 = response.data;
           this.schemaCodificaRegole = this.fb.group({ regole: response.data });
           this.newRuleFormOpened = !(response.data.length > 0);
+          console.log();
         },
         error => {
           if (error.status === 401 || error.status === 403) {

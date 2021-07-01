@@ -1,6 +1,6 @@
 <div formclass="regola-container">
     <label class="rule-label">Variabile Obbligatoria </label>
-    <mat-checkbox [(ngModel)]="regola.REQUIRED" class="variable-required"></mat-checkbox>
+    <mat-checkbox [checked]="regola.REQUIRED==='Y'" (change)="onChangeRequired($event)" class="variable-required"></mat-checkbox>
     <mat-form-field appearance="standard">
         <mat-label>Nome variabile</mat-label>
         <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput required >
