@@ -14,5 +14,5 @@ export interface SchemaCodificaRegole {
   MIN: number;
   MAX: number;
   OPTIONS?: SchemaCodificaOptions[];
-  SOTTOSCHEMA?: SchemaCodifica;
+  SOTTOSCHEMI?: {ID_SCHEMA: number, TITOLO: string}[];
 }

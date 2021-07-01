@@ -16,11 +16,15 @@ class RegoleManager {
         $objects = select_list($sql1 . $sql);
 
         foreach($objects as $id=>$o) {
-            $sql = "SELECT * from schemi_options WHERE ID_SCHEMA=$o[ID_SCHEMA] and NOM_VARIABILE='$o[NOM_VARIABILE]'  ";
+            $sql = "SELECT * FROM schemi_options " .
+                "WHERE ID_SCHEMA=$o[ID_SCHEMA] and NOM_VARIABILE='$o[NOM_VARIABILE]' " .
+                "ORDER BY VALUE_OPTION";
             $objects[$id]["OPTIONS"] = select_list($sql);
 
-            $sql = "SELECT ID_SOTTO_SCHEMA from schemi_sottoschemi WHERE ID_SCHEMA=$o[ID_SCHEMA] and NOM_VARIABILE='$o[NOM_VARIABILE]'  ";
-            $objects[$id]["SOTTOSCHEMA"] = select_single_value($sql);
+            $sql = "SELECT b.ID_SCHEMA, b.TITOLO FROM schemi_sottoschemi s " .
+                "JOIN schemi_codifica b ON b.ID_SCHEMA=s.ID_SOTTO_SCHEMA " .
+                "WHERE s.ID_SCHEMA=$o[ID_SCHEMA] AND s.NOM_VARIABILE='$o[NOM_VARIABILE]'  ORDER BY 1";
+            $objects[$id]["SOTTOSCHEMI"] = select_list($sql);
         }
         return [$objects, $count];
     }
