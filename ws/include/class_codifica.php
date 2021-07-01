@@ -4,13 +4,22 @@ $codificaManager = new CodificaManager();
 
 class CodificaManager {
     
-    function getAll() {
-        // TODO qui serviranno filtri e paginazione
+    function getAll($top=null, $skip=null) {
 
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT * ";
         $sql = "FROM codifiche x ";
         $sql .= "ORDER BY x.ID_CODIFICA DESC ";
+
+        // paginazione
+        if ($top) {
+            if ($skip) {
+                $sql .= "LIMIT $skip,$top ";
+            } else {
+                $sql .= "LIMIT $top ";
+            }
+        }
+
         $count = select_single_value($sql0 . $sql);
         $objects = select_list($sql1 . $sql);        
         return [$objects, $count];
@@ -21,8 +30,11 @@ class CodificaManager {
         return select_single($sql);
     }
 
+    /**
+     * Salva sia la tabella codifiche, sia la codifiche_dati
+     */
     function crea($json_data) {
-        $loggedUser = ''; // TODO
+        global $logged_user;
         $sql = insert("codifiche", ["ID_CODIFICA" => $con->escape_string($json_data->ID_CODIFICA),
                                 "ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
                                 "CODICE" => $con->escape_string($json_data->CODICE),
@@ -30,6 +42,7 @@ class CodificaManager {
                                 "UTENTE_CODIFICATORE" => $loggedUser
                                 ]);
         execute_update($sql);
+
         if (isset($json_data->DATI)) {
             foreach($json_data->DATI as $D) {
                 $sql = insert("codifiche_dati", ["ID_CODIFICA" => $con->escape_string($json_data->ID_CODIFICA),
@@ -40,6 +53,7 @@ class CodificaManager {
                 execute_update($sql);
             }
         }
+
         return $this->getById($json_data->ID_CODIFICA);
     }
 

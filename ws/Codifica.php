@@ -11,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_logged_user_JWT();
 
 $idCodifica = isset($_GET['idCodifica']) ? $con->escape_string($_GET['idCodifica']) : null;
+$top = isset($_GET['top']) ? $con->escape_string($_GET['top']) : null;
+$skip = isset($_GET['skip']) ? $con->escape_string($_GET['skip']) : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -20,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['value' => $object]);
     
     } else {
-        [$list, $count] = $codificaManager->getAll();
+        [$list, $count] = $codificaManager->getAll($top, $skip);
           
         header('Content-Type: application/json');
         echo json_encode(['data' => $list, 'count' => $count]);
