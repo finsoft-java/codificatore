@@ -35,7 +35,7 @@ class RegoleManager {
     }
 
     function crea($json_data) {
-
+        global $con;
         $sql = insert("schemi_regole", ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
                                 "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
                                 "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE),
@@ -53,7 +53,7 @@ class RegoleManager {
     }
     
     function aggiorna($json_data) {     
-        
+        global $con;
         $sql = update("schemi_regole", ["ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE),
                                 "ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
                                 "REQUIRED" => $con->escape_string($json_data->REQUIRED),

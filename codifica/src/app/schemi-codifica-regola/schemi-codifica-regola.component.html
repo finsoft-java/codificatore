@@ -8,7 +8,7 @@
     </mat-form-field>
     <mat-form-field appearance="standard">
         <mat-label>Ordine presentazione</mat-label>
-        <input formControlName="ORD_PRESENTAZIONE" type="number" matInput >
+        <input [(ngModel)]="regola.ORD_PRESENTAZIONE" type="number" matInput >
     </mat-form-field>
     <mat-form-field appearance="standard">
         <mat-label>Etichetta</mat-label>
@@ -48,17 +48,20 @@
     </div>
     <div [ngStyle]="{'display': regola.TIPO == 'elenco'?'':'none'}">
         <label class="rule-label"> Opzioni</label> 
-        <button mat-raised-button color="primary" [ngStyle] ="{float:'right'}" (click)="addOption()">Aggiungi Opzione</button>
+        <button mat-raised-button color="primary" [disabled]="isAddRuleActive" [ngStyle] ="{float:'right'}" (click)="addOption()">Aggiungi Opzione</button>
         <table mat-table [ngStyle] ="{width:'100%'}" [dataSource]="regola.OPTIONS?regola.OPTIONS:[]" #regoleTable>
             <ng-container matColumnDef="ETICHETTA">
                 <th mat-header-cell *matHeaderCellDef>Etichetta</th>
                 <td mat-cell *matCellDef="let option"> 
-                    {{option.VALUE_OPTION?option.ETICHETTA:''}} 
-                    <div *ngIf="!option.VALUE_OPTION">
+                    {{option.ID_SCHEMA>0?option.ETICHETTA:''}} 
+                    <div *ngIf="option.ID_SCHEMA<1">
                         <mat-form-field  class="addOptionInput" appearance="standard">
                             <input matInput placeholder="Etichetta" [(ngModel)]="option.ETICHETTA">
                         </mat-form-field>
-                        <button (click)="saveOption(option.ETICHETTA)" class="save-button"><mat-icon class="mat-icon">save</mat-icon></button>
+                        <mat-form-field  class="addOptionInput" appearance="standard">
+                            <input matInput placeholder="Valore" [(ngModel)]="option.VALUE_OPTION">
+                        </mat-form-field>
+                        <button (click)="saveOption()" class="save-button"><mat-icon class="mat-icon">save</mat-icon></button>
                         <button (click)="removeOption()" class="clear-button"><mat-icon class="mat-icon">clear</mat-icon></button>
                     </div>
                 </td>

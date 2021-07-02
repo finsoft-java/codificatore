@@ -26,7 +26,7 @@ class SchemiManager {
     }
 
     function crea($json_data) {
-
+        global $con;
         $sql = insert("schemi_codifica", ["ID_SCHEMA" => null, // AUTO_INCREMENT
                                 "TITOLO" => $con->escape_string($json_data->TITOLO),
                                 "DESCRIZIONE" => $con->escape_string($json_data->DESCRIZIONE),
@@ -39,11 +39,12 @@ class SchemiManager {
                                 ]);
         // L'immagine va aggiornata a parte
         execute_update($sql);
-        return $this->getById($json_data->ID_SCHEMA);
+        $idCodifica = $con->insert_id;
+        return $this->getById($idCodifica);
     }
     
     function aggiorna($json_data) {     
-        
+        global $con;
         $sql = update("schemi_codifica", ["TITOLO" => $con->escape_string($json_data->TITOLO),
                                 "DESCRIZIONE" => $con->escape_string($json_data->DESCRIZIONE),
                                 "TIPOLOGIA" => $con->escape_string($json_data->TIPOLOGIA),

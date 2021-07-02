@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { SchemaCodificaRegole } from '../_models';
+import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
+import { AlertService } from '../_services/alert.service';
 
 @Component({
   selector: 'app-schemi-codifica-regola',
@@ -30,7 +32,12 @@ export class SchemiCodificaRegolaComponent implements OnInit {
     { label: 'Elenco', value: 'elenco' },
     { label: 'Sottoschema', value: 'sottoschema' }];
 
-  constructor() { }
+  isAddRuleActive: boolean = false;
+
+  constructor(
+    public schemiCodificaRegolaService: SchemiCodificaRegoleService,
+    public alertService: AlertService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -41,20 +48,37 @@ export class SchemiCodificaRegolaComponent implements OnInit {
 
   addOption() {
     this.regola.OPTIONS?.unshift({
-      ID_SCHEMA: this.regola.ID_SCHEMA,
+      ID_SCHEMA: -1,
       NOM_VARIABILE: this.regola.NOM_VARIABILE,
       VALUE_OPTION: '',
       ETICHETTA: ''
     });
+    this.isAddRuleActive = true;
     this.regoleTable?.renderRows();
   }
   removeOption() {
     this.regola.OPTIONS?.shift();
+    this.isAddRuleActive = false;
     this.regoleTable?.renderRows();
   }
-  saveOption(etichetta: string) {
-    this.regola.OPTIONS![0].ETICHETTA = etichetta;
-    this.regola.OPTIONS![0].VALUE_OPTION = 'a';
+  saveOption() {
+    this.regola.OPTIONS![0].ID_SCHEMA = this.regola.ID_SCHEMA;
+    console.log(this.regola);
+    this.schemiCodificaRegolaService.update(this.regola).subscribe(
+      response => {
+        console.log(response.value);
+      },
+      error => {
+        if (error.status === 401 || error.status === 403) {
+          this.alertService.error('Errore del Server');
+        } else {
+          // Ad esempio: Impossibile conettersi al server PHP
+          this.alertService.error(error);
+        }
+        // this.loading = false;
+      }
+    );
     this.regoleTable?.renderRows();
+    this.isAddRuleActive = false;
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
+import { SchemaCodifica, SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
 import { SchemiCodificaOpzioniService } from '../_services/schemi-codifica-opzioni.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
@@ -28,17 +28,17 @@ export class SchemiCodificaFormComponent implements OnInit {
   newRuleFormOpened: boolean = true;
   id: number = -1;
 
-  schemaCodificaForm = this.fb.group({
-    ID_SCHEMA: [-1, [Validators.required]],
-    TITOLO: ['', [Validators.required]],
+  schemaCodificaForm = {
+    ID_SCHEMA: -1,
+    TITOLO: '',
     DESCRIZIONE: '',
-    TIPOLOGIA: ['', [Validators.required]],
-    TPL_CODICE: ['', [Validators.required]],
-    TPL_DESCRIZIONE: ['', [Validators.required]],
-    PRE_RENDER_JS: ['', [Validators.required]],
-    IS_VALID: ['', [Validators.required]],
+    TIPOLOGIA: '',
+    TPL_CODICE: '',
+    TPL_DESCRIZIONE: '',
+    PRE_RENDER_JS: '',
+    IS_VALID: '',
     NOTE_INTERNE: ''
-  });
+  };
 
   schemaCodificaRegole2: SchemaCodificaRegole[] = [];
 
@@ -57,8 +57,6 @@ export class SchemiCodificaFormComponent implements OnInit {
     MIN: 0,
     MAX: 0
   });
-
-  get f1() { return this.schemaCodificaForm.controls; }
 
   get f2() { return this.parsingRules.controls; }
 
@@ -88,7 +86,8 @@ export class SchemiCodificaFormComponent implements OnInit {
     this.schemaCodificaService.getById(id)
       .subscribe(
         response => {
-          this.schemaCodificaForm = this.fb.group(response.value);
+          this.schemaCodificaForm = response.value;
+          console.log(this.schemaCodificaForm);
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -102,6 +101,43 @@ export class SchemiCodificaFormComponent implements OnInit {
       );
   }
 
+  updateSchema() {
+    this.schemaCodificaService.update(this.schemaCodificaForm)
+      .subscribe(
+        response => {
+          this.alertService.success('Schema aggiornato con successo!');
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertService.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertService.error(error);
+          }
+          // this.loading = false;
+        }
+      );
+  }
+
+  addSchema() {
+    this.schemaCodificaService.create(this.schemaCodificaForm)
+      .subscribe(
+        response => {
+          this.alertService.success('Schema creato con successo!');
+          this.schemaCodificaForm = response.value;
+          this.id = this.schemaCodificaForm.ID_SCHEMA;
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertService.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertService.error(error);
+          }
+          // this.loading = false;
+        }
+      );
+  }
 
   getRegoleEsistenti(id: number): void {
     this.schemiCodificaRegoleService.getAll(id)
@@ -110,7 +146,6 @@ export class SchemiCodificaFormComponent implements OnInit {
           this.schemaCodificaRegole2 = response.data;
           this.schemaCodificaRegole = this.fb.group({ regole: response.data });
           this.newRuleFormOpened = !(response.data.length > 0);
-          console.log();
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -125,7 +160,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   }
 
   logForm(): void {
-    console.log(this.schemaCodificaForm.controls);
+    console.log(this.schemaCodificaForm);
   }
 
   openNewRuleForm(): void {
