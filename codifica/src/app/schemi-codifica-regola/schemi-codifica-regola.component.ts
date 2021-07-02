@@ -43,7 +43,7 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   }
 
   onChangeRequired(event: any) {
-    this.regola.REQUIRED = event.source.checked ? 'Y' : 'n';
+    this.regola.REQUIRED = event.source.checked ? 'Y' : 'N';
   }
 
   addOption() {
@@ -63,7 +63,11 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   }
   saveOption() {
     this.regola.OPTIONS![0].ID_SCHEMA = this.regola.ID_SCHEMA;
-    console.log(this.regola);
+    this.regoleTable?.renderRows();
+    this.isAddRuleActive = false;
+  }
+
+  saveRule() {
     this.schemiCodificaRegolaService.update(this.regola).subscribe(
       response => {
         console.log(response.value);
@@ -78,7 +82,5 @@ export class SchemiCodificaRegolaComponent implements OnInit {
         // this.loading = false;
       }
     );
-    this.regoleTable?.renderRows();
-    this.isAddRuleActive = false;
   }
 }

@@ -49,7 +49,7 @@ class RegoleManager {
                                 "MAX" => $con->escape_string($json_data->MAX)
                                 ]);
         execute_update($sql);
-        return $this->getById($json_data->ID_SCHEMA);
+        return $this->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE);
     }
     
     function aggiorna($json_data) {     

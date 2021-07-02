@@ -49,7 +49,7 @@
     <div [ngStyle]="{'display': regola.TIPO == 'elenco'?'':'none'}">
         <label class="rule-label"> Opzioni</label> 
         <button mat-raised-button color="primary" [disabled]="isAddRuleActive" [ngStyle] ="{float:'right'}" (click)="addOption()">Aggiungi Opzione</button>
-        <table mat-table [ngStyle] ="{width:'100%'}" [dataSource]="regola.OPTIONS?regola.OPTIONS:[]" #regoleTable>
+        <table mat-table [ngStyle] ="{'width':'100%', 'margin-bottom':'15px'}" [dataSource]="regola.OPTIONS?regola.OPTIONS:[]" #regoleTable>
             <ng-container matColumnDef="ETICHETTA">
                 <th mat-header-cell *matHeaderCellDef>Etichetta</th>
                 <td mat-cell *matCellDef="let option"> 
@@ -65,9 +65,9 @@
                         <button (click)="removeOption()" class="clear-button"><mat-icon class="mat-icon">clear</mat-icon></button>
                     </div>
                 </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="['ETICHETTA']"></tr>
-              <tr mat-row *matRowDef="let row; columns: ['ETICHETTA'];"></tr>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['ETICHETTA']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['ETICHETTA'];"></tr>
         </table>
     </div>
     <!-- <button mat-button color="primary" (click)="log()">clicca</button> -->
@@ -85,4 +85,5 @@
         </mat-form-field>
     </div>
      -->
-<!-- </div> -->
+    <button (click)="saveRule()" [ngStyle]="{'margin-left': '10px'}" mat-raised-button color="primary">Salva Opzione</button>
+</div>

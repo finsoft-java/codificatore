@@ -20,12 +20,16 @@
     vertical-align: bottom;
 }
 
+.rule-label {
+    margin-left: 10px;
+}
+
 .variable-required{
     margin: 20px 0 0 10px;
 }
 
 .mat-radio-group {
-    margin: 10px 0;
+    display: block;
 }
 
 .mat-radio-button {
@@ -46,10 +50,32 @@
     width: 98%;
 }
 
-.clear-button {
+.close-form {
     float: right;
+    vertical-align: sub;
+}
+
+.button-panel {
+    display: inline-block;
+}
+
+.save-button,
+.clear-button {
+    margin-left: 10px;
     background-color: transparent;
     border: none;
+}
+
+.save-button .mat-icon {
+    color: lightgreen;
+}
+
+.save-button:hover {
+    background-color: lightgreen;
+}
+
+.save-button:hover > .mat-icon {
+    color: white;
 }
 
 .clear-button .mat-icon {
@@ -63,4 +89,17 @@
 
 .clear-button:hover > .mat-icon {
     color: white;
+}
+
+.rules-header {
+    display: inline-block;
+}
+
+.open-rule-form {
+    float: right;
+}
+
+.addOptionInput {
+    width: 40%;
+    margin: 0;
 }

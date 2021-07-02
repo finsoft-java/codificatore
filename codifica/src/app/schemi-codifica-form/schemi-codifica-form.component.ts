@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SchemaCodifica, SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
 import { SchemiCodificaOpzioniService } from '../_services/schemi-codifica-opzioni.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { AlertService } from '../_services/alert.service';
+import { MatTable } from '@angular/material/table';
 
 @Component({
   selector: 'app-schemi-codifica-form',
@@ -42,12 +44,10 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   schemaCodificaRegole2: SchemaCodificaRegole[] = [];
 
-  schemaCodificaRegole: FormGroup = this.fb.group({ regole: [] });
-
-  parsingRules = this.fb.group({
-    ID_SCHEMA: [-1, [Validators.required]],
+  schemaCodificaRegola = {
+    ID_SCHEMA: -1,
     NOM_VARIABILE: '',
-    ORD_PRESENTAZIONE: '',
+    ORD_PRESENTAZIONE: 1,
     ETICHETTA: '',
     REQUIRED: '',
     TIPO: 'Tipo',
@@ -55,10 +55,14 @@ export class SchemiCodificaFormComponent implements OnInit {
     PATTERN_REGEXP: '',
     NUM_DECIMALI: 0,
     MIN: 0,
-    MAX: 0
-  });
+    MAX: 0,
+    OPTIONS: [] as SchemaCodificaOptions[],
+    SOTTOSCHEMI: []
+  };
 
-  get f2() { return this.parsingRules.controls; }
+  isAddRuleActive: boolean = false;
+
+  @ViewChild('regole') regoleTable?: MatTable<SchemaCodificaRegole>;
 
   constructor(
     private route: ActivatedRoute,
@@ -99,6 +103,10 @@ export class SchemiCodificaFormComponent implements OnInit {
           // this.loading = false;
         }
       );
+  }
+
+  onChangeValid(event: MatCheckboxChange) {
+    this.schemaCodificaForm.IS_VALID = event.source.checked ? 'Y' : 'N';
   }
 
   updateSchema() {
@@ -144,7 +152,6 @@ export class SchemiCodificaFormComponent implements OnInit {
       .subscribe(
         response => {
           this.schemaCodificaRegole2 = response.data;
-          this.schemaCodificaRegole = this.fb.group({ regole: response.data });
           this.newRuleFormOpened = !(response.data.length > 0);
         },
         error => {
@@ -159,11 +166,50 @@ export class SchemiCodificaFormComponent implements OnInit {
       );
   }
 
-  logForm(): void {
-    console.log(this.schemaCodificaForm);
-  }
-
   openNewRuleForm(): void {
     this.newRuleFormOpened = true;
+  }
+
+  // da mettere in nuovo componente
+
+  addOption() {
+    this.schemaCodificaRegola.OPTIONS?.unshift({
+      ID_SCHEMA: -1,
+      NOM_VARIABILE: '',
+      VALUE_OPTION: '',
+      ETICHETTA: ''
+    });
+    this.isAddRuleActive = true;
+    this.regoleTable?.renderRows();
+  }
+  removeOption() {
+    this.schemaCodificaRegola.OPTIONS?.shift();
+    this.isAddRuleActive = false;
+    this.regoleTable?.renderRows();
+  }
+  saveOption() {
+    this.schemaCodificaRegola.OPTIONS![0].ID_SCHEMA = this.schemaCodificaForm.ID_SCHEMA;
+    console.log(this.schemaCodificaRegola.ID_SCHEMA);
+    this.regoleTable?.renderRows();
+    this.isAddRuleActive = false;
+    console.log(this.schemaCodificaRegola.OPTIONS);
+  }
+
+  createRule() {
+    this.schemaCodificaRegola.ID_SCHEMA = this.schemaCodificaForm.ID_SCHEMA;
+    this.schemiCodificaRegoleService.create(this.schemaCodificaRegola).subscribe(
+      response => {
+        console.log(response.value);
+      },
+      error => {
+        if (error.status === 401 || error.status === 403) {
+          this.alertService.error('Errore del Server');
+        } else {
+          // Ad esempio: Impossibile conettersi al server PHP
+          this.alertService.error(error);
+        }
+        // this.loading = false;
+      }
+    );
   }
 }
