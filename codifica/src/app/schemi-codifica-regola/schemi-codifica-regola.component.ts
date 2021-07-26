@@ -29,8 +29,6 @@ export class SchemiCodificaRegolaComponent implements OnInit {
     { label: 'Elenco', value: 'elenco' },
     { label: 'Sottoschema', value: 'sottoschema' }];
 
-  isAddRuleActive: boolean = false;
-
   constructor(
     public schemiCodificaRegolaService: SchemiCodificaRegoleService,
     public alertService: AlertService
@@ -44,24 +42,20 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   }
 
   addOption() {
-    this.regola.OPTIONS?.unshift({
-      ID_SCHEMA: -1,
+    if (this.regola.OPTIONS === undefined || this.regola.OPTIONS === null) {
+      this.regola.OPTIONS = [];
+    }
+    this.regola.OPTIONS!.unshift({
+      ID_SCHEMA: this.regola.ID_SCHEMA,
       NOM_VARIABILE: this.regola.NOM_VARIABILE,
       VALUE_OPTION: '',
       ETICHETTA: ''
     });
-    this.isAddRuleActive = true;
-    this.regoleTable?.renderRows();
+    this.regoleTable?.renderRows(); // force render
   }
   removeOption() {
     this.regola.OPTIONS?.shift();
-    this.isAddRuleActive = false;
-    this.regoleTable?.renderRows();
-  }
-  saveOption() {
-    this.regola.OPTIONS![0].ID_SCHEMA = this.regola.ID_SCHEMA;
-    this.regoleTable?.renderRows();
-    this.isAddRuleActive = false;
+    this.regoleTable?.renderRows(); // force render
   }
 
   saveRule() {

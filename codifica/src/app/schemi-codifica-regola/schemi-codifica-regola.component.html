@@ -48,21 +48,20 @@
     </div>
     <div [ngStyle]="{'display': regola.TIPO == 'elenco' && !creating ? '' : 'none'}">
         <label class="rule-label"> Opzioni</label> 
-        <button mat-raised-button color="primary" [disabled]="isAddRuleActive" [ngStyle] ="{float:'right'}" (click)="addOption()">Aggiungi Opzione</button>
+        <button mat-raised-button color="primary" [ngStyle] ="{float:'right'}" (click)="addOption()">Aggiungi Opzione</button>
         <table mat-table [ngStyle] ="{'width':'100%', 'margin-bottom':'15px'}" [dataSource]="regola.OPTIONS ? regola.OPTIONS : []" #regoleTable>
             <ng-container matColumnDef="ETICHETTA">
                 <th mat-header-cell *matHeaderCellDef>Etichetta</th>
                 <td mat-cell *matCellDef="let option"> 
-                    {{option.ID_SCHEMA > 0 ? option.ETICHETTA : ''}} 
-                    <div *ngIf="option.ID_SCHEMA < 1">
+                    <div>
                         <mat-form-field  class="addOptionInput" appearance="fill">
                             <input matInput placeholder="Etichetta" [(ngModel)]="option.ETICHETTA">
                         </mat-form-field>
+                        &nbsp;
                         <mat-form-field  class="addOptionInput" appearance="fill">
                             <input matInput placeholder="Valore" [(ngModel)]="option.VALUE_OPTION">
                         </mat-form-field>
-                        <button (click)="saveOption()" class="save-button"><mat-icon class="mat-icon">save</mat-icon></button>
-                        <button (click)="removeOption()" class="clear-button"><mat-icon class="mat-icon">clear</mat-icon></button>
+                        <button (click)="removeOption()" class="clear-button"><mat-icon class="mat-icon">delete</mat-icon></button>
                     </div>
                 </td>
             </ng-container>
