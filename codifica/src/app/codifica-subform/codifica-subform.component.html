@@ -4,21 +4,21 @@
 
 <div *ngFor="let r of regole">
     <div *ngIf="r.TIPO =='text'">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>{{r.NOM_VARIABILE}}</mat-label>
             <input matInput name="Rule_{{r.NOM_VARIABILE}}" [required]="r.REQUIRED=='Y'" [maxLength]="r.MAXLENGTH" [pattern]="r.PATTERN_REGEXP" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
             <mat-hint>{{r.ETICHETTA}}</mat-hint>
         </mat-form-field>
     </div>
     <div *ngIf="r.TIPO =='number'">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>{{r.NOM_VARIABILE}}</mat-label>
             <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}" [required]="r.REQUIRED=='Y'" [min]="r.MIN" [max]="r.MAX" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
             <mat-hint>{{r.ETICHETTA}}</mat-hint>
         </mat-form-field>
     </div>
     <div *ngIf="r.TIPO =='elenco'">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>{{r.NOM_VARIABILE}}</mat-label>
             <mat-select name="Rule_{{r.NOM_VARIABILE}}" [required]="r.REQUIRED=='Y'" (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE,$event)">
                 <mat-option *ngFor="let opt of r.OPTIONS" [value]="opt.VALUE_OPTION">
@@ -30,7 +30,7 @@
     </div>
     <div *ngIf="r.TIPO =='sottoschema'">
         <h5>{{r.ETICHETTA}}</h5>
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>{{r.NOM_VARIABILE}}</mat-label>
             <mat-select name="Rule_{{r.NOM_VARIABILE}}" [required]="r.REQUIRED=='Y'" (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE,$event)">
                 <mat-option *ngFor="let s of schemi" [value]="s.ID_SCHEMA">

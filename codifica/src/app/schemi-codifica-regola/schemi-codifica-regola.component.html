@@ -1,20 +1,20 @@
 <div formclass="regola-container">
     <label class="rule-label">Obbligatoria</label>
     <mat-checkbox [checked]="regola.REQUIRED==='Y'" (change)="onChangeRequired($event)" class="variable-required"></mat-checkbox>
-    <mat-form-field appearance="standard">
+    <mat-form-field appearance="fill">
         <mat-label>Nome variabile</mat-label>
         <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput required >
         <mat-hint>Es: "tipo_prod"</mat-hint>
     </mat-form-field>
-    <mat-form-field appearance="standard">
+    <mat-form-field appearance="fill">
         <mat-label>Ordine presentazione</mat-label>
         <input [(ngModel)]="regola.ORD_PRESENTAZIONE" type="number" matInput >
     </mat-form-field>
-    <mat-form-field appearance="standard">
+    <mat-form-field appearance="fill">
         <mat-label>Etichetta</mat-label>
         <input [(ngModel)]="regola.ETICHETTA" type="text" matInput required>
     </mat-form-field>
-    <mat-form-field appearance="standard">
+    <mat-form-field appearance="fill">
         <mat-label>Tipo di variabile</mat-label>
         <mat-select [(ngModel)]="regola.TIPO" name="types" required>
             <mat-option *ngFor="let type of types" [value]="type.value">
@@ -23,25 +23,25 @@
         </mat-select>
     </mat-form-field>
     <div [ngStyle]="{'display': regola.TIPO == 'number'?'':'none'}">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>Numero di Decimali</mat-label>
             <input  [(ngModel)]="regola.NUM_DECIMALI" type="number" matInput >
         </mat-form-field>
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>Max</mat-label>
             <input  [(ngModel)]="regola.MAX" type="number" matInput >
         </mat-form-field>
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>Min</mat-label>
             <input  [(ngModel)]="regola.MIN" type="number" matInput >
         </mat-form-field>
     </div>
     <div [ngStyle]="{'display': regola.TIPO == 'text'?'':'none'}">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>Lunghezza massima</mat-label>
             <input  [(ngModel)]="regola.MAXLENGTH" type="number" matInput >
         </mat-form-field>
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>Espressione regolare</mat-label>
             <input  [(ngModel)]="regola.PATTERN_REGEXP" type="text" matInput >
         </mat-form-field>
@@ -55,10 +55,10 @@
                 <td mat-cell *matCellDef="let option"> 
                     {{option.ID_SCHEMA>0?option.ETICHETTA:''}} 
                     <div *ngIf="option.ID_SCHEMA<1">
-                        <mat-form-field  class="addOptionInput" appearance="standard">
+                        <mat-form-field  class="addOptionInput" appearance="fill">
                             <input matInput placeholder="Etichetta" [(ngModel)]="option.ETICHETTA">
                         </mat-form-field>
-                        <mat-form-field  class="addOptionInput" appearance="standard">
+                        <mat-form-field  class="addOptionInput" appearance="fill">
                             <input matInput placeholder="Valore" [(ngModel)]="option.VALUE_OPTION">
                         </mat-form-field>
                         <button (click)="saveOption()" class="save-button"><mat-icon class="mat-icon">save</mat-icon></button>
@@ -72,7 +72,7 @@
     </div>
     <!-- <button mat-button color="primary" (click)="log()">clicca</button> -->
     <!--<div [ngStyle]="{'display': TIPO == 'Sottoschema'?'':'none'}">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="fill">
             <mat-label>Schema</mat-label>
             <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
                 <mat-option  value="a">
