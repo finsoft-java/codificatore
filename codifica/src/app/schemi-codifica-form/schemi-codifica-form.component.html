@@ -1,6 +1,3 @@
-<!-- <h3>{{this.header}}</h3>
-<mat-stepper orientation="vertical">
-    <mat-step label="Dati Iniziali" [stepControl]="schemiCodificaForm"> -->
         <div>
             <h2 class="first-section-header">Dati Iniziali</h2>
             <form class="schema-form">
@@ -47,117 +44,19 @@
                     <textarea matInput [(ngModel)]="schemaCodificaForm.PRE_RENDER_JS" name="PRE_RENDER_JS" class="text-area-lg"></textarea>
                     <mat-hint>Questa funzione JavaScript permette di alterare il comportamento standard della codifica</mat-hint>
                 </mat-form-field>
-                <!-- <button mat-button matStepperNext>Next</button> -->
             </form> 
         </div>
-        <button mat-raised-button color="primary" class="spaced-button left-margin-9" (click)="id?updateSchema():addSchema()">{{this.id?'Aggiorna Schema':'Aggiungi Schema'}}</button>
-    <!-- </mat-step>
-    <mat-step label="regole di Codifica" [stepControl]="parsingRules"> -->
+        <button mat-raised-button color="primary" class="spaced-button left-margin-9" (click)="id ? updateSchema() : addSchema()">{{this.id ? 'Aggiorna Schema' : 'Crea Schema'}}</button>
+
+<!-- ============================================================================================== -->
+
         <div *ngIf="this.id" class="second-section">
             <h2 class="rules-header">Regole di Codifica</h2>
             <button *ngIf="!this.newRuleFormOpened" mat-raised-button color="primary" class="open-rule-form" (click)="openNewRuleForm()">Aggiungi Regola</button>
             <div *ngIf="this.newRuleFormOpened" style="margin: 20px 0 0 2px">
                 <h5 style="display: inline-block;">Nuova Regola</h5>
                 <button (click)="this.newRuleFormOpened=!this.newRuleFormOpened " class="clear-button close-form"><mat-icon class="mat-icon">clear</mat-icon></button>
-                <form class="schema-form">
-                    <mat-checkbox [(ngModel)]="schemaCodificaRegola.REQUIRED" name="required" class="variable-required">Obbligatoria</mat-checkbox>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Nome variabile</mat-label>
-                        <input [(ngModel)]="schemaCodificaRegola.NOM_VARIABILE" name="nom_variabile" type="text" matInput >
-                        <mat-hint>Es: "tipo_prod"</mat-hint>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Ordine presentazione</mat-label>
-                        <input [(ngModel)]="schemaCodificaRegola.ORD_PRESENTAZIONE" name="ord_presentazione" type="number" matInput >
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Etichetta</mat-label>
-                        <input [(ngModel)]="schemaCodificaRegola.ETICHETTA" name="etichetta" type="text" matInput >
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Tipo della visualizzazione</mat-label>
-                        <mat-select [(ngModel)]="schemaCodificaRegola.TIPO" name="tipo">
-                            <mat-option *ngFor="let type of types" [value]="type.value">
-                            {{type.label}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <div [ngStyle]="{'display': schemaCodificaRegola.TIPO == 'number'?'':'none'}">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Numero di Decimali</mat-label>
-                            <input [(ngModel)]="schemaCodificaRegola.NUM_DECIMALI" name="num_decimali" type="number" matInput >
-                        </mat-form-field>
-                        <mat-form-field appearance="fill">
-                            <mat-label>Max</mat-label>
-                            <input [(ngModel)]="schemaCodificaRegola.MAX" name="max" type="number" matInput >
-                        </mat-form-field>
-                        <mat-form-field appearance="fill">
-                            <mat-label>Min</mat-label>
-                            <input [(ngModel)]="schemaCodificaRegola.MIN" name="min" type="number" matInput >
-                        </mat-form-field>
-                    </div>
-                    <div [ngStyle]="{'display': schemaCodificaRegola.TIPO == 'text'?'':'none'}">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Lunghezza massima</mat-label>
-                            <input [(ngModel)]="schemaCodificaRegola.MAXLENGTH" name="maxlength" type="number" matInput >
-                        </mat-form-field>
-                        <mat-form-field appearance="fill">
-                            <mat-label>Espressione regolare</mat-label>
-                            <input [(ngModel)]="schemaCodificaRegola.PATTERN_REGEXP" name="pattern_regexp" type="text" matInput >
-                        </mat-form-field>
-                    </div>
-                    <div [ngStyle]="{'display': schemaCodificaRegola.TIPO == 'elenco'?'':'none'}"> 
-                        <label class="rule-label"> Opzioni</label> 
-                        <button mat-raised-button color="primary" [disabled]="isAddRuleActive" [ngStyle] ="{'float':'right', 'margin-bottom':'15px'}" (click)="addOption()">Aggiungi Opzione</button>
-                        <table mat-table [ngStyle] ="{'width':'100%', 'margin-bottom':'15px'}" [dataSource]="schemaCodificaRegola.OPTIONS?schemaCodificaRegola.OPTIONS:[]" #regole>
-                            <ng-container matColumnDef="ETICHETTA">
-                                <th mat-header-cell *matHeaderCellDef>Etichetta</th>
-                                <td mat-cell *matCellDef="let option"> 
-                                    {{option.ID_SCHEMA>0?option.ETICHETTA:''}} 
-                                    <div *ngIf="option.ID_SCHEMA<1">
-                                        <mat-form-field  class="addOptionInput" appearance="fill">
-                                            <input matInput placeholder="Etichetta" [(ngModel)]="option.ETICHETTA" name="option_etichetta">
-                                        </mat-form-field>
-                                        <mat-form-field  class="addOptionInput" appearance="fill">
-                                            <input matInput placeholder="Valore" [(ngModel)]="option.VALUE_OPTION" name="option_value">
-                                        </mat-form-field>
-                                        <button (click)="saveOption()" class="save-button"><mat-icon class="mat-icon">save</mat-icon></button>
-                                        <button (click)="removeOption()" class="clear-button"><mat-icon class="mat-icon">clear</mat-icon></button>
-                                    </div>
-                                </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="['ETICHETTA']"></tr>
-                            <tr mat-row *matRowDef="let row; columns: ['ETICHETTA'];"></tr>
-                        </table>
-                    </div><!--
-                    <div [ngStyle]="{'display': TIPO == 'Sottoschema'?'':'none'}">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Schema</mat-label>
-                            <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
-                                <mat-option  value="a">
-                                a
-                                </mat-option>
-                                <mat-option  value="b">
-                                b
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div [ngStyle]="{'display': Elenco == 'Case'?'':'none'}">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Schema</mat-label>
-                            <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
-                                <mat-option  value="a">
-                                a
-                                </mat-option>
-                                <mat-option  value="b">
-                                b
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div> -->
-                </form>
-                <button (click)="createRule()" [ngStyle]="{'margin-left': '10px'}" mat-raised-button color="primary">Salva Regola</button>
+                <app-schemi-codifica-regola [regola]="nuovaRegola" [creating]="true" (saved)="refreshRegole()" (deleted)="refreshRegole()"></app-schemi-codifica-regola>
             </div>
             <mat-accordion>
                 <mat-expansion-panel *ngFor="let schemaRule of schemaCodificaRegole2">
@@ -166,16 +65,8 @@
                             {{schemaRule.NOM_VARIABILE}}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-schemi-codifica-regola [regola] = "schemaRule"></app-schemi-codifica-regola>
+                    <app-schemi-codifica-regola [regola]="schemaRule"></app-schemi-codifica-regola>
                 </mat-expansion-panel>
             </mat-accordion>       
         </div>
-        <!-- <div>
-            <input hidden="true" id="input-file-id" multiple type="file" />
-            <label for="input-file-id" class="mat-focus-indicator upload-image mat-raised-button mat-button-base mat-primary ">Choose Files</label>
-        </div> -->
-        <!-- <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-    </mat-step>
-</mat-stepper> -->
 

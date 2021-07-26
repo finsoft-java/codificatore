@@ -1,4 +1,3 @@
-import { SchemaCodifica } from './SchemaCodifica';
 import { SchemaCodificaOptions } from './SchemaCodificaOptions';
 
 export interface SchemaCodificaRegole {
@@ -8,11 +7,11 @@ export interface SchemaCodificaRegole {
   ETICHETTA: string;
   REQUIRED: string;
   TIPO: string;
-  MAXLENGTH: number;
-  PATTERN_REGEXP: string;
-  NUM_DECIMALI: number;
-  MIN: number;
-  MAX: number;
+  MAXLENGTH: number | null;
+  PATTERN_REGEXP: string | null;
+  NUM_DECIMALI: number | null;
+  MIN: number | null;
+  MAX: number | null;
   OPTIONS?: SchemaCodificaOptions[];
   SOTTOSCHEMI?: {ID_SCHEMA: number, TITOLO: string}[];
 }

@@ -44,21 +44,7 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   schemaCodificaRegole2: SchemaCodificaRegole[] = [];
 
-  schemaCodificaRegola = {
-    ID_SCHEMA: -1,
-    NOM_VARIABILE: '',
-    ORD_PRESENTAZIONE: 1,
-    ETICHETTA: '',
-    REQUIRED: '',
-    TIPO: 'Tipo',
-    MAXLENGTH: -1,
-    PATTERN_REGEXP: '',
-    NUM_DECIMALI: 0,
-    MIN: 0,
-    MAX: 0,
-    OPTIONS: [] as SchemaCodificaOptions[],
-    SOTTOSCHEMI: []
-  };
+  nuovaRegola!: SchemaCodificaRegole;
 
   isAddRuleActive: boolean = false;
 
@@ -168,48 +154,25 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   openNewRuleForm(): void {
     this.newRuleFormOpened = true;
-  }
-
-  // da mettere in nuovo componente
-
-  addOption() {
-    this.schemaCodificaRegola.OPTIONS?.unshift({
-      ID_SCHEMA: -1,
+    this.nuovaRegola = {
+      ID_SCHEMA: this.schemaCodificaForm.ID_SCHEMA,
       NOM_VARIABILE: '',
-      VALUE_OPTION: '',
-      ETICHETTA: ''
-    });
-    this.isAddRuleActive = true;
-    this.regoleTable?.renderRows();
-  }
-  removeOption() {
-    this.schemaCodificaRegola.OPTIONS?.shift();
-    this.isAddRuleActive = false;
-    this.regoleTable?.renderRows();
-  }
-  saveOption() {
-    this.schemaCodificaRegola.OPTIONS![0].ID_SCHEMA = this.schemaCodificaForm.ID_SCHEMA;
-    console.log(this.schemaCodificaRegola.ID_SCHEMA);
-    this.regoleTable?.renderRows();
-    this.isAddRuleActive = false;
-    console.log(this.schemaCodificaRegola.OPTIONS);
+      ORD_PRESENTAZIONE: 1,
+      ETICHETTA: '',
+      REQUIRED: 'N',
+      TIPO: 'text',
+      MAXLENGTH: null,
+      PATTERN_REGEXP: null,
+      NUM_DECIMALI: null,
+      MIN: null,
+      MAX: null,
+      OPTIONS: [],
+      SOTTOSCHEMI: []
+    }
   }
 
-  createRule() {
-    this.schemaCodificaRegola.ID_SCHEMA = this.schemaCodificaForm.ID_SCHEMA;
-    this.schemiCodificaRegoleService.create(this.schemaCodificaRegola).subscribe(
-      response => {
-        console.log(response.value);
-      },
-      error => {
-        if (error.status === 401 || error.status === 403) {
-          this.alertService.error('Errore del Server');
-        } else {
-          // Ad esempio: Impossibile conettersi al server PHP
-          this.alertService.error(error);
-        }
-        // this.loading = false;
-      }
-    );
+  refreshRegole() {
+    this.newRuleFormOpened = false;
+    this.getRegoleEsistenti(this.id);
   }
 }

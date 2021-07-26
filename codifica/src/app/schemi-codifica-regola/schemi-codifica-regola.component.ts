@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { SchemaCodificaRegole } from '../_models';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
@@ -10,19 +10,16 @@ import { AlertService } from '../_services/alert.service';
   styleUrls: ['./schemi-codifica-regola.component.css']
 })
 export class SchemiCodificaRegolaComponent implements OnInit {
-  @Input() regola: SchemaCodificaRegole = {
-    ID_SCHEMA: 0,
-    NOM_VARIABILE: '',
-    ORD_PRESENTAZIONE: 0,
-    ETICHETTA: '',
-    REQUIRED: '',
-    TIPO: '',
-    MAXLENGTH: 0,
-    PATTERN_REGEXP: '',
-    NUM_DECIMALI: 0,
-    MIN: 0,
-    MAX: 0
-  };
+  @Input()
+  regola!: SchemaCodificaRegole;
+
+  @Input()
+  creating = false;
+
+  @Output()
+  saved = new EventEmitter<SchemaCodificaRegole>();
+  @Output()
+  deleted = new EventEmitter<SchemaCodificaRegole>();
 
   @ViewChild('regoleTable') regoleTable?: MatTable<SchemaCodificaRegole>;
 
@@ -68,9 +65,47 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   }
 
   saveRule() {
-    this.schemiCodificaRegolaService.update(this.regola).subscribe(
+    if (this.creating) {
+      this.schemiCodificaRegolaService.create(this.regola).subscribe(
+        response => {
+          console.log(response.value);
+          this.regola = response.value;
+          this.saved.emit(this.regola);
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertService.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertService.error(error);
+          }
+          // this.loading = false;
+        }
+      );
+    } else {
+      this.schemiCodificaRegolaService.update(this.regola).subscribe(
+        response => {
+          console.log(response.value);
+          this.regola = response.value;
+          this.saved.emit(this.regola);
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertService.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertService.error(error);
+          }
+          // this.loading = false;
+        }
+      );
+    }
+  }
+
+  deleteRule() {
+    this.schemiCodificaRegolaService.delete(this.regola).subscribe(
       response => {
-        console.log(response.value);
+        this.deleted.emit(this.regola);
       },
       error => {
         if (error.status === 401 || error.status === 403) {
