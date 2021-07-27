@@ -118,6 +118,10 @@ class RegoleManager {
     }
 
     function elimina($idSchema, $nomVariabile) {
+        $sql = "DELETE FROM schemi_options WHERE ID_SCHEMA = $idSchema AND NOM_VARIABILE='$nomVariabile' ";
+        execute_update($sql);
+        $sql = "DELETE FROM schemi_sottoschemi WHERE ID_SCHEMA = $idSchema AND NOM_VARIABILE='$nomVariabile' ";
+        execute_update($sql);
         $sql = "DELETE FROM schemi_regole WHERE ID_SCHEMA = $idSchema AND NOM_VARIABILE='$nomVariabile' ";
         execute_update($sql);
     }

@@ -173,6 +173,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   }
 
   refreshRegole() {
+    console.log('Refresh required');
     this.newRuleFormOpened = false;
     this.getRegoleEsistenti(this.id);
   }

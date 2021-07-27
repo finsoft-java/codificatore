@@ -45,7 +45,7 @@ CREATE TABLE `codifiche_dati` (
   `ID_CODIFICA` int(11) NOT NULL,
   `NOM_VARIABILE` varchar(20) NOT NULL,
   `ID_SCHEMA` int(11) NOT NULL,
-  `VALORE` varchar(255) NOT NULL
+  `VALORE` varchar(255)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

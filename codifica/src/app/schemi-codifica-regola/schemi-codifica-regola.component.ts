@@ -108,6 +108,7 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   deleteRule() {
     this.schemiCodificaRegolaService.delete(this.regola).subscribe(
       response => {
+        console.log("ECCOMI QUI ORA EMETTO");
         this.deleted.emit(this.regola);
       },
       error => {

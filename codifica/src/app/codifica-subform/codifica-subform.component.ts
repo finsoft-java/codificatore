@@ -72,6 +72,12 @@ export class CodificaSubformComponent implements OnInit {
   }
 
   onChangeSelectRule(nomVariabile: string, evt: MatSelectChange) {
+    this.parametri[nomVariabile] = evt.value;
+    this.componiCodiceDescrizione();
+  }
+
+  onChangeSottoschema(nomVariabile: string, evt: MatSelectChange) {
+    this.parametri[nomVariabile + '.id'] = null; // forse destroy subform
     this.parametri[nomVariabile + '.id'] = evt.value;
     this.componiCodiceDescrizione();
   }
@@ -96,7 +102,7 @@ export class CodificaSubformComponent implements OnInit {
     if (!template) return '';
 
     const matches = template.match(/{{[^}]*}}/g);
-    console.log(this.parametri);
+    console.log('Compongo il codice (o la descrizione) con questi parametri:', this.parametri);
 
     let result = template;
     if (matches != null) {
