@@ -4,12 +4,15 @@ $regoleManager = new RegoleManager();
 
 class RegoleManager {
     
-    function getAll($idSchema = null) {
+    function getAll($idSchema=null, $soloGlobali=false) {
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT * ";
-        $sql = "FROM schemi_regole x ";
+        $sql = "FROM schemi_regole x WHERE 1=1 ";
         if ($idSchema != null) {
-            $sql .= "WHERE ID_SCHEMA=$idSchema ";
+            $sql .= "AND ID_SCHEMA=$idSchema ";
+        }
+        if ($soloGlobali) {
+            $sql .= "AND GLOBAL='Y' ";
         }
         $sql .= "ORDER BY x.ID_SCHEMA, x.ORD_PRESENTAZIONE ";
         $count = select_single_value($sql0 . $sql);

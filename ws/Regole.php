@@ -12,6 +12,7 @@ require_logged_user_JWT();
 
 $idSchema = isset($_GET['idSchema']) ? $con->escape_string($_GET['idSchema']) : null;
 $nomVariabile = isset($_GET['nomVariabile']) ? $con->escape_string($_GET['nomVariabile']) : null;
+$soloGlobali = isset($_GET['soloGlobali']) ? $con->escape_string($_GET['soloGlobali']) == 'true' : false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -22,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     } else {
         // $idSchema may be null or not
-        [$list, $count] = $regoleManager->getAll($idSchema);
+        [$list, $count] = $regoleManager->getAll($idSchema, $soloGlobali);
           
         header('Content-Type: application/json');
         echo json_encode(['data' => $list, 'count' => $count]);

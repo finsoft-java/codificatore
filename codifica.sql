@@ -89,6 +89,7 @@ CREATE TABLE `schemi_options` (
 CREATE TABLE `schemi_regole` (
   `ID_SCHEMA` int(11) NOT NULL,
   `NOM_VARIABILE` varchar(20) NOT NULL,
+  `GLOBAL` char(1) NOT NULL,
   `ORD_PRESENTAZIONE` int(11) NOT NULL,
   `ETICHETTA` varchar(255) NOT NULL,
   `REQUIRED` char(1) NOT NULL,

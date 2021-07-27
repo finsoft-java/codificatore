@@ -15,6 +15,10 @@ export class SchemiCodificaRegoleService {
     return this.http.get<ListBean<SchemaCodificaRegole>>(environment.wsUrl + `Regole.php?idSchema=${idSchema}`);
   }
 
+  getAllGlobali(): Observable<ListBean<SchemaCodificaRegole>> {
+    return this.http.get<ListBean<SchemaCodificaRegole>>(environment.wsUrl + `Regole.php?soloGlobali=true`);
+  }
+
   getById(idSchema: number, nomVariabile: string): Observable<ValueBean<SchemaCodificaRegole>> {
     return this.http.get<ValueBean<SchemaCodificaRegole>>(environment.wsUrl
                             + `Regole.php?idSchema=${idSchema}&nomVariabile=${nomVariabile}`);

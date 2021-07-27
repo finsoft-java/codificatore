@@ -28,6 +28,8 @@ export class SchemiCodificaFormComponent implements OnInit {
   elencoOptionsSelected: string = '';
   sottoschemaOptionsSelected: string = '';
   newRuleFormOpened: boolean = false;
+  scegliRegoleGlobali: boolean = false;
+  regoleGlobali: SchemaCodificaRegole[] = [];
   id: number = -1;
   selectedImage: any;
 
@@ -154,10 +156,10 @@ export class SchemiCodificaFormComponent implements OnInit {
   }
 
   openNewRuleForm(): void {
-    this.newRuleFormOpened = true;
     this.nuovaRegola = {
       ID_SCHEMA: this.schemaCodificaForm.ID_SCHEMA,
       NOM_VARIABILE: '',
+      GLOBAL: 'N',
       ORD_PRESENTAZIONE: 1,
       ETICHETTA: '',
       REQUIRED: 'N',
@@ -170,12 +172,31 @@ export class SchemiCodificaFormComponent implements OnInit {
       OPTIONS: [],
       SOTTOSCHEMI: []
     }
+    this.scegliRegoleGlobali = false;
+    this.newRuleFormOpened = true;
+  }
+
+  openNewRuleGlobaleForm(): void {
+    this.openNewRuleForm();
+    this.nuovaRegola.GLOBAL = 'Y';
+  }
+
+  openNewRuleFormScegliGlobale(): void {
+    this.openNewRuleGlobaleForm();
+    this.scegliRegoleGlobali = true;
+    this.schemiCodificaRegoleService.getAllGlobali().subscribe(response => {
+      this.regoleGlobali = response.data;
+    });
   }
 
   refreshRegole() {
     console.log('Refresh required');
     this.newRuleFormOpened = false;
     this.getRegoleEsistenti(this.id);
+  }
+
+  aggiungiRegolaGlobale($event: any) {
+    console.log($event); //TODO
   }
 
   uploadImage(event: any) {

@@ -52,11 +52,28 @@
 
         <div *ngIf="this.id" class="second-section">
             <h2 class="rules-header">Regole di Codifica</h2>
-            <button *ngIf="!this.newRuleFormOpened" mat-raised-button color="primary" class="open-rule-form" (click)="openNewRuleForm()">Aggiungi Regola</button>
+            <div *ngIf="!this.newRuleFormOpened" class="open-rule-form">
+                Aggiungi regola:
+                <button mat-raised-button color="primary" (click)="openNewRuleForm()">Nuova</button>
+                <button mat-raised-button color="secondary" (click)="openNewRuleGlobaleForm()">Nuova Globale</button>
+                <button mat-raised-button color="secondary" (click)="openNewRuleFormScegliGlobale()">Globale già esistente</button>
+            </div>
             <div *ngIf="this.newRuleFormOpened" style="margin: 20px 0 0 2px">
                 <h5 style="display: inline-block;">Nuova Regola</h5>
                 <button (click)="this.newRuleFormOpened=!this.newRuleFormOpened " class="clear-button close-form"><mat-icon class="mat-icon">clear</mat-icon></button>
-                <app-schemi-codifica-regola [regola]="nuovaRegola" [creating]="true" (saved)="refreshRegole()" (deleted)="refreshRegole()" ></app-schemi-codifica-regola>
+
+                <div *ngIf="scegliRegoleGlobali">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Scegli una variabile globale esistente</mat-label>
+                        <mat-select (change)="aggiungiRegolaGlobale($event)">
+                            <mat-option *ngFor="let r of regoleGlobali" [value]="r.NOM_VARIABILE">
+                            {{r.NOM_VARIABILE}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <app-schemi-codifica-regola *ngIf="!scegliRegoleGlobali" [regola]="nuovaRegola" [creating]="true" (saved)="refreshRegole()" (deleted)="refreshRegole()" ></app-schemi-codifica-regola>
             </div>
             <mat-accordion>
                 <mat-expansion-panel *ngFor="let schemaRule of schemaCodificaRegole2">

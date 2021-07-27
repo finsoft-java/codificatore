@@ -1,15 +1,17 @@
 <div formclass="regola-container" *ngIf="regola">
-    <label class="rule-label">Obbligatoria</label>
-    <mat-checkbox [checked]="regola.REQUIRED==='Y'" (change)="onChangeRequired($event)" class="variable-required"></mat-checkbox>
     <mat-form-field appearance="fill">
         <mat-label>Nome variabile</mat-label>
         <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput required  [disabled]="!creating">
         <mat-hint>Es: "tipo_prod"</mat-hint>
     </mat-form-field>
+    <label class="rule-label">Globale</label>
+    <mat-checkbox [checked]="regola.GLOBAL==='Y'" disabled></mat-checkbox>
     <mat-form-field appearance="fill">
         <mat-label>Ordine presentazione</mat-label>
         <input [(ngModel)]="regola.ORD_PRESENTAZIONE" type="number" matInput >
     </mat-form-field>
+    <label class="rule-label">Obbligatoria</label>
+    <mat-checkbox [checked]="regola.REQUIRED==='Y'" (change)="onChangeRequired($event)" class="variable-required"></mat-checkbox>
     <mat-form-field appearance="fill">
         <mat-label>Etichetta</mat-label>
         <input [(ngModel)]="regola.ETICHETTA" type="text" matInput required>
