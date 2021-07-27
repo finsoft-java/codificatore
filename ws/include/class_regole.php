@@ -32,15 +32,15 @@ class RegoleManager {
     function getById($id_schema, $nomVariabile) {
         $sql = "SELECT * FROM schemi_regole x WHERE x.id_schema=$id_schema AND x.nom_variabile='$nomVariabile' ";
         $o = select_single($sql);
-        
+
         $sql = "SELECT * FROM schemi_options " .
-            "WHERE ID_SCHEMA=$o[ID_SCHEMA] and NOM_VARIABILE='$o[NOM_VARIABILE]' " .
+            "WHERE ID_SCHEMA=$id_schema and NOM_VARIABILE='$nomVariabile' " .
             "ORDER BY VALUE_OPTION";
         $o["OPTIONS"] = select_list($sql);
 
         $sql = "SELECT b.ID_SCHEMA, b.TITOLO FROM schemi_sottoschemi s " .
             "JOIN schemi_codifica b ON b.ID_SCHEMA=s.ID_SOTTO_SCHEMA " .
-            "WHERE s.ID_SCHEMA=$o[ID_SCHEMA] AND s.NOM_VARIABILE='$o[NOM_VARIABILE]'  ORDER BY 1";
+            "WHERE s.ID_SCHEMA=$id_schema AND s.NOM_VARIABILE='$nomVariabile'  ORDER BY 1";
         $o["SOTTOSCHEMI"] = select_list($sql);
 
         return $o;
