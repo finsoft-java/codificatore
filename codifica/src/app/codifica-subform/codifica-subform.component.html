@@ -40,8 +40,8 @@
             <mat-hint>{{r.ETICHETTA}}</mat-hint>
         </mat-form-field>
 
-        <app-codifica-subform *ngIf="parametri[r.NOM_VARIABILE] !== ''"
-            [idSchema]="parseInt(parametri[r.NOM_VARIABILE])"
+        <app-codifica-subform *ngIf="parametri[r.NOM_VARIABILE+'.id'] !== ''"
+            [idSchema]="parseInt(parametri[r.NOM_VARIABILE+'.id'])"
             (changeCodice)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'codice', $event)"
             (changeDescrizione)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'descrizione', $event)"
             (changeDatiCodifica)="parametriSottoSchemi = $event"

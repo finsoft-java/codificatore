@@ -43,10 +43,12 @@ export class CodificaSubformComponent implements OnInit {
     this.regoleSvc.getAll(this.idSchema).subscribe(response => {
       this.regole = response.data;
       this.regole.forEach(r => {
-        this.parametri[r.NOM_VARIABILE] = '';
         if (r.TIPO === 'sottoschema') {
+          this.parametri[r.NOM_VARIABILE + '.id'] = '';
           this.parametri[r.NOM_VARIABILE + '.codice'] = '';
           this.parametri[r.NOM_VARIABILE + '.descrizione'] = '';
+        } else {
+          this.parametri[r.NOM_VARIABILE] = '';
         }
       });
     });
@@ -70,7 +72,7 @@ export class CodificaSubformComponent implements OnInit {
   }
 
   onChangeSelectRule(nomVariabile: string, evt: MatSelectChange) {
-    this.parametri[nomVariabile] = evt.value;
+    this.parametri[nomVariabile + '.id'] = evt.value;
     this.componiCodiceDescrizione();
   }
 
@@ -99,17 +101,57 @@ export class CodificaSubformComponent implements OnInit {
     let result = template;
     if (matches != null) {
       matches.forEach(m => {
+        let [parametriObj, parametriStr] = this.splitParameters();
         let formula = '';
-        Object.keys(this.parametri).forEach(p => {
-          formula += `var ${p}='${this.parametri[p]}';`;
+        parametriObj.forEach(paramName => {
+          formula += `var ${paramName}={};`;
+        });
+        parametriStr.forEach(paramName => {
+          formula += `var ${paramName}='${this.parametri[paramName]}';`;
         });
         formula += m.substring(2, m.length - 2);
+        console.log('Going to evaluate: ' + formula);
         const repl = eval(formula);
         result = result.replace(m, repl || '');
       });
     }
 
     return result;
+  }
+
+  /**
+   * Divide i parametri tra stringhe e oggetti
+  */
+  splitParameters () {
+    let parametriObj: string[] = [];
+    let parametriStr: string[] = [];
+    Object.keys(this.parametri).forEach(paramName => {
+      let [parametriObj1, parametriStr1] = this.splitParameter(paramName);
+      parametriObj1.forEach(element => {
+        if ((element !== undefined) && !(element in parametriObj)) {
+          parametriObj.push(element);
+        }
+      });
+      parametriStr1.forEach(element => {
+        if ((element !== undefined) && !(element in parametriStr)) {
+          parametriStr.push(element);
+        }
+      });
+    });
+    return [parametriObj, parametriStr];
+  }
+
+  /**
+   * Divide i parametri tra stringhe e oggetti
+   * Dato 'aaa.bbb.ccc' restituisce [['aaa','bbb'],['ccc']]]
+  */
+  splitParameter(paramName: string) {
+    let tokens = paramName.split('.');
+    if (tokens.length == 1) {
+      return [[], [paramName]];
+    } else {
+      return [tokens, [tokens.pop()]];
+    }
   }
 
   componiCodiceDescrizione() {
