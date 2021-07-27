@@ -68,7 +68,6 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   }
 
   saveRule() {
-    console.log("THERE", this.regola);
     if (this.creating) {
       this.schemiCodificaRegolaService.create(this.regola).subscribe(
         response => {
@@ -133,7 +132,6 @@ export class SchemiCodificaRegolaComponent implements OnInit {
       ID_SOTTO_SCHEMA: -1
     });
     this.subschemaTable?.renderRows(); // force render
-    console.log("HERE", this.regola);
   }
 
   removeSubschema(subschema: SchemaCodificaSottoschema) {
