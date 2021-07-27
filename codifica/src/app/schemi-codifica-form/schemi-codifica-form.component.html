@@ -70,3 +70,13 @@
             </mat-accordion>       
         </div>
 
+<!-- ============================================================================================== -->
+
+        <div *ngIf="this.id" class="second-section">
+            <button (click)="fileInput.click()" mat-raised-button color="primary" disabled>
+                <span>Carica un'immagine...</span>
+                <input #fileInput type="file" (change)="uploadImage($event)" accept="image/*" style="display:none;" />
+            </button>
+            &nbsp;
+            <button mat-raised-button color="warn" (click)="deleteImage()" style="margin-right:15px;" disabled>Elimina immagine attuale</button>
+        </div>
