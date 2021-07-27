@@ -1,4 +1,5 @@
 import { SchemaCodificaOptions } from './SchemaCodificaOptions';
+import { SchemaCodificaSottoschema } from './SchemaSottoschema';
 
 export interface SchemaCodificaRegole {
   ID_SCHEMA: number;
@@ -13,5 +14,5 @@ export interface SchemaCodificaRegole {
   MIN: number | null;
   MAX: number | null;
   OPTIONS?: SchemaCodificaOptions[];
-  SOTTOSCHEMI?: {ID_SCHEMA: number, TITOLO: string}[];
+  SOTTOSCHEMI?: SchemaCodificaSottoschema[];
 }

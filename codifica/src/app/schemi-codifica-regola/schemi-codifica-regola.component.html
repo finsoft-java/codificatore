@@ -1,9 +1,9 @@
-<div formclass="regola-container">
+<div formclass="regola-container" *ngIf="regola">
     <label class="rule-label">Obbligatoria</label>
     <mat-checkbox [checked]="regola.REQUIRED==='Y'" (change)="onChangeRequired($event)" class="variable-required"></mat-checkbox>
     <mat-form-field appearance="fill">
         <mat-label>Nome variabile</mat-label>
-        <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput required >
+        <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput required  [disabled]="!creating">
         <mat-hint>Es: "tipo_prod"</mat-hint>
     </mat-form-field>
     <mat-form-field appearance="fill">
@@ -49,41 +49,55 @@
     <div [ngStyle]="{'display': regola.TIPO == 'elenco' && !creating ? '' : 'none'}">
         <label class="rule-label"> Opzioni</label> 
         <button mat-raised-button color="primary" [ngStyle] ="{float:'right'}" (click)="addOption()">Aggiungi Opzione</button>
-        <table mat-table [ngStyle] ="{'width':'100%', 'margin-bottom':'15px'}" [dataSource]="regola.OPTIONS ? regola.OPTIONS : []" #regoleTable>
+        <table mat-table [ngStyle] ="{'width':'100%', 'margin-bottom':'15px'}" [dataSource]="regola.OPTIONS ? regola.OPTIONS : []" #optionsTable>
             <ng-container matColumnDef="ETICHETTA">
                 <th mat-header-cell *matHeaderCellDef>Etichetta</th>
-                <td mat-cell *matCellDef="let option"> 
-                    <div>
-                        <mat-form-field  class="addOptionInput" appearance="fill">
-                            <input matInput placeholder="Etichetta" [(ngModel)]="option.ETICHETTA">
-                        </mat-form-field>
-                        &nbsp;
-                        <mat-form-field  class="addOptionInput" appearance="fill">
-                            <input matInput placeholder="Valore" [(ngModel)]="option.VALUE_OPTION">
-                        </mat-form-field>
-                        <button (click)="removeOption()" class="clear-button"><mat-icon class="mat-icon">delete</mat-icon></button>
-                    </div>
+                <td mat-cell *matCellDef="let option">
+                    <mat-form-field  appearance="fill">
+                        <input matInput placeholder="Etichetta" [(ngModel)]="option.ETICHETTA">
+                    </mat-form-field>
                 </td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['ETICHETTA']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['ETICHETTA'];"></tr>
+            <ng-container matColumnDef="VALORE">
+                <th mat-header-cell *matHeaderCellDef>Valore</th>
+                <td mat-cell *matCellDef="let option"> 
+                    <mat-form-field  appearance="fill">
+                        <input matInput placeholder="Valore" [(ngModel)]="option.VALUE_OPTION">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="AZIONI">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let option">
+                    <button (click)="removeOption(option)" class="clear-button"><mat-icon class="mat-icon">delete</mat-icon></button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['ETICHETTA','VALORE','AZIONI']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['ETICHETTA','VALORE','AZIONI'];"></tr>
         </table>
     </div>
-    <!-- <button mat-button color="primary" (click)="log()">clicca</button> -->
-    <!--<div [ngStyle]="{'display': TIPO == 'Sottoschema'?'':'none'}">
-        <mat-form-field appearance="fill">
-            <mat-label>Schema</mat-label>
-            <mat-select [(ngModel)]="sottoschemaOptionsSelected" name="types">
-                <mat-option  value="a">
-                a
-                </mat-option>
-                <mat-option  value="b">
-                b
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+    <div [ngStyle]="{'display': regola.TIPO == 'sottoschema' && !creating ? '' : 'none'}">
+        <label class="rule-label"> Sottoschemi</label> 
+        <button mat-raised-button color="primary" [ngStyle] ="{float:'right'}" (click)="addSubschema()">Aggiungi Sottoschema</button>
+        <table mat-table [ngStyle] ="{'width':'100%', 'margin-bottom':'15px'}" [dataSource]="regola.SOTTOSCHEMI ? regola.SOTTOSCHEMI : []" #subschemaTable>
+            <ng-container matColumnDef="SOTTOSCHEMA">
+                <th mat-header-cell *matHeaderCellDef>Id</th>
+                <td mat-cell *matCellDef="let sottoschema">
+                    <mat-select matInput appearance="fill" [(ngModel)]="sottoschema.ID_SOTTO_SCHEMA">
+                        <mat-option *ngFor="let schema of listaSchemiInterni" [value]="schema.ID_SCHEMA">{{ schema.TITOLO }}</mat-option>
+                    </mat-select>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="AZIONI">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let s">
+                    <button (click)="removeSubschema(s)" class="clear-button"><mat-icon class="mat-icon">delete</mat-icon></button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['SOTTOSCHEMA','AZIONI']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['SOTTOSCHEMA','AZIONI'];"></tr>
+        </table>
     </div>
-     -->
      <button (click)="saveRule()" [ngStyle]="{'margin-left': '10px'}" mat-raised-button color="primary">Salva Regola</button>
-     <button *ngIf="!creating" (click)="deleteRule()" [ngStyle]="{'margin-left': '10px'}" mat-raised-button color="error">Elimina Regola</button>
+     <button *ngIf="!creating" (click)="deleteRule()" [ngStyle]="{'margin-left': '10px'}" mat-raised-button color="warn">Elimina Regola</button>
 </div>

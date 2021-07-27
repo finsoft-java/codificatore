@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
-import { SchemaCodificaRegole } from '../_models';
+import { SchemaCodifica, SchemaCodificaOptions, SchemaCodificaRegole, SchemaCodificaSottoschema } from '../_models';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { AlertService } from '../_services/alert.service';
+import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 
 @Component({
   selector: 'app-schemi-codifica-regola',
@@ -21,7 +22,8 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   @Output()
   deleted = new EventEmitter<SchemaCodificaRegole>();
 
-  @ViewChild('regoleTable') regoleTable?: MatTable<SchemaCodificaRegole>;
+  @ViewChild('optionsTable') optionsTable?: MatTable<SchemaCodificaRegole>;
+  @ViewChild('subschemaTable') subschemaTable?: MatTable<SchemaCodificaRegole>;
 
   types: any[]= [
     { label: 'Testo', value: 'text' },
@@ -29,12 +31,18 @@ export class SchemiCodificaRegolaComponent implements OnInit {
     { label: 'Elenco', value: 'elenco' },
     { label: 'Sottoschema', value: 'sottoschema' }];
 
+  listaSchemiInterni : SchemaCodifica[] = [];
+
   constructor(
     public schemiCodificaRegolaService: SchemiCodificaRegoleService,
+    public schemiCodificaService: SchemiCodificaService,
     public alertService: AlertService
   ) { }
 
   ngOnInit(): void {
+    this.schemiCodificaService.getValidiInterni().subscribe(response => {
+      this.listaSchemiInterni = response.data;
+    });
   }
 
   onChangeRequired(event: any) {
@@ -51,14 +59,16 @@ export class SchemiCodificaRegolaComponent implements OnInit {
       VALUE_OPTION: '',
       ETICHETTA: ''
     });
-    this.regoleTable?.renderRows(); // force render
+    this.optionsTable?.renderRows(); // force render
   }
-  removeOption() {
-    this.regola.OPTIONS?.shift();
-    this.regoleTable?.renderRows(); // force render
+
+  removeOption(option: SchemaCodificaOptions) {
+    this.regola.OPTIONS?.splice(this.regola.OPTIONS?.findIndex(x => x.ETICHETTA == option.ETICHETTA), 1);
+    this.optionsTable?.renderRows(); // force render
   }
 
   saveRule() {
+    console.log("THERE", this.regola);
     if (this.creating) {
       this.schemiCodificaRegolaService.create(this.regola).subscribe(
         response => {
@@ -111,5 +121,23 @@ export class SchemiCodificaRegolaComponent implements OnInit {
         // this.loading = false;
       }
     );
+  }
+
+  addSubschema() {
+    if (this.regola.SOTTOSCHEMI === undefined || this.regola.SOTTOSCHEMI === null) {
+      this.regola.SOTTOSCHEMI = [];
+    }
+    this.regola.SOTTOSCHEMI!.unshift({
+      ID_SCHEMA: this.regola.ID_SCHEMA,
+      NOM_VARIABILE: this.regola.NOM_VARIABILE,
+      ID_SOTTO_SCHEMA: -1
+    });
+    this.subschemaTable?.renderRows(); // force render
+    console.log("HERE", this.regola);
+  }
+
+  removeSubschema(subschema: SchemaCodificaSottoschema) {
+    this.regola.SOTTOSCHEMI?.splice(this.regola.SOTTOSCHEMI?.findIndex(x => x.ID_SOTTO_SCHEMA == subschema.ID_SOTTO_SCHEMA), 1);
+    this.subschemaTable?.renderRows(); // force render
   }
 }

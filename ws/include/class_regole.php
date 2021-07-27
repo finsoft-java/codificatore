@@ -21,9 +21,10 @@ class RegoleManager {
                 "ORDER BY VALUE_OPTION";
             $objects[$id]["OPTIONS"] = select_list($sql);
 
-            $sql = "SELECT b.ID_SCHEMA, b.TITOLO FROM schemi_sottoschemi s " .
+            $sql = "SELECT s.*, b.TITOLO FROM schemi_sottoschemi s " .
                 "JOIN schemi_codifica b ON b.ID_SCHEMA=s.ID_SOTTO_SCHEMA " .
-                "WHERE s.ID_SCHEMA=$o[ID_SCHEMA] AND s.NOM_VARIABILE='$o[NOM_VARIABILE]'  ORDER BY 1";
+                "WHERE s.ID_SCHEMA=$o[ID_SCHEMA] AND s.NOM_VARIABILE='$o[NOM_VARIABILE]' " .
+                "ORDER BY b.TITOLO";
             $objects[$id]["SOTTOSCHEMI"] = select_list($sql);
         }
         return [$objects, $count];
@@ -38,9 +39,10 @@ class RegoleManager {
             "ORDER BY VALUE_OPTION";
         $o["OPTIONS"] = select_list($sql);
 
-        $sql = "SELECT b.ID_SCHEMA, b.TITOLO FROM schemi_sottoschemi s " .
+        $sql = "SELECT s.*, b.TITOLO FROM schemi_sottoschemi s " .
             "JOIN schemi_codifica b ON b.ID_SCHEMA=s.ID_SOTTO_SCHEMA " .
-            "WHERE s.ID_SCHEMA=$id_schema AND s.NOM_VARIABILE='$nomVariabile'  ORDER BY 1";
+            "WHERE s.ID_SCHEMA=$id_schema AND s.NOM_VARIABILE='$nomVariabile' " .
+            "ORDER BY b.TITOLO";
         $o["SOTTOSCHEMI"] = select_list($sql);
 
         return $o;
@@ -82,27 +84,35 @@ class RegoleManager {
         $sql = "DELETE FROM schemi_options WHERE ID_SCHEMA = $json_data->ID_SCHEMA AND NOM_VARIABILE='$json_data->NOM_VARIABILE' ";
         execute_update($sql);
 
+        $giaInseriti = [];  // evito di inserire duplicati
         if (isset($json_data->OPTIONS)) {
             foreach ($json_data->OPTIONS as $o) {
-                $sql = insert("schemi_options", ["ID_SCHEMA" => $con->escape_string($o->ID_SCHEMA),
-                    "NOM_VARIABILE" => $con->escape_string($o->NOM_VARIABILE),
-                    "VALUE_OPTION" => $con->escape_string($o->VALUE_OPTION),
-                    "ETICHETTA" => $con->escape_string($o->ETICHETTA)
-                    ]);
-                execute_update($sql);
+                if (!in_array($o->VALUE_OPTION, $giaInseriti)) {
+                    $sql = insert("schemi_options", ["ID_SCHEMA" => $con->escape_string($o->ID_SCHEMA),
+                        "NOM_VARIABILE" => $con->escape_string($o->NOM_VARIABILE),
+                        "VALUE_OPTION" => $con->escape_string($o->VALUE_OPTION),
+                        "ETICHETTA" => $con->escape_string($o->ETICHETTA)
+                        ]);
+                    execute_update($sql);
+                    $giaInseriti[] = $o->VALUE_OPTION;
+                }
             }
         }
 
         $sql = "DELETE FROM schemi_sottoschemi WHERE ID_SCHEMA = $json_data->ID_SCHEMA AND NOM_VARIABILE='$json_data->NOM_VARIABILE' ";
         execute_update($sql);
 
+        $giaInseriti = [];  // evito di inserire duplicati
         if (isset($json_data->SOTTOSCHEMI)) {
             foreach ($json_data->SOTTOSCHEMI as $o) {
-                $sql = insert("schemi_sottoschemi", ["ID_SCHEMA" => $con->escape_string($o->ID_SCHEMA),
-                    "NOM_VARIABILE" => $con->escape_string($o->NOM_VARIABILE),
-                    "ID_SOTTO_SCHEMA" => $con->escape_string($o->ID_SOTTO_SCHEMA)
-                    ]);
-                execute_update($sql);
+                if (!in_array($o->ID_SOTTO_SCHEMA, $giaInseriti)) {
+                    $sql = insert("schemi_sottoschemi", ["ID_SCHEMA" => $con->escape_string($o->ID_SCHEMA),
+                        "NOM_VARIABILE" => $con->escape_string($o->NOM_VARIABILE),
+                        "ID_SOTTO_SCHEMA" => $con->escape_string($o->ID_SOTTO_SCHEMA)
+                        ]);
+                    execute_update($sql);
+                    $giaInseriti[] = $o->ID_SOTTO_SCHEMA;
+                }
             }
         }
     }

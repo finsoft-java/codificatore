@@ -27,7 +27,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   schemaOptionsList: SchemaCodificaOptions[] = [];
   elencoOptionsSelected: string = '';
   sottoschemaOptionsSelected: string = '';
-  newRuleFormOpened: boolean = true;
+  newRuleFormOpened: boolean = false;
   id: number = -1;
   selectedImage: any;
 
@@ -49,7 +49,7 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   isAddRuleActive: boolean = false;
 
-  @ViewChild('regole') regoleTable?: MatTable<SchemaCodificaRegole>;
+  //@ViewChild('regole') regoleTable?: MatTable<SchemaCodificaRegole>;
 
   constructor(
     private route: ActivatedRoute,
