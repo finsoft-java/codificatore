@@ -29,6 +29,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   sottoschemaOptionsSelected: string = '';
   newRuleFormOpened: boolean = true;
   id: number = -1;
+  selectedImage: any;
 
   schemaCodificaForm = {
     ID_SCHEMA: -1,
@@ -174,5 +175,16 @@ export class SchemiCodificaFormComponent implements OnInit {
   refreshRegole() {
     this.newRuleFormOpened = false;
     this.getRegoleEsistenti(this.id);
+  }
+
+  uploadImage(event: any) {
+    console.log(event);
+    this.selectedImage = event.target.files;
+    this.schemaCodificaService.uploadImage(this.selectedImage);
+  }
+
+  deleteImage() {
+    // TODO Some warning?
+    this.schemaCodificaService.deleteImage(this.id);
   }
 }
