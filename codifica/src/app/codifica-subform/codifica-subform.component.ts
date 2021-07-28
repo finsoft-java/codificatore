@@ -1,4 +1,5 @@
 /* eslint-disable no-eval */
+import { ThisReceiver } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { IHash, SchemaCodifica, SchemaCodificaRegole } from '../_models';
@@ -25,6 +26,8 @@ export class CodificaSubformComponent implements OnInit {
   changeDescrizione: EventEmitter<string> = new EventEmitter<string>();
   @Output()
   changeDatiCodifica: EventEmitter<IHash[]> = new EventEmitter<IHash[]>();
+  @Output()
+  changeParametriObbligatoriSettati: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   schema?: SchemaCodifica;
   regole: SchemaCodificaRegole[] = [];
@@ -33,6 +36,7 @@ export class CodificaSubformComponent implements OnInit {
   codiceCalcolato = '';
   descrizioneCalcolata = '';
   parametriSottoSchemi: IHash[] = [];
+  parametriObbligatoriSettati = false;
 
   ngOnInit(): void {
     // Carico lo schema (ma serve??)
@@ -68,17 +72,20 @@ export class CodificaSubformComponent implements OnInit {
 
   onChangeInputRule(nomVariabile: string, evt: Event) {
     this.parametri[nomVariabile] = (<HTMLInputElement>evt.target).value;
+    this.controllaRegoleObbligatorie();
     this.componiCodiceDescrizione();
   }
 
   onChangeSelectRule(nomVariabile: string, evt: MatSelectChange) {
     this.parametri[nomVariabile] = evt.value;
+    this.controllaRegoleObbligatorie();
     this.componiCodiceDescrizione();
   }
 
   onChangeSottoschema(nomVariabile: string, evt: MatSelectChange) {
     this.parametri[nomVariabile + '.id'] = null; // forse destroy subform
     this.parametri[nomVariabile + '.id'] = evt.value;
+    this.controllaRegoleObbligatorie();
     this.componiCodiceDescrizione();
   }
 
@@ -88,6 +95,7 @@ export class CodificaSubformComponent implements OnInit {
   onChangeVariabileSottoschema(nomVariabile: string, nomSottoVariabile: string, evt: string) {
     this.parametri[nomVariabile + '.' + nomSottoVariabile] = evt;
     this.componiCodiceDescrizione();
+    this.controllaRegoleObbligatorie();
   }
 
   parseInt(s: string) {
@@ -175,5 +183,19 @@ export class CodificaSubformComponent implements OnInit {
     datiCodifica[this.idSchema] = this.parametri;
 
     this.changeDatiCodifica.emit(datiCodifica);
+  }
+
+  controllaRegoleObbligatorie() {
+    const missing = this.regole.filter(x => x.REQUIRED == 'Y').find(x => {
+      const value = this.parametri[x.NOM_VARIABILE];
+      return (value === undefined || value == null || value == '');
+    });
+    this.parametriObbligatoriSettati = !missing;
+    this.changeParametriObbligatoriSettati.emit(this.parametriObbligatoriSettati);
+  }
+
+  changeParametriObbligatoriSottoschemi(nomVariabile: string, $event: boolean) {
+    // TODO
+    console.log("Should recheck ParametriRquired", $event);
   }
 }

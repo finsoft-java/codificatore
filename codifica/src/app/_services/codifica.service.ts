@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ListBean, ValueBean, Codifica } from '../_models';
+import { ListBean, ValueBean, Codifica, IHash } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +10,17 @@ import { ListBean, ValueBean, Codifica } from '../_models';
 export class CodificaService {
   constructor(private http: HttpClient) { }
 
-  // PER EMANUELE: al getALl() puoi agiungere tutti i filtri che ti servono
   getAll(): Observable<ListBean<Codifica>> {
     return this.http.get<ListBean<Codifica>>(environment.wsUrl + 'Codifica.php');
   }
 
   getById(idCodifica: number): Observable<ValueBean<Codifica>> {
     return this.http.get<ValueBean<Codifica>>(environment.wsUrl + `Codifica.php?idCodifica=${idCodifica}`);
+  }
+
+  getByDatiCodifica(datiCodifica: IHash): Observable<ListBean<Codifica>> {
+    console.log("DEBUG datiCodifica=", datiCodifica);
+    return this.http.post<ListBean<Codifica>>(environment.wsUrl + 'RicercaCodifiche.php', datiCodifica);
   }
 
   create(obj: Codifica): Observable<ValueBean<Codifica>> {

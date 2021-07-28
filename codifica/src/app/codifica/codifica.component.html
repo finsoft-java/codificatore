@@ -18,17 +18,49 @@ Selezionare lo schema di codifica:
         (changeCodice)="codiceCalcolato = $event"
         (changeDescrizione)="descrizioneCalcolata = $event"
         (changeDatiCodifica)="datiCodifica = $event"
+        (changeParametriObbligatoriSettati)="parametriObbligatoriSettati = $event"
         >
     </app-codifica-subform>
 
     <!-- Calcolo CODICE e DESCRIZIONE in tempo reale-->
-    <div *ngIf="calcoloCompletato" style="background-color: lightgreen; margin-top: 20px;">
-        <p style="padding: 15px; padding-bottom: 0;">
-            <b>Codice</b>: {{codiceCalcolato}} 
-        </p>
-        <p style="padding: 15px;">
-            <b>Descrizione</b>: {{descrizioneCalcolata}} 
-        </p>
-        <button (click)="salvaCodifica()" mat-raised-button color="primary" [disabled]="codificaSalvata !== undefined">Salva</button>
+    <div *ngIf="parametriObbligatoriSettati">
+        <div class="area-evidenziata">
+            <p style="padding: 15px; padding-bottom: 0;">
+                <b>Codice</b>: {{codiceCalcolato}} 
+            </p>
+            <p style="padding: 15px;">
+                <b>Descrizione</b>: {{descrizioneCalcolata}} 
+            </p>
+        </div>
+
+        <div>
+            <button (click)="ricercaCodifiche()" mat-raised-button color="primary" [disabled]="searching">Ricerca tra i codici già salvati</button>
+
+            <div *ngIf="codificheTrovate.length == 0">
+            Nessuna codifica esistente soddisfa i parametri selezionati.
+            </div>
+
+            <table *ngIf="codificheTrovate.length > 0" mat-table [dataSource]="codificheTrovate">
+                <ng-container matColumnDef="CODICE">
+                    <th mat-header-cell *matHeaderCellDef>Codice</th>
+                    <td mat-cell *matCellDef="let c">
+                        {{c.CODICE}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="DESCRIZIONE">
+                    <th mat-header-cell *matHeaderCellDef>Descrizione</th>
+                    <td mat-cell *matCellDef="let c"> 
+                        {{c.DESCRIZIONE}}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="['CODICE','DESCRIZIONE']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['CODICE','DESCRIZIONE'];"></tr>
+            </table>
+
+        </div>
+
+        <div>
+            <button (click)="salvaCodifica()" mat-raised-button color="primary" [disabled]="codificaSalvata !== undefined">Salva questa codifica</button>
+        </div>
     </div>
 </div>

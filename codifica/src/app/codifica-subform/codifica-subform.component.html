@@ -45,6 +45,7 @@
             (changeCodice)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'codice', $event)"
             (changeDescrizione)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'descrizione', $event)"
             (changeDatiCodifica)="parametriSottoSchemi = $event"
+            (changeParametriObbligatoriSettati)="changeParametriObbligatoriSottoschemi(r.NOM_VARIABILE, $event)"
             >
         </app-codifica-subform>
     </div>

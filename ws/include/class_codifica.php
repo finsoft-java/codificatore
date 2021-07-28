@@ -29,6 +29,44 @@ class CodificaManager {
         $sql = "SELECT * FROM codifiche x WHERE x.id_codifica=$idCodifica ";
         return select_single($sql);
     }
+    
+    /**
+     * I parametri scelti dall'utente ci arrivano come JSON
+     * 
+     * @param $datiCodifica è una mappa {idSchema -> {nomeParametro -> Valore}}
+     */
+    function getByDatiCodifica($datiCodifica, $top=null, $skip=null) {
+
+        $sql0 = "SELECT COUNT(*) AS cnt ";
+        $sql1 = "SELECT x.* ";
+        $sql = "FROM codifiche x ";
+        $v = 1;
+        foreach ($datiCodifica as $idSchema => $parametri) {
+            if ($idSchema !== null && $parametri !== null) {
+                foreach ($parametri as $nomVariabile => $valore) {
+                    $sql .= "JOIN codifiche_dati c$v ON c$v.ID_CODIFICA=x.ID_CODIFICA and c$v.ID_SCHEMA=$idSchema AND c$v.NOM_VARIABILE='$nomVariabile' AND c$v.VALORE";
+                    $sql .= ($valore == null) ? " IS NULL " : "='$valore' ";
+                    ++$v;
+                }
+            }
+        }
+
+        $count = select_single_value($sql0 . $sql);
+
+        $sql .= "ORDER BY x.ID_CODIFICA DESC ";
+
+        // paginazione
+        if ($top) {
+            if ($skip) {
+                $sql .= "LIMIT $skip,$top ";
+            } else {
+                $sql .= "LIMIT $top ";
+            }
+        }
+
+        $objects = select_list($sql1 . $sql);        
+        return [$objects, $count];
+    }
 
     /**
      * Salva sia la tabella codifiche, sia la codifiche_dati
