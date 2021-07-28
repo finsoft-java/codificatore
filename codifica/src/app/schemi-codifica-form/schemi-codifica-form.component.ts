@@ -156,11 +156,14 @@ export class SchemiCodificaFormComponent implements OnInit {
   }
 
   openNewRuleForm(): void {
+    const maxOrd = Math.max(...this.schemaCodificaRegole2.map(x => x.ORD_PRESENTAZIONE));
+    const newOrd = Math.floor(maxOrd / 10) * 10 + 10;
+
     this.nuovaRegola = {
       ID_SCHEMA: this.schemaCodificaForm.ID_SCHEMA,
       NOM_VARIABILE: '',
       GLOBAL: 'N',
-      ORD_PRESENTAZIONE: 1,
+      ORD_PRESENTAZIONE: newOrd,
       ETICHETTA: '',
       REQUIRED: 'N',
       TIPO: 'text',
