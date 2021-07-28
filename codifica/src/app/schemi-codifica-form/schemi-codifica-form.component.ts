@@ -32,6 +32,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   regoleGlobali: SchemaCodificaRegole[] = [];
   id: number = -1;
   selectedImage: any;
+  regolaGlobaleSelected: any;
 
   schemaCodificaForm = {
     ID_SCHEMA: -1,
@@ -161,6 +162,7 @@ export class SchemiCodificaFormComponent implements OnInit {
 
     this.nuovaRegola = {
       ID_SCHEMA: this.schemaCodificaForm.ID_SCHEMA,
+      ID_REGOLA: -1, // deve essere settato server-side
       NOM_VARIABILE: '',
       GLOBAL: 'N',
       ORD_PRESENTAZIONE: newOrd,
@@ -198,8 +200,23 @@ export class SchemiCodificaFormComponent implements OnInit {
     this.getRegoleEsistenti(this.id);
   }
 
-  aggiungiRegolaGlobale($event: any) {
-    console.log($event); //TODO
+  creaRegolaDaGlobale() {
+    let r = this.regoleGlobali.find(x => x.ID_REGOLA == this.regolaGlobaleSelected);
+    if (r) {
+      this.openNewRuleGlobaleForm();
+      this.nuovaRegola.ID_REGOLA = r.ID_REGOLA;
+      this.nuovaRegola.NOM_VARIABILE = r.NOM_VARIABILE;
+      this.nuovaRegola.ETICHETTA = r.ETICHETTA;
+      this.nuovaRegola.REQUIRED = r.REQUIRED;
+      this.nuovaRegola.TIPO = r.TIPO;
+      this.nuovaRegola.MAXLENGTH = r.MAXLENGTH;
+      this.nuovaRegola.PATTERN_REGEXP = r.PATTERN_REGEXP;
+      this.nuovaRegola.NUM_DECIMALI = r.NUM_DECIMALI;
+      this.nuovaRegola.MIN = r.MIN;
+      this.nuovaRegola.MAX = r.MAX;
+      this.nuovaRegola.OPTIONS = r.OPTIONS;
+      this.nuovaRegola.SOTTOSCHEMI = r.SOTTOSCHEMI;
+    }
   }
 
   uploadImage(event: any) {

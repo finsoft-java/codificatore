@@ -1,7 +1,6 @@
 
 export interface SchemaCodificaOptions {
-  ID_SCHEMA: number;
-  NOM_VARIABILE: string;
+  ID_REGOLA: number;
   VALUE_OPTION: string;
   ETICHETTA: string;
 }

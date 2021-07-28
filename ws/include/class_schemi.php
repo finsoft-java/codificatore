@@ -58,6 +58,22 @@ class SchemiManager {
     }
 
     function elimina($idSchema) {
+
+        // Elimino tutte le regole ma non quelle globali
+        
+        $sql = "SELECT GLOBAL FROM schemi_regole s JOIN regole r ON s.ID_REGOLA=r.ID_REGOLA " .
+                "WHERE s.ID_SCHEMA=$idSchema AND r.GLOBAL='N' ";
+        $rules = select_column($sql);
+        if ($rules) {
+            $ids = implode(',', $rules);
+
+            $sql = "DELETE FROM regole_options WHERE ID_REGOLA IN ($ids)";
+            execute_update($sql);
+            $sql = "DELETE FROM regole_sottoschemi WHERE ID_REGOLA IN ($ids) ";
+            execute_update($sql);
+            $sql = "DELETE FROM regole WHERE ID_REGOLA IN ($ids) ";
+        }
+
         $sql = "DELETE FROM schemi_codifica WHERE ID_SCHEMA = $idSchema";
         execute_update($sql);
     }

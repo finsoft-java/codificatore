@@ -12,18 +12,8 @@ class RegoleManager {
         $count = select_single_value($sql0 . $sql);
         $objects = select_list($sql1 . $sql);
 
-        // FIXME: subroutine completamento
-        foreach($objects as $id=>$o) {
-            $sql = "SELECT * FROM regole_options " .
-                "WHERE ID_REGOLA=$o[ID_REGOLA] " .
-                "ORDER BY VALUE_OPTION";
-            $objects[$id]["OPTIONS"] = select_list($sql);
-
-            $sql = "SELECT rs.*, s.TITOLO FROM regole_sottoschemi rs " .
-                "JOIN schemi_codifica s ON s.ID_SCHEMA=rs.ID_SOTTO_SCHEMA " .
-                "WHERE rs.ID_REGOLA=$o[ID_REGOLA] " .
-                "ORDER BY s.TITOLO";
-            $objects[$id]["SOTTOSCHEMI"] = select_list($sql);
+        foreach($objects as $id => $o) {
+            $objects[$id] = $this->_completaRegola($o);
         }
         return [$objects, $count];
     }
@@ -31,47 +21,40 @@ class RegoleManager {
     function getAllGlobali() {
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT NULL AS IS_SCHEMA, NULL AS ORD_PREENTAZIONE, r.* ";
-        $sql = "FROM REGOLE r WHERE GLOBAL='Y'' " .
+        $sql = "FROM REGOLE r WHERE GLOBAL='Y' " .
                "ORDER BY r.NOM_VARIABILE ";
         $count = select_single_value($sql0 . $sql);
         $objects = select_list($sql1 . $sql);
 
-        // FIXME: subroutine completamento
-        foreach($objects as $id=>$o) {
-            $sql = "SELECT * FROM regole_options " .
-                "WHERE ID_REGOLA=$o[ID_REGOLA] " .
-                "ORDER BY VALUE_OPTION";
-            $objects[$id]["OPTIONS"] = select_list($sql);
-
-            $sql = "SELECT rs.*, s.TITOLO FROM regole_sottoschemi rs " .
-                "JOIN schemi_codifica s ON s.ID_SCHEMA=rs.ID_SOTTO_SCHEMA " .
-                "WHERE rs.ID_REGOLA=$o[ID_REGOLA] " .
-                "ORDER BY s.TITOLO";
-            $objects[$id]["SOTTOSCHEMI"] = select_list($sql);
+        foreach($objects as $id => $o) {
+            $objects[$id] = $this->_completaRegola($o);
         }
         return [$objects, $count];
     }
     
-    function getById($id_schema, $nomVariabile) {
+    function getById($idSchema, $nomVariabile) {
         $sql = "SELECT s.*,r.GLOBAL,r.ETICHETTA,r.REQUIRED,r.TIPO,r.MAXLENGTH,r.PATTERN_REGEXP,r.NUM_DECIMALI,r.MIN,r.MAX " .
                 "FROM schemi_regole s JOIN REGOLE r ON r.ID_REGOLA=s.ID_REGOLA " .
                 "WHERE s.ID_SCHEMA=$idSchema AND s.NOM_VARIABILE='$nomVariabile' " .
                 "ORDER BY s.ORD_PRESENTAZIONE ";
         $o = select_single($sql);
 
-        // FIXME: subroutine completamento
+        return $this->_completaRegola($o);
+    }
+
+    function _completaRegola(&$regola) {
         $sql = "SELECT * FROM regole_options " .
-            "WHERE ID_SCHEMA=$id_schema and NOM_VARIABILE='$nomVariabile' " .
+            "WHERE ID_REGOLA=$regola[ID_REGOLA] " .
             "ORDER BY VALUE_OPTION";
-        $o["OPTIONS"] = select_list($sql);
+        $regola["OPTIONS"] = select_list($sql);
 
-        $sql = "SELECT s.*, b.TITOLO FROM regole_sottoschemi s " .
-            "JOIN schemi_codifica b ON b.ID_SCHEMA=s.ID_SOTTO_SCHEMA " .
-            "WHERE s.ID_SCHEMA=$id_schema AND s.NOM_VARIABILE='$nomVariabile' " .
-            "ORDER BY b.TITOLO";
-        $o["SOTTOSCHEMI"] = select_list($sql);
+        $sql = "SELECT rs.*, s.TITOLO FROM regole_sottoschemi rs " .
+            "JOIN schemi_codifica s ON s.ID_SCHEMA=rs.ID_SOTTO_SCHEMA " .
+            "WHERE rs.ID_REGOLA=$regola[ID_REGOLA] " .
+            "ORDER BY s.TITOLO";
+        $regola["SOTTOSCHEMI"] = select_list($sql);
 
-        return $o;
+        return $regola;
     }
 
     function crea($json_data) {
@@ -153,17 +136,20 @@ class RegoleManager {
     }
 
     function elimina($idSchema, $nomVariabile) {
-        // Elimino tutto, tranne le variabili globali
-        $sql = "SELECT s.ID_REGOLA FROM schemi_regole s JOIN regole r ON s.ID_REGOLA=r.ID_REGOLA " .
-                "WHERE s.ID_SCHEMA=$idSchema AND s.NOM_VARIABILE='$nomVariabile' AND r.GLOBAL='N' ";
-        $ids = implode(',', select_column($sql));
+        // Elimino anche dalla tabella regole, ma solo se non è globale
+        $sql = "SELECT r.ID_REGOLA FROM schemi_regole s JOIN regole r ON s.ID_REGOLA=r.ID_REGOLA " .
+                "WHERE s.ID_SCHEMA=$idSchema AND s.NOM_VARIABILE='$nomVariabile' AND GLOBAL='N' ";
+        $idRegola = select_single_value($sql);
 
-        $sql = "DELETE FROM regole_options WHERE ID_REGOLA IN ($ids)";
-        execute_update($sql);
-        $sql = "DELETE FROM regole_sottoschemi WHERE ID_REGOLA IN ($ids) ";
-        execute_update($sql);
-        $sql = "DELETE FROM regole WHERE ID_REGOLA IN ($ids) ";
-        execute_update($sql);
+        if ($idRegola) {
+            $sql = "DELETE FROM regole_options WHERE ID_REGOLA=$idRegola";
+            execute_update($sql);
+            $sql = "DELETE FROM regole_sottoschemi WHERE ID_REGOLA=$idRegola ";
+            execute_update($sql);
+            $sql = "DELETE FROM regole WHERE ID_REGOLA=$idRegola ";
+            execute_update($sql);
+        }
+
         $sql = "DELETE FROM schemi_regole WHERE ID_SCHEMA = $idSchema AND NOM_VARIABILE='$nomVariabile' ";
         execute_update($sql);
     }

@@ -65,12 +65,13 @@
                 <div *ngIf="scegliRegoleGlobali">
                     <mat-form-field appearance="fill">
                         <mat-label>Scegli una variabile globale esistente</mat-label>
-                        <mat-select (change)="aggiungiRegolaGlobale($event)">
-                            <mat-option *ngFor="let r of regoleGlobali" [value]="r.NOM_VARIABILE">
+                        <mat-select [(ngModel)]="regolaGlobaleSelected">
+                            <mat-option *ngFor="let r of regoleGlobali" [value]="r.ID_REGOLA">
                             {{r.NOM_VARIABILE}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <button mat-raised-button color="primary" (click)="creaRegolaDaGlobale()" [disabled]="!regolaGlobaleSelected">Aggiungi</button>
                 </div>
 
                 <app-schemi-codifica-regola *ngIf="!scegliRegoleGlobali" [regola]="nuovaRegola" [creating]="true" (saved)="refreshRegole()" (deleted)="refreshRegole()" ></app-schemi-codifica-regola>

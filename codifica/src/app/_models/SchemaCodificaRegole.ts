@@ -2,9 +2,10 @@ import { SchemaCodificaOptions } from './SchemaCodificaOptions';
 import { SchemaCodificaSottoschema } from './SchemaSottoschema';
 
 export interface SchemaCodificaRegole {
-  ID_SCHEMA: number;
+  ID_SCHEMA: number|null;
   NOM_VARIABILE: string;
-  GLOBAL: string;
+  ID_REGOLA: number;
+  GLOBAL: 'Y'|'N';
   ORD_PRESENTAZIONE: number;
   ETICHETTA: string;
   REQUIRED: string;

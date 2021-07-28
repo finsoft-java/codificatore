@@ -54,8 +54,7 @@ export class SchemiCodificaRegolaComponent implements OnInit {
       this.regola.OPTIONS = [];
     }
     this.regola.OPTIONS!.unshift({
-      ID_SCHEMA: this.regola.ID_SCHEMA,
-      NOM_VARIABILE: this.regola.NOM_VARIABILE,
+      ID_REGOLA: this.regola.ID_REGOLA,
       VALUE_OPTION: '',
       ETICHETTA: ''
     });
@@ -128,8 +127,7 @@ export class SchemiCodificaRegolaComponent implements OnInit {
       this.regola.SOTTOSCHEMI = [];
     }
     this.regola.SOTTOSCHEMI!.unshift({
-      ID_SCHEMA: this.regola.ID_SCHEMA,
-      NOM_VARIABILE: this.regola.NOM_VARIABILE,
+      ID_REGOLA: this.regola.ID_REGOLA,
       ID_SOTTO_SCHEMA: -1
     });
     this.subschemaTable?.renderRows(); // force render

@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     } else if ($idSchema !== null) {
         // $idSchema may be null or not
-        [$list, $count] = $regoleManager->getAllgetAllByIdSchema($idSchema, $soloGlobali);
+        [$list, $count] = $regoleManager->getAllByIdSchema($idSchema, $soloGlobali);
           
         header('Content-Type: application/json');
         echo json_encode(['data' => $list, 'count' => $count]);
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         header('Content-Type: application/json');
         echo json_encode(['data' => $list, 'count' => $count]);
     } else {
-        print_error(400, 'Un parametro tra idSchema e soloGlobali deve essere settato')
+        print_error(400, 'Un parametro tra idSchema e soloGlobali deve essere settato');
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //==========================================================

@@ -1,5 +1,4 @@
 export interface SchemaCodificaSottoschema {
-  ID_SCHEMA: number;
-  NOM_VARIABILE: string;
+  ID_REGOLA: number;
   ID_SOTTO_SCHEMA: number;
 }
