@@ -1,35 +1,4 @@
 <mat-drawer-container class="example-container" autosize>
-  <!-- <mat-drawer #drawer class="example-sidenav" mode="side">
-    <nav style="padding: 15px">
-      <button
-        mat-menu-item
-        (click)="routerFrontend.navigate(['codifica']); drawer.toggle()"
-      >
-        <span>Codifica</span>
-      </button>
-      <button
-        mat-menu-item
-        (click)="routerFrontend.navigate(['ricerca']); drawer.toggle()"
-      >
-        <span>Ricerca codice</span>
-      </button>
-      <button
-        mat-menu-item
-        (click)="routerFrontend.navigate(['ricerca-avanzata']); drawer.toggle()"
-      >
-        <span>Ricerca avanzata</span>
-      </button>
-      <button
-        mat-menu-item
-        (click)="routerFrontend.navigate(['regole-codifica']); drawer.toggle()"
-      >
-        <span>Regole di codifica</span>
-      </button>
-      <button mat-menu-item (click)="logout(); drawer.toggle()">
-        <span>Logout</span>
-      </button>
-    </nav>
-  </mat-drawer> -->
 
   <div
     class="navbar navbar-default navbar-fixed-top"
@@ -52,6 +21,7 @@
               mat-button
               (click)="routerFrontend.navigate(['ricerca'])"
               aria-label="Example icon-button with a menu"
+              disabled
             >
               <span>Ricerca codice</span>
             </button>
@@ -59,6 +29,7 @@
               mat-button
               (click)="routerFrontend.navigate(['ricerca-avanzata'])"
               aria-label="Example icon-button with a menu"
+              disabled
             >
               <span>Ricerca avanzata</span>
             </button>
