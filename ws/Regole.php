@@ -16,17 +16,25 @@ $soloGlobali = isset($_GET['soloGlobali']) ? $con->escape_string($_GET['soloGlob
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
-    if ($idSchema && $nomVariabile) {
+    if ($idSchema  !== null && $nomVariabile) {
         $object = $regoleManager->getById($idSchema, $nomVariabile);
         header('Content-Type: application/json');
         echo json_encode(['value' => $object]);
     
-    } else {
+    } else if ($idSchema !== null) {
         // $idSchema may be null or not
-        [$list, $count] = $regoleManager->getAll($idSchema, $soloGlobali);
+        [$list, $count] = $regoleManager->getAllgetAllByIdSchema($idSchema, $soloGlobali);
           
         header('Content-Type: application/json');
         echo json_encode(['data' => $list, 'count' => $count]);
+    } else if ($soloGlobali) {
+        // $idSchema may be null or not
+        [$list, $count] = $regoleManager->getAllGlobali();
+          
+        header('Content-Type: application/json');
+        echo json_encode(['data' => $list, 'count' => $count]);
+    } else {
+        print_error(400, 'Un parametro tra idSchema e soloGlobali deve essere settato')
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //==========================================================
