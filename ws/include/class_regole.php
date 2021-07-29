@@ -7,7 +7,7 @@ class RegoleManager {
     function getAllByIdSchema($idSchema) {
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT s.*,r.GLOBAL,r.ETICHETTA,r.REQUIRED,r.TIPO,r.MAXLENGTH,r.PATTERN_REGEXP,r.NUM_DECIMALI,r.MIN,r.MAX ";
-        $sql = "FROM schemi_regole s JOIN REGOLE r ON r.ID_REGOLA=s.ID_REGOLA WHERE ID_SCHEMA=$idSchema " .
+        $sql = "FROM schemi_regole s JOIN regole r ON r.ID_REGOLA=s.ID_REGOLA WHERE ID_SCHEMA=$idSchema " .
                "ORDER BY s.ORD_PRESENTAZIONE ";
         $count = select_single_value($sql0 . $sql);
         $objects = select_list($sql1 . $sql);
@@ -21,7 +21,7 @@ class RegoleManager {
     function getAllGlobali() {
         $sql0 = "SELECT COUNT(*) AS cnt ";
         $sql1 = "SELECT NULL AS IS_SCHEMA, NULL AS ORD_PREENTAZIONE, r.* ";
-        $sql = "FROM REGOLE r WHERE GLOBAL='Y' " .
+        $sql = "FROM regole r WHERE GLOBAL='Y' " .
                "ORDER BY r.NOM_VARIABILE ";
         $count = select_single_value($sql0 . $sql);
         $objects = select_list($sql1 . $sql);
@@ -34,7 +34,7 @@ class RegoleManager {
     
     function getById($idSchema, $nomVariabile) {
         $sql = "SELECT s.*,r.GLOBAL,r.ETICHETTA,r.REQUIRED,r.TIPO,r.MAXLENGTH,r.PATTERN_REGEXP,r.NUM_DECIMALI,r.MIN,r.MAX " .
-                "FROM schemi_regole s JOIN REGOLE r ON r.ID_REGOLA=s.ID_REGOLA " .
+                "FROM schemi_regole s JOIN regole r ON r.ID_REGOLA=s.ID_REGOLA " .
                 "WHERE s.ID_SCHEMA=$idSchema AND s.NOM_VARIABILE='$nomVariabile' " .
                 "ORDER BY s.ORD_PRESENTAZIONE ";
         $o = select_single($sql);
