@@ -59,79 +59,97 @@ class RegoleManager {
 
     function crea($json_data) {
         global $con;
-        $sql = insert("regole", ["NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
-                                "GLOBAL" => $con->escape_string($json_data->GLOBAL),
-                                "ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
-                                "REQUIRED" => $con->escape_string($json_data->REQUIRED),
-                                "TIPO" => $con->escape_string($json_data->TIPO),
-                                "MAXLENGTH" => $con->escape_string($json_data->MAXLENGTH),
-                                "PATTERN_REGEXP" => $con->escape_string($json_data->PATTERN_REGEXP),
-                                "NUM_DECIMALI" => $con->escape_string($json_data->NUM_DECIMALI),
-                                "MIN" => $con->escape_string($json_data->MIN),
-                                "MAX" => $con->escape_string($json_data->MAX)
-                                ]);
-        execute_update($sql);
-        $idRegola = $con->insert_id;
-        $sql = insert("schemi_regole", ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
-                                "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
-                                "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE),
-                                "ID_REGOLA" => $idRegola
-                                ]);
-        execute_update($sql);
+        $con->begin_transaction();
+        try {
+            $sql = insert("regole", ["NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
+                                    "GLOBAL" => $con->escape_string($json_data->GLOBAL),
+                                    "ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
+                                    "REQUIRED" => $con->escape_string($json_data->REQUIRED),
+                                    "TIPO" => $con->escape_string($json_data->TIPO),
+                                    "MAXLENGTH" => $con->escape_string($json_data->MAXLENGTH),
+                                    "PATTERN_REGEXP" => $con->escape_string($json_data->PATTERN_REGEXP),
+                                    "NUM_DECIMALI" => $con->escape_string($json_data->NUM_DECIMALI),
+                                    "MIN" => $con->escape_string($json_data->MIN),
+                                    "MAX" => $con->escape_string($json_data->MAX)
+                                    ]);
+            execute_update($sql);
+            $idRegola = $con->insert_id;
+            $sql = insert("schemi_regole", ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
+                                    "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
+                                    "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE),
+                                    "ID_REGOLA" => $idRegola
+                                    ]);
+            execute_update($sql);
+
+            $con->commit();
+        } catch (mysqli_sql_exception $exception) {
+            $con->rollback();
+
+            throw $exception;
+        }
         return $this->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE);
     }
     
     function aggiorna($json_data) {     
         global $con;
-        // sulla tabella schemi_regole posso aggiornare solamente l'ordinamento
-        $sql = update("schemi_regole", ["ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE)], 
-                                ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
-                                "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE)]);
-        execute_update($sql);
+        $con->begin_transaction();
+        try {
+            // sulla tabella schemi_regole posso aggiornare solamente l'ordinamento
+            $sql = update("schemi_regole", ["ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE)], 
+                                    ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
+                                    "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE)]);
+            execute_update($sql);
 
-        // sulla tabella regole *non * posso aggiornare GLOBAL, nè NOM_VARIABILE
-        $sql = update("regole", ["ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
-                                "REQUIRED" => $con->escape_string($json_data->REQUIRED),
-                                "TIPO" => $con->escape_string($json_data->TIPO),
-                                "MAXLENGTH" => $con->escape_string($json_data->MAXLENGTH),
-                                "PATTERN_REGEXP" => $con->escape_string($json_data->PATTERN_REGEXP),
-                                "NUM_DECIMALI" => $con->escape_string($json_data->NUM_DECIMALI),
-                                "MIN" => $con->escape_string($json_data->MIN),
-                                "MAX" => $con->escape_string($json_data->MAX)], 
-                               ["ID_REGOLA" => $con->escape_string($json_data->ID_REGOLA)]);
-        execute_update($sql);
+            // sulla tabella regole *non * posso aggiornare GLOBAL, nè NOM_VARIABILE
+            $sql = update("regole", ["ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
+                                    "REQUIRED" => $con->escape_string($json_data->REQUIRED),
+                                    "TIPO" => $con->escape_string($json_data->TIPO),
+                                    "MAXLENGTH" => $con->escape_string($json_data->MAXLENGTH),
+                                    "PATTERN_REGEXP" => $con->escape_string($json_data->PATTERN_REGEXP),
+                                    "NUM_DECIMALI" => $con->escape_string($json_data->NUM_DECIMALI),
+                                    "MIN" => $con->escape_string($json_data->MIN),
+                                    "MAX" => $con->escape_string($json_data->MAX)], 
+                                ["ID_REGOLA" => $con->escape_string($json_data->ID_REGOLA)]);
+            execute_update($sql);
 
-        $sql = "DELETE FROM regole_options WHERE ID_REGOLA = $json_data->ID_REGOLA ";
-        execute_update($sql);
+            $sql = "DELETE FROM regole_options WHERE ID_REGOLA = $json_data->ID_REGOLA ";
+            execute_update($sql);
 
-        $giaInseriti = [];  // evito di inserire duplicati
-        if (isset($json_data->OPTIONS)) {
-            foreach ($json_data->OPTIONS as $o) {
-                if (!in_array($o->VALUE_OPTION, $giaInseriti)) {
-                    $sql = insert("regole_options", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
-                        "VALUE_OPTION" => $con->escape_string($o->VALUE_OPTION),
-                        "ETICHETTA" => $con->escape_string($o->ETICHETTA)
-                        ]);
-                    execute_update($sql);
-                    $giaInseriti[] = $o->VALUE_OPTION;
+            $giaInseriti = [];  // evito di inserire duplicati
+            if (isset($json_data->OPTIONS)) {
+                foreach ($json_data->OPTIONS as $o) {
+                    if (!in_array($o->VALUE_OPTION, $giaInseriti)) {
+                        $sql = insert("regole_options", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
+                            "VALUE_OPTION" => $con->escape_string($o->VALUE_OPTION),
+                            "ETICHETTA" => $con->escape_string($o->ETICHETTA)
+                            ]);
+                        execute_update($sql);
+                        $giaInseriti[] = $o->VALUE_OPTION;
+                    }
                 }
             }
-        }
 
-        $sql = "DELETE FROM regole_sottoschemi WHERE ID_REGOLA = $json_data->ID_REGOLA ";
-        execute_update($sql);
+            $sql = "DELETE FROM regole_sottoschemi WHERE ID_REGOLA = $json_data->ID_REGOLA ";
+            execute_update($sql);
 
-        $giaInseriti = [];  // evito di inserire duplicati
-        if (isset($json_data->SOTTOSCHEMI)) {
-            foreach ($json_data->SOTTOSCHEMI as $o) {
-                if (!in_array($o->ID_SOTTO_SCHEMA, $giaInseriti)) {
-                    $sql = insert("regole_sottoschemi", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
-                        "ID_SOTTO_SCHEMA" => $con->escape_string($o->ID_SOTTO_SCHEMA)
-                        ]);
-                    execute_update($sql);
-                    $giaInseriti[] = $o->ID_SOTTO_SCHEMA;
+            $giaInseriti = [];  // evito di inserire duplicati
+            if (isset($json_data->SOTTOSCHEMI)) {
+                foreach ($json_data->SOTTOSCHEMI as $o) {
+                    if (!in_array($o->ID_SOTTO_SCHEMA, $giaInseriti)) {
+                        $sql = insert("regole_sottoschemi", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
+                            "ID_SOTTO_SCHEMA" => $con->escape_string($o->ID_SOTTO_SCHEMA)
+                            ]);
+                        execute_update($sql);
+                        $giaInseriti[] = $o->ID_SOTTO_SCHEMA;
+                    }
                 }
             }
+
+            $con->commit();
+        } catch (mysqli_sql_exception $exception) {
+            $con->rollback();
+
+            throw $exception;
         }
     }
 
