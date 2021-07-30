@@ -64,6 +64,10 @@ class SchemiManager {
         $sql = "SELECT GLOBAL FROM schemi_regole s JOIN regole r ON s.ID_REGOLA=r.ID_REGOLA " .
                 "WHERE s.ID_SCHEMA=$idSchema AND r.GLOBAL='N' ";
         $rules = select_column($sql);
+
+        $sql = "DELETE FROM schemi_codifica WHERE ID_SCHEMA = $idSchema";
+        execute_update($sql);
+
         if ($rules) {
             $ids = implode(',', $rules);
 
@@ -73,9 +77,6 @@ class SchemiManager {
             execute_update($sql);
             $sql = "DELETE FROM regole WHERE ID_REGOLA IN ($ids) ";
         }
-
-        $sql = "DELETE FROM schemi_codifica WHERE ID_SCHEMA = $idSchema";
-        execute_update($sql);
     }
 }
 ?>

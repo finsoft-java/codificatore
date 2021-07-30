@@ -141,6 +141,9 @@ class RegoleManager {
                 "WHERE s.ID_SCHEMA=$idSchema AND s.NOM_VARIABILE='$nomVariabile' AND GLOBAL='N' ";
         $idRegola = select_single_value($sql);
 
+        $sql = "DELETE FROM schemi_regole WHERE ID_SCHEMA = $idSchema AND NOM_VARIABILE='$nomVariabile' ";
+        execute_update($sql);
+
         if ($idRegola) {
             $sql = "DELETE FROM regole_options WHERE ID_REGOLA=$idRegola";
             execute_update($sql);
@@ -149,9 +152,6 @@ class RegoleManager {
             $sql = "DELETE FROM regole WHERE ID_REGOLA=$idRegola ";
             execute_update($sql);
         }
-
-        $sql = "DELETE FROM schemi_regole WHERE ID_SCHEMA = $idSchema AND NOM_VARIABILE='$nomVariabile' ";
-        execute_update($sql);
     }
 }
 ?>
