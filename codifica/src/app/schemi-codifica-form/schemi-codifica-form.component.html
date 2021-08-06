@@ -83,7 +83,7 @@
                             {{schemaRule.NOM_VARIABILE}}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-schemi-codifica-regola [regola]="schemaRule"></app-schemi-codifica-regola>
+                    <app-schemi-codifica-regola [regola]="schemaRule" [creating]="false" (saved)="refreshRegole()" (deleted)="refreshRegole()"></app-schemi-codifica-regola>
                 </mat-expansion-panel>
             </mat-accordion>       
         </div>
