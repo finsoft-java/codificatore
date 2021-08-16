@@ -19,6 +19,8 @@ export class CodificaSubformComponent implements OnInit {
   idSchema!: number;
   @Input()
   soloSchemiInterni = true;
+  @Input()
+  considerRequired = true;
 
   @Output()
   changeCodice: EventEmitter<string> = new EventEmitter<string>();

@@ -8,27 +8,22 @@
     <div class="container">
       <div class="navbar-header">
         <nav style="padding: 15px 0">
-          <!--<div class="example-sidenav-content">-->
           <div>
             <button
               mat-button
               (click)="routerFrontend.navigate(['codifica'])"
-              aria-label="Example icon-button with a menu"
             >
               <span>Codifica</span>
             </button>
             <button
               mat-button
               (click)="routerFrontend.navigate(['ricerca'])"
-              aria-label="Example icon-button with a menu"
-              disabled
             >
               <span>Ricerca codice</span>
             </button>
             <button
               mat-button
               (click)="routerFrontend.navigate(['ricerca-avanzata'])"
-              aria-label="Example icon-button with a menu"
               disabled
             >
               <span>Ricerca avanzata</span>
@@ -36,14 +31,12 @@
             <button
               mat-button
               (click)="routerFrontend.navigate(['schemi-codifica'])"
-              aria-label="Example icon-button with a menu"
             >
               <span>Schemi di codifica</span>
             </button>
             <button
               mat-button
               (click)="logout()"
-              aria-label="Example icon-button with a menu"
             >
               <span>Logout</span>
             </button>
@@ -57,12 +50,10 @@
       <alert></alert>
       <router-outlet></router-outlet>
     </div>
-    <!--
-<footer style="background-color: black;color:#fff;padding:30px;">
+<!--footer style="background-color: black;color:#fff;padding:30px;">
     <div class="container">
         Finsoft 2021
     </div>
-</footer>
--->
+</footer-->
   </div>
 </mat-drawer-container>

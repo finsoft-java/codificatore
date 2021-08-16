@@ -23,9 +23,6 @@ export class CodificaComponent implements OnInit {
   descrizioneCalcolata = '';
   codificaSalvata?: Codifica;
   datiCodifica: IHash[] = []; // Contiene tutti i parametri di tutti i sottoschemi
-  
-  codificheTrovate: Codifica[] = [];
-  searching = false;
 
   ngOnInit(): void {
     this.svc.getValidiPubblici().subscribe(response => {
@@ -80,21 +77,5 @@ export class CodificaComponent implements OnInit {
 
   setParametriObbligatori($event: boolean) {
     this.parametriObbligatoriSettati = $event;
-    if (this.parametriObbligatoriSettati) {
-      this.ricercaCodifiche();
-    }
-  }
-
-  ricercaCodifiche() {
-    this.searching = true;
-    this.codSvc.getByDatiCodifica(this.datiCodifica).subscribe(response => {
-      console.log(response);
-      this.codificheTrovate = response.data;
-      this.searching = false;
-    },
-    error => {
-      this.codificheTrovate = [];
-      this.searching = false;
-    });
   }
 }

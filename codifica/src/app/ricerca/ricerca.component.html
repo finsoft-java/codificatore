@@ -1,12 +1,34 @@
-<h2>Ricerca guidata codice</h2>
 
-La funzione permette di ricercare le codifiche in base agli attributi nel database locale.<br/>
-L’utente dovrà scegliere per prima cosa lo schema di codifica.<br/>
-L’interfaccia è analoga a quella di codifica, tuttavia non è obbligatorio rispondere a tutte le domande.  All’invio del form verrà generata una tabella con gli articoli corrispondenti ai criteri.<br/>
-Dato che il numero potrebbe essere elevato sarà necessaria la paginazione della tabella, con 50-100 elementi per pagina (utilizzando un controllo tipo DataTables l’utente può scegliere secondo le proprie esigenze, ma non è fondamentale).<br/>
-Sulla tabella saranno presenti questi dettagli:<br/>
-•	codice disegno/commerciale<br/>
-•	descrizione<br/>
-•	codice valido (sì/no/n.d.)<br/>
-•	eventuali altri attributi da definire<br/>
-Sarà possibile esaminare ciascun codice nel dettaglio per verificare gli attributi non riportati in tabella.<br/> 
+<h3 class="page-header">Ricerca guidata codice</h3>
+
+Selezionare lo schema di codifica:
+<mat-form-field class="select-schema">
+    <mat-select placeholder="Schema di codifica" [(ngModel)]="schemaScelto" (selectionChange)="onSelectSchema($event)" name="schema" [disabled]="schemaScelto !== undefined">
+        <mat-option *ngFor="let schema of schemi" [value]="schema">
+            {{schema.TITOLO}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<button (click)="reset()" mat-raised-button color="secondary" [ngStyle]="{'float': 'right', 'margin-bottom': '15px'}" [disabled]="schemaScelto === undefined">Reset</button>
+
+<div class="schema-main-section" *ngIf="schemaScelto !== undefined">
+    
+    <app-codifica-subform
+        [considerRequired]="false"
+        [idSchema]="schemaScelto.ID_SCHEMA"
+        (changeDatiCodifica)="datiCodifica = $event"
+        >
+    </app-codifica-subform>
+
+    <app-tabellina-ricerca
+        [datiCodifica]="datiCodifica"
+    ></app-tabellina-ricerca>
+
+</div>
+
+<p style="margin:2cm"><b>
+    Ancora da fare: <i> Sarà possibile esaminare ciascun codice nel dettaglio per verificare gli attributi non riportati in tabella. </i>
+</b></p>
+    
+    
