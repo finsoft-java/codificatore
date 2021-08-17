@@ -3,6 +3,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { IHash, SchemaCodifica, SchemaCodificaRegole } from '../_models';
+import { JsEvalService } from '../_services/js-eval.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 
@@ -13,7 +14,8 @@ import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 })
 export class CodificaSubformComponent implements OnInit {
   constructor(private svcSchemi: SchemiCodificaService,
-    private regoleSvc: SchemiCodificaRegoleService) { }
+    private regoleSvc: SchemiCodificaRegoleService,
+    private jsEvalService: JsEvalService) { }
 
   @Input()
   idSchema!: number;
@@ -104,78 +106,11 @@ export class CodificaSubformComponent implements OnInit {
     return Number(s);
   }
 
-  /**
-   * Compone una stringa template con i parametri presenti in this.parametri
-   * @returns rendered template
-   */
-  componi(template: string): string {
-    if (!template) return '';
-
-    const matches = template.match(/{{[^}]*}}/g);
-    console.log('Compongo il codice (o la descrizione) con questi parametri:', this.parametri);
-
-    let result = template;
-    if (matches != null) {
-      matches.forEach(m => {
-        let [parametriObj, parametriStr] = this.splitParameters();
-        let formula = '';
-        parametriObj.forEach(paramName => {
-          formula += `var ${paramName}={};`;
-        });
-        parametriStr.forEach(paramName => {
-          formula += `var ${paramName}='${this.parametri[paramName]}';`;
-        });
-        // FIXME qui dovrei applicare la pre-render formula!!!
-        formula += m.substring(2, m.length - 2);
-        console.log('Going to evaluate: ' + formula);
-        const repl = eval(formula);
-        result = result.replace(m, repl || '');
-      });
-    }
-
-    return result;
-  }
-
-  /**
-   * Divide i parametri tra stringhe e oggetti
-  */
-  splitParameters () {
-    let parametriObj: string[] = [];
-    let parametriStr: string[] = [];
-    Object.keys(this.parametri).forEach(paramName => {
-      let [parametriObj1, parametriStr1] = this.splitParameter(paramName);
-      parametriObj1.forEach(element => {
-        if ((element !== undefined) && !(element in parametriObj)) {
-          parametriObj.push(element);
-        }
-      });
-      parametriStr1.forEach(element => {
-        if ((element !== undefined) && !(element in parametriStr)) {
-          parametriStr.push(element);
-        }
-      });
-    });
-    return [parametriObj, parametriStr];
-  }
-
-  /**
-   * Divide i parametri tra stringhe e oggetti
-   * Dato 'aaa.bbb.ccc' restituisce [['aaa','bbb'],['ccc']]]
-  */
-  splitParameter(paramName: string) {
-    let tokens = paramName.split('.');
-    if (tokens.length == 1) {
-      return [[], [paramName]];
-    } else {
-      return [tokens, [tokens.pop()]];
-    }
-  }
-
   componiCodiceDescrizione() {
     if (!this.schema) return;
 
-    this.codiceCalcolato = this.componi(this.schema!.TPL_CODICE);
-    this.descrizioneCalcolata = this.componi(this.schema!.TPL_DESCRIZIONE);
+    this.codiceCalcolato = this.jsEvalService.componi(this.schema!.TPL_CODICE, this.parametri, this.schema!.PRE_RENDER_JS);
+    this.descrizioneCalcolata = this.jsEvalService.componi(this.schema!.TPL_DESCRIZIONE, this.parametri, this.schema!.PRE_RENDER_JS);
 
     this.changeCodice.emit(this.codiceCalcolato);
     this.changeDescrizione.emit(this.descrizioneCalcolata);
