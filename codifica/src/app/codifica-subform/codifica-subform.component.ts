@@ -125,6 +125,7 @@ export class CodificaSubformComponent implements OnInit {
         parametriStr.forEach(paramName => {
           formula += `var ${paramName}='${this.parametri[paramName]}';`;
         });
+        // FIXME qui dovrei applicare la pre-render formula!!!
         formula += m.substring(2, m.length - 2);
         console.log('Going to evaluate: ' + formula);
         const repl = eval(formula);

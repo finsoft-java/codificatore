@@ -28,6 +28,7 @@ export class AuthenticationService {
         return this.http.post<any>(url, body).pipe(map(data => {
           if (data) {
             localStorage.setItem('currentUser', data["value"].username);
+            localStorage.setItem('role', data["value"].ruolo);
             this.changeUsername(username);
           } else {
             data = 'bho';
@@ -35,11 +36,12 @@ export class AuthenticationService {
           return data;
         }));
     }
+
     public isAuthenticated(): boolean {
       const token = localStorage.getItem('currentUser');
-      if(token == null && token == undefined){
+      if (token == null || token == undefined){
         return false;
-      }else{
+      } else {
         this.currentUserSubject.username = token;
         return true;
       }
@@ -47,6 +49,7 @@ export class AuthenticationService {
 
     logout() {
       localStorage.removeItem('currentUser');
+      localStorage.removeItem('role');
       this.router.navigate(['/login']);
     }
 }

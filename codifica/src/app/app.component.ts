@@ -11,13 +11,13 @@ import { User } from './_models';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'cassettiere';
   routerFrontend: Router;
   showFiller = false;
   isLogged = false;
   subscription: Subscription = new Subscription();
   currentUserSubject: User = new User();
   menuDisabled = true;
+  ruoloUtente: string = '';
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     const url = window.location.href.endsWith('login');
     let token = localStorage.getItem('currentUser');
+    this.ruoloUtente = localStorage.getItem('role') || '';
 
     this.subscription = this.authenticationService.nameChange.subscribe((value) => {
       this.currentUserSubject.username = value;
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit {
 
     this.router.events.pipe(filter((evt: Event) => evt instanceof NavigationEnd)).subscribe((evt: Event) => {
       this.menuDisabled = ((evt as NavigationEnd).url === '/login');
+      this.ruoloUtente = localStorage.getItem('role') || '';
     });
   }
 
