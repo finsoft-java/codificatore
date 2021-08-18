@@ -109,8 +109,12 @@ export class CodificaSubformComponent implements OnInit {
   componiCodiceDescrizione() {
     if (!this.schema) return;
 
-    this.codiceCalcolato = this.jsEvalService.componi(this.schema!.TPL_CODICE, this.parametri, this.schema!.PRE_RENDER_JS);
-    this.descrizioneCalcolata = this.jsEvalService.componi(this.schema!.TPL_DESCRIZIONE, this.parametri, this.schema!.PRE_RENDER_JS);
+    if (this.schema.TPL_CODICE) {
+      this.codiceCalcolato = this.jsEvalService.componi(this.schema.TPL_CODICE, this.parametri, this.schema.PRE_RENDER_JS);
+    }
+    if (this.schema.TPL_DESCRIZIONE) {
+      this.codiceCalcolato = this.jsEvalService.componi(this.schema.TPL_DESCRIZIONE, this.parametri, this.schema.PRE_RENDER_JS);
+    }
 
     this.changeCodice.emit(this.codiceCalcolato);
     this.changeDescrizione.emit(this.descrizioneCalcolata);

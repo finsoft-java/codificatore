@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
+import { SchemaCodifica, SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
 import { SchemiCodificaOpzioniService } from '../_services/schemi-codifica-opzioni.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { AlertService } from '../_services/alert.service';
 import { MatTable } from '@angular/material/table';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-schemi-codifica-form',
@@ -34,34 +35,31 @@ export class SchemiCodificaFormComponent implements OnInit {
   selectedImage: any;
   regolaGlobaleSelected: any;
 
-  schemaCodificaForm = {
+  schemaCodificaForm: SchemaCodifica = {
     ID_SCHEMA: -1,
     TITOLO: '',
     DESCRIZIONE: '',
     TIPOLOGIA: '',
-    TPL_CODICE: '',
-    TPL_DESCRIZIONE: '',
-    PRE_RENDER_JS: '',
-    IS_VALID: '',
-    NOTE_INTERNE: ''
+    TPL_CODICE: null,
+    TPL_DESCRIZIONE: null,
+    PRE_RENDER_JS: null,
+    IS_VALID: 'N',
+    NOTE_INTERNE: null,
+    IMMAGINE_B64: null
   };
-
   schemaCodificaRegole2: SchemaCodificaRegole[] = [];
-
   nuovaRegola!: SchemaCodificaRegole;
-
   isAddRuleActive: boolean = false;
-
-  //@ViewChild('regole') regoleTable?: MatTable<SchemaCodificaRegole>;
+  imageSrc: SafeResourceUrl|null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private alertService: AlertService,
     public fb: FormBuilder,
     public schemaCodificaService: SchemiCodificaService,
     public schemiCodificaRegoleService: SchemiCodificaRegoleService,
-    public schemiCodificaOpzioniService: SchemiCodificaOpzioniService
+    public schemiCodificaOpzioniService: SchemiCodificaOpzioniService,
+    private _sanitizer: DomSanitizer
   ) {
   }
 
@@ -82,6 +80,7 @@ export class SchemiCodificaFormComponent implements OnInit {
         response => {
           this.schemaCodificaForm = response.value;
           console.log(this.schemaCodificaForm);
+          this.imageSrc = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' + this.schemaCodificaForm.IMMAGINE_B64);
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -228,5 +227,9 @@ export class SchemiCodificaFormComponent implements OnInit {
   deleteImage() {
     // TODO Some warning?
     this.schemaCodificaService.deleteImage(this.id);
+  }
+
+  hasImage(): boolean {
+    return false;
   }
 }

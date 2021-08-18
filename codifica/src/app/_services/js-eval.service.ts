@@ -16,7 +16,7 @@ export class JsEvalService {
    * @param jsPrerender es. "name = 'Mr. ' + name"
    * @returns rendered template es. "Hello MR. GOOFY"
    */
-   componi(template: string, parametri: IHash, jsPrerender?: string): string {
+   componi(template: string, parametri: IHash, jsPrerender?: string|null): string {
     if (!template) return '';
 
     const matches = template.match(/{{[^}]*}}/g);

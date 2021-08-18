@@ -6,7 +6,9 @@ class SchemiManager {
     
     function getAll($soloValidi=false, $tipo=null) {
         $sql0 = "SELECT COUNT(*) AS cnt ";
-        $sql1 = "SELECT * ";
+
+        //devo escludere il campo BLOB
+        $sql1 = "SELECT ID_SCHEMA,TITOLO,DESCRIZIONE,TIPOLOGIA,TPL_CODICE,TPL_DESCRIZIONE,PRE_RENDER_JS,IS_VALID,NOTE_INTERNE ";
         $sql = "FROM schemi_codifica x WHERE 1=1 ";
         if ($soloValidi) {
             $sql .= "AND IS_VALID='Y' ";
@@ -21,7 +23,11 @@ class SchemiManager {
     }
     
     function getById($id_schema) {
-        $sql = "SELECT * FROM schemi_codifica x WHERE x.id_schema=$id_schema ";
+
+        // converto il campo BLOB in b64
+        $sql = "SELECT ID_SCHEMA,TITOLO,DESCRIZIONE,TIPOLOGIA,TPL_CODICE,TPL_DESCRIZIONE,PRE_RENDER_JS,IS_VALID,NOTE_INTERNE," .
+            "TO_BASE64(IMMAGINE) AS IMMAGINE_B64 " .
+            "FROM schemi_codifica x WHERE x.id_schema=$id_schema ";
         return select_single($sql);
     }
 

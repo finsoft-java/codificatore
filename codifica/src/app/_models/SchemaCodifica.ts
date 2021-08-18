@@ -4,9 +4,10 @@ export interface SchemaCodifica {
   TITOLO: string;
   DESCRIZIONE: string;
   TIPOLOGIA: string;
-  TPL_CODICE: string;
-  TPL_DESCRIZIONE: string;
-  PRE_RENDER_JS: string;
+  TPL_CODICE: string|null;
+  TPL_DESCRIZIONE: string|null;
+  PRE_RENDER_JS: string|null;
   IS_VALID: string;
-  NOTE_INTERNE: string;
+  NOTE_INTERNE: string|null;
+  IMMAGINE_B64: string|null;
 }
