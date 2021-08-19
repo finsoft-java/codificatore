@@ -36,11 +36,11 @@ export class SchemiCodificaService implements HttpCrudService<SchemaCodifica> {
   }
 
   delete(obj: SchemaCodifica): Observable<void> {
-    return this.http.delete<any>(environment.wsUrl + `Schemi.php?idSchema=${obj.ID_SCHEMA}`);
+    return this.http.delete<void>(environment.wsUrl + `Schemi.php?idSchema=${obj.ID_SCHEMA}`);
   }
 
   deleteImage(idSchemaCodifica: number) {
-    // TODO
+    return this.http.delete<void>(environment.wsUrl + `SchemaImage.php?idSchema=${idSchemaCodifica}`);
   }
 
   uploadImage(image: any) {

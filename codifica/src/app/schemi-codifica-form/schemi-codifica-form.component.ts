@@ -80,7 +80,7 @@ export class SchemiCodificaFormComponent implements OnInit {
         response => {
           this.schemaCodificaForm = response.value;
           console.log(this.schemaCodificaForm);
-          this.imageSrc = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' + this.schemaCodificaForm.IMMAGINE_B64);
+          this.imageSrc = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/*;base64,' + this.schemaCodificaForm.IMMAGINE_B64);
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -226,10 +226,12 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   deleteImage() {
     // TODO Some warning?
-    this.schemaCodificaService.deleteImage(this.id);
+    this.schemaCodificaService.deleteImage(this.id).subscribe(response => {
+      this.getSchemaEsistente(this.id);
+    });
   }
 
   hasImage(): boolean {
-    return false;
+    return this.schemaCodificaForm && this.schemaCodificaForm.IMMAGINE_B64 != null;
   }
 }
