@@ -220,8 +220,32 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   uploadImage(event: any) {
     console.log(event);
-    this.selectedImage = event.target.files;
-    this.schemaCodificaService.uploadImage(this.selectedImage);
+    this.selectedImage = event.target.files && event.target.files[0];
+    console.log(this.selectedImage);
+    if (this.selectedImage) {
+      this.schemaCodificaService.uploadImage(this.id, this.selectedImage).subscribe(response => {
+        this.getSchemaEsistente(this.id);
+      });
+    }
+
+    /*
+    const file: File = event.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+
+      this.selectedFile = new ImageSnippet(event.target.result, file);
+
+      this.imageService.uploadImage(this.selectedFile.file).subscribe(
+        (res) => {
+        
+        },
+        (err) => {
+        
+        })
+    });
+
+    reader.readAsDataURL(file);*/
   }
 
   deleteImage() {

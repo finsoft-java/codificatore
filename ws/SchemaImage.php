@@ -15,16 +15,15 @@ $idSchema = isset($_GET['idSchema']) ? $con->escape_string($_GET['idSchema']) : 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //==========================================================
     
-    
-    /*$postdata = file_get_contents("php://input");
-    $json_data = json_decode($postdata);
-    if (!$json_data) {
-        print_error(400, "Missing JSON data");
+    if (!$idSchema) {
+        print_error(400, 'Missing idSchema');
     }
-    $object = $schemiManager->crea($json_data);
-    
-    header('Content-Type: application/json');
-    echo json_encode(['value' => $object]);*/
+    $object = $schemiManager->getById($idSchema);
+    if (!$object) {
+        print_error(404, 'Not found');
+    }
+
+    $schemiManager->uploadImmagine($idSchema, $_FILES["image"]["tmp_name"]);
     
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     //==========================================================
