@@ -100,6 +100,17 @@ class CodificaManager {
         $sql = "DELETE FROM codifiche WHERE ID_CODIFICA = $idCodifica ";
         execute_update($sql);
     }
+    
+    function getDatiCodifica($idCodifica) {
+
+        $sql = "SELECT * " .
+                "FROM codifiche_dati x " .
+                "WHERE id_codifica='$idCodifica' ";
+
+        $objects = select_list($sql1 . $sql);        
+        $count = count($objects);
+        return [$objects, $count];
+    }
 
 }
 ?>
