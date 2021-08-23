@@ -8,7 +8,10 @@ class LdapManager {
      * Login
      */
     function login($username, $pwd) {
-        return $this->_common_get_user(AD_SERVER, $username . '@' . AD_DOMAIN, $pwd, $username, AD_BASE_DN, [AD_FILTER => 'validatore', '' => 'codificatore']);
+		if (AD_FILTER)
+			return $this->_common_get_user(AD_SERVER, $username . '@' . AD_DOMAIN, $pwd, $username, AD_BASE_DN, [AD_FILTER => 'validatore', '' => 'codificatore']);
+		else
+			return $this->_common_get_user(AD_SERVER, $username . '@' . AD_DOMAIN, $pwd, $username, AD_BASE_DN, ['' => 'validatore']);
     }
 
     /**

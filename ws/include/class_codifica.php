@@ -44,9 +44,10 @@ class CodificaManager {
         foreach ($datiCodifica as $idSchema => $parametri) {
             if ($idSchema !== null && $parametri !== null) {
                 foreach ($parametri as $nomVariabile => $valore) {
-                    $sql .= "JOIN codifiche_dati c$v ON c$v.ID_CODIFICA=x.ID_CODIFICA and c$v.ID_SCHEMA=$idSchema AND c$v.NOM_VARIABILE='$nomVariabile' AND c$v.VALORE";
-                    $sql .= ($valore == null) ? " IS NULL " : "='$valore' ";
-                    ++$v;
+                    if ($valore) {
+                        $sql .= "JOIN codifiche_dati c$v ON c$v.ID_CODIFICA=x.ID_CODIFICA and c$v.ID_SCHEMA=$idSchema AND c$v.NOM_VARIABILE='$nomVariabile' AND c$v.VALORE='$valore' ";
+                        ++$v;
+                    }
                 }
             }
         }
@@ -99,6 +100,17 @@ class CodificaManager {
     function elimina($idCodifica) {
         $sql = "DELETE FROM codifiche WHERE ID_CODIFICA = $idCodifica ";
         execute_update($sql);
+    }
+    
+    function getDatiCodifica($idCodifica) {
+
+        $sql = "SELECT * " .
+                "FROM codifiche_dati x " .
+                "WHERE id_codifica='$idCodifica' ";
+
+        $objects = select_list($sql1 . $sql);        
+        $count = count($objects);
+        return [$objects, $count];
     }
 
 }
