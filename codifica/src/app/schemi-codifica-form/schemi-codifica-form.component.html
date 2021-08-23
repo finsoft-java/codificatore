@@ -46,7 +46,7 @@
                 </mat-form-field>
             </form> 
         </div>
-        <button mat-raised-button color="primary" class="spaced-button left-margin-9" (click)="id ? updateSchema() : addSchema()">{{this.id ? 'Aggiorna Schema' : 'Crea Schema'}}</button>
+        <button mat-raised-button color="primary" class="update-schema" (click)="id ? updateSchema() : addSchema()">{{this.id ? 'Aggiorna Schema' : 'Crea Schema'}}</button>
 
 <!-- ============================================================================================== -->
 
@@ -54,13 +54,17 @@
             <h2 class="rules-header">Regole di Codifica</h2>
             <div *ngIf="!this.newRuleFormOpened" class="open-rule-form">
                 Aggiungi regola:
-                <button mat-raised-button color="primary" (click)="openNewRuleForm()">Nuova</button>
-                <button mat-raised-button color="secondary" (click)="openNewRuleGlobaleForm()">Nuova Globale</button>
-                <button mat-raised-button color="secondary" (click)="openNewRuleFormScegliGlobale()">Globale già esistente</button>
+                <button class="spaced-button" mat-raised-button color="primary" (click)="openNewRuleForm()">Nuova</button>
+                <button class="spaced-button" mat-raised-button color="secondary" (click)="openNewRuleGlobaleForm()">Nuova Globale</button>
+                <button class="spaced-button" mat-raised-button color="secondary" (click)="openNewRuleFormScegliGlobale()">Globale già esistente</button>
             </div>
             <div *ngIf="this.newRuleFormOpened" style="margin: 20px 0 0 2px">
-                <h5 style="display: inline-block;">Nuova Regola</h5>
-                <button (click)="this.newRuleFormOpened=!this.newRuleFormOpened " class="clear-button close-form"><mat-icon class="mat-icon">clear</mat-icon></button>
+                <!-- <div> -->
+                    <h5 style="display: inline-block;">Nuova Regola</h5>
+                <div class="close-wrapper">
+                    <button (click)="this.newRuleFormOpened=!this.newRuleFormOpened " class="clear-button close-form"><mat-icon class="mat-icon">clear</mat-icon></button>
+                </div>
+                <!-- </div> -->
 
                 <div *ngIf="scegliRegoleGlobali">
                     <mat-form-field appearance="fill">
@@ -90,7 +94,7 @@
 
 <!-- ============================================================================================== -->
         <div *ngIf="this.id" class="second-section">
-            <img [src]="imageSrc" style="width: 200px;" *ngIf="hasImage()" />
+            <img [src]="imageSrc" style="width: 100%;" *ngIf="hasImage()" />
             <button (click)="fileInput.click()" mat-raised-button color="primary">
                 <span>Carica un'immagine...</span>
                 <input #fileInput type="file" (change)="uploadImage($event)" accept="image/*" style="display:none;" />

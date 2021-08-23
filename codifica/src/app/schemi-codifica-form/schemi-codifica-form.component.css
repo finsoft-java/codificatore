@@ -7,16 +7,14 @@
     margin-left: 10px;
 }
 
-.schema-type-label, .spaced-button{
+.update-schema {
     margin-top: 20px;
-}
-
-.left-margin-9 {
     margin-left: 9px;
 }
 
 .schema-type-label {
     margin-left: 9px;
+    margin-top: 20px;
     vertical-align: bottom;
 }
 
@@ -50,9 +48,22 @@
     width: 98%;
 }
 
-.close-form {
-    float: right;
-    vertical-align: sub;
+.close-wrapper{
+    display:inline-block;
+    width: 74.5%;
+    text-align: right;
+}
+
+@media (min-width: 992px) {
+    .close-wrapper{
+        width: 81%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .close-wrapper{
+        width: 86%;
+    }
 }
 
 .button-panel {
@@ -96,10 +107,32 @@
 }
 
 .open-rule-form {
-    float: right;
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    margin: 0 0 30px 0;
+    vertical-align: super;
+}
+
+@media (min-width: 992px) {
+    .open-rule-form {
+        width: 71.5%;
+        text-align: right;
+    }
+}
+
+@media (min-width: 1200px) {
+    .open-rule-form {
+        width: 76%;
+        text-align: right;
+    }
 }
 
 .addOptionInput {
     width: 40%;
     margin: 0;
+}
+
+.spaced-button {
+    margin: 0 3px 0 3px;
 }
