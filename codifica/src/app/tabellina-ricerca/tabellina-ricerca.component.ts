@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatRow } from '@angular/material/table';
-import { Codifica, IHash } from '../_models';
+import { ModaleParametriComponent } from '../modale-parametri/modale-parametri.component';
+import { Codifica, IHash, SchemaCodifica } from '../_models';
 import { CodificaService } from '../_services/codifica.service';
 
 @Component({
@@ -23,8 +25,10 @@ export class TabellinaRicercaComponent implements OnInit {
   numOfRecords: number = 50;
   pageSize: number = 50;
   tableLength ?= 0;
+  selectedCodifica: Codifica = {ID_CODIFICA: 0, DESCRIZIONE: '', ID_SCHEMA: 0, CODICE: ''};
+  modaleVisibile: boolean = false;
 
-  constructor(private codSvc: CodificaService) { }
+  constructor(private codSvc: CodificaService, public dialog: MatDialog) { }
   
   ngOnInit(): void {
   }
@@ -48,8 +52,29 @@ export class TabellinaRicercaComponent implements OnInit {
     this.skip = event.pageIndex * this.numOfRecords;
     this.ricercaCodifiche();
   }
-
+  
   showParameters(row: MatRow) {
-    
+    if (this.selectedCodifica.ID_CODIFICA !== (row as Codifica).ID_CODIFICA) {
+      console.log(row);
+      this.codSvc.getParametersByIdCodifica((row as Codifica).ID_CODIFICA || 1).subscribe(response => {
+        (row as Codifica).DATI = response.data;
+        this.selectedCodifica = row as Codifica;
+        const dialogRef = this.dialog.open(ModaleParametriComponent, {
+          width: '400px',
+          data: response.data
+        });
+      },
+      error => {
+      });
+    }
+    else {
+      const dialogRef = this.dialog.open(ModaleParametriComponent, {
+        width: '400px',
+        data: this.selectedCodifica.DATI
+      });
+    }
+  }
+  closeModale() {
+    this.modaleVisibile = false;
   }
 }

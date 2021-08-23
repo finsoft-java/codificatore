@@ -33,3 +33,8 @@
         aria-label="Select page of periodic elements">
     </mat-paginator>
 </div>
+
+<div *ngIf="modaleVisibile">
+    <app-modale-parametri [Codifica] = "selectedCodifica">
+    </app-modale-parametri>
+</div>

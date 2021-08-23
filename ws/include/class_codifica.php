@@ -108,7 +108,7 @@ class CodificaManager {
                 "FROM codifiche_dati x " .
                 "WHERE id_codifica='$idCodifica' ";
 
-        $objects = select_list($sql1 . $sql);        
+        $objects = select_list($sql);        
         $count = count($objects);
         return [$objects, $count];
     }

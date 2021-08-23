@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ListBean, ValueBean, Codifica, IHash } from '../_models';
+import { ListBean, ValueBean, Codifica, IHash, CodificaDati } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -32,4 +32,9 @@ export class CodificaService {
   delete(obj: Codifica): Observable<void> {
     return this.http.delete<any>(environment.wsUrl + `Codifica.php?idCodifica=${obj.ID_CODIFICA}`);
   }
+
+  getParametersByIdCodifica(idCodifica: number): Observable<ListBean<CodificaDati>> {
+    return this.http.get<ListBean<CodificaDati>>(environment.wsUrl + `DatiCodifica.php?idCodifica=${idCodifica}`);
+  }
+
 }

@@ -38,6 +38,7 @@ import { SchemiCodificaFormComponent } from './schemi-codifica-form/schemi-codif
 import { SchemiCodificaRegolaComponent } from './schemi-codifica-regola/schemi-codifica-regola.component';
 import { CodificaSubformComponent } from './codifica-subform/codifica-subform.component';
 import { TabellinaRicercaComponent } from './tabellina-ricerca/tabellina-ricerca.component';
+import { ModaleParametriComponent } from './modale-parametri/modale-parametri.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { TabellinaRicercaComponent } from './tabellina-ricerca/tabellina-ricerca
     SchemiCodificaFormComponent,
     SchemiCodificaRegolaComponent,
     CodificaSubformComponent,
-    TabellinaRicercaComponent
+    TabellinaRicercaComponent,
+    ModaleParametriComponent
   ],
   imports: [
     HttpClientModule,
