@@ -18,9 +18,9 @@ export class CodificaService {
     return this.http.get<ValueBean<Codifica>>(environment.wsUrl + `Codifica.php?idCodifica=${idCodifica}`);
   }
 
-  getByDatiCodifica(datiCodifica: IHash): Observable<ListBean<Codifica>> {
+  getByDatiCodifica(datiCodifica: IHash, top: number, skip: number): Observable<ListBean<Codifica>> {
     console.log("DEBUG datiCodifica=", datiCodifica);
-    return this.http.post<ListBean<Codifica>>(environment.wsUrl + 'RicercaCodifiche.php', datiCodifica);
+    return this.http.post<ListBean<Codifica>>(environment.wsUrl + `RicercaCodifiche.php?top=${top}&&skip=${skip}`, datiCodifica);
   }
 
   create(obj: Codifica): Observable<ValueBean<Codifica>> {
