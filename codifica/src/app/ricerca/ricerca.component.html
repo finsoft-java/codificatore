@@ -10,7 +10,9 @@ Selezionare lo schema di codifica:
     </mat-select>
 </mat-form-field>
 
-<button (click)="reset()" mat-raised-button color="secondary" [ngStyle]="{'float': 'right', 'margin-bottom': '15px'}" [disabled]="schemaScelto === undefined">Reset</button>
+<div class="reset-wrapper">
+    <button (click)="reset()" mat-raised-button color="secondary" [disabled]="schemaScelto === undefined">Reset</button>
+</div>
 
 <div class="schema-main-section" *ngIf="schemaScelto !== undefined">
     

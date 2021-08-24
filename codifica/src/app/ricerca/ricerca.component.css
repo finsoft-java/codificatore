@@ -6,3 +6,15 @@
     margin: 10px 0;
     width: 100%;
 }
+
+.reset-wrapper {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+@media(min-width: 765px){
+    .reset-wrapper {
+        text-align: right;
+        margin-bottom: 0;
+    }
+}
