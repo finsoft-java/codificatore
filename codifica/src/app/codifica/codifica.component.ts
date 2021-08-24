@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { Codifica, CodificaDati, IHash, SchemaCodifica, SchemaCodificaRegole } from '../_models';
+import { AlertService } from '../_services/alert.service';
 import { CodificaService } from '../_services/codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
@@ -14,7 +15,8 @@ import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 export class CodificaComponent implements OnInit {
   constructor(private svc: SchemiCodificaService,
     private regoleSvc: SchemiCodificaRegoleService,
-    private codSvc: CodificaService) { }
+    private codSvc: CodificaService,
+    private alertService: AlertService) { }
 
   schemi: SchemaCodifica[] = [];
   schemaScelto?: SchemaCodifica;
@@ -72,6 +74,14 @@ export class CodificaComponent implements OnInit {
     this.codSvc.create(c).subscribe(response => {
       this.codificaSalvata = response.value;
       console.log('Codifica was saved;', this.codificaSalvata);
+      this.alertService.success('Codifica salvata con successo!');
+    },
+    error => {
+      if (error.status === 401 || error.status === 403) {
+        this.alertService.error('Errore del Server');
+      } else {
+        this.alertService.error(error);
+      }
     });
   }
 

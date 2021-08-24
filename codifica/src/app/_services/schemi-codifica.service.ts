@@ -46,7 +46,7 @@ export class SchemiCodificaService implements HttpCrudService<SchemaCodifica> {
   uploadImage(idSchemaCodifica: number, image: File) {
     const formData = new FormData();
     formData.append('image', image);
-    console.log('just here');
+    console.log(formData.get('image'));
     return this.http.post<void>(environment.wsUrl + `SchemaImage.php?idSchema=${idSchemaCodifica}`, formData);
   }
 }

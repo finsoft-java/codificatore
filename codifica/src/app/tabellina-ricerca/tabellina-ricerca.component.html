@@ -1,4 +1,4 @@
-<div>
+<div class="tabella-wrapper">
     <button (click)="ricercaCodifiche()" mat-raised-button color="primary" class="cerca-codifica"
         [disabled]="!searchEnabled || stato=='searching' || datiCodifica == null || datiCodifica.length == 0">
         Ricerca tra i codici già salvati
@@ -26,15 +26,11 @@
     </table>
     <mat-paginator *ngIf="codificheTrovate.length > 0"
         [length] = "tableLength"
-        [pageSize] ="pageSize"
-        [pageSizeOptions]="[50, 100]"
+        [pageSize] ="numOfRecords"
+        [pageSizeOptions]="[2,50, 100]"
         showFirstLastButtons 
         (page)="changePage($event)"
-        aria-label="Select page of periodic elements">
+        aria-label="Select page"
+        >
     </mat-paginator>
-</div>
-
-<div *ngIf="modaleVisibile">
-    <app-modale-parametri [Codifica] = "selectedCodifica">
-    </app-modale-parametri>
 </div>

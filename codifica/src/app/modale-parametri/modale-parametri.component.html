@@ -1,8 +1,6 @@
 <div class="modale">
     <h3>Parametri Codifica</h3>
-    <ul>
-        <li *ngFor="let parameter of data">
-            {{parameter.NOM_VARIABILE}} {{parameter.VALORE}}
-        </li>
-    </ul>
+    <div class="parametro" *ngFor="let parameter of data">
+        <b>{{parameter.NOM_VARIABILE}}:</b> {{parameter.VALORE}}
+    </div>
 </div>

@@ -9,5 +9,17 @@
 
 .area-evidenziata {
     background-color: lightgreen;
-    margin: 20px
+    margin-top: 20px ;
+}
+
+.reset-wrapper {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+@media(min-width: 765px){
+    .reset-wrapper {
+        text-align: right;
+        margin-bottom: 0;
+    }
 }

@@ -6,14 +6,14 @@
     <div *ngIf="r.TIPO =='text'">
         <mat-form-field appearance="fill">
             <mat-label>{{r.NOM_VARIABILE}}</mat-label>
-            <input matInput name="Rule_{{r.NOM_VARIABILE}}" [required]="considerRequired && r.REQUIRED=='Y'" [maxLength]="r.MAXLENGTH" [pattern]="r.PATTERN_REGEXP" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
+            <input matInput name="Rule_{{r.NOM_VARIABILE}}" [required]="considerRequired && r.REQUIRED=='Y'" [maxLength]="r.MAXLENGTH" [pattern]="r.PATTERN_REGEXP" (input)="onChangeInputRule(r.NOM_VARIABILE,$event)">
             <mat-hint>{{r.ETICHETTA}}</mat-hint>
         </mat-form-field>
     </div>
     <div *ngIf="r.TIPO =='number'">
         <mat-form-field appearance="fill">
             <mat-label>{{r.NOM_VARIABILE}}</mat-label>
-            <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}" [required]="considerRequired && r.REQUIRED=='Y'" [min]="r.MIN" [max]="r.MAX" (change)="onChangeInputRule(r.NOM_VARIABILE,$event)">
+            <input matInput type="number" name="Rule_{{r.NOM_VARIABILE}}" [required]="considerRequired && r.REQUIRED=='Y'" [min]="r.MIN" [max]="r.MAX" (input)="onChangeInputRule(r.NOM_VARIABILE,$event)">
             <mat-hint>{{r.ETICHETTA}}</mat-hint>
         </mat-form-field>
     </div>

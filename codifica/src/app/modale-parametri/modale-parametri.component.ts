@@ -20,5 +20,6 @@ export class ModaleParametriComponent implements OnInit {
 
   closeModal() {
     this.dialogRef.close();
+    this.closed.emit(false);
   }
 }

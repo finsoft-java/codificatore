@@ -22,14 +22,13 @@ export class TabellinaRicercaComponent implements OnInit {
   codificheTrovate: Codifica[] = [];
   stato: 'initial' | 'searching' | 'search_done' = 'initial';
   skip: number = 0;
-  numOfRecords: number = 50;
-  pageSize: number = 50;
+  numOfRecords: number = 2;
   tableLength ?= 0;
-  selectedCodifica: Codifica = {ID_CODIFICA: 0, DESCRIZIONE: '', ID_SCHEMA: 0, CODICE: ''};
+  selectedCodifica: Codifica = { ID_CODIFICA: 0, DESCRIZIONE: '', ID_SCHEMA: 0, CODICE: '' };
   modaleVisibile: boolean = false;
 
   constructor(private codSvc: CodificaService, public dialog: MatDialog) { }
-  
+
   ngOnInit(): void {
   }
 
@@ -49,10 +48,12 @@ export class TabellinaRicercaComponent implements OnInit {
   }
 
   changePage(event: PageEvent) {
+    console.log('boooooh');
+    this.numOfRecords = event.pageSize;
     this.skip = event.pageIndex * this.numOfRecords;
     this.ricercaCodifiche();
   }
-  
+
   showParameters(row: MatRow) {
     if (this.selectedCodifica.ID_CODIFICA !== (row as Codifica).ID_CODIFICA) {
       console.log(row);

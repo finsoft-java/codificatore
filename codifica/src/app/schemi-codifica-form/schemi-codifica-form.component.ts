@@ -81,6 +81,7 @@ export class SchemiCodificaFormComponent implements OnInit {
           this.schemaCodificaForm = response.value;
           console.log(this.schemaCodificaForm);
           this.imageSrc = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/*;base64,' + this.schemaCodificaForm.IMMAGINE_B64);
+          console.log(this.imageSrc);
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -141,7 +142,7 @@ export class SchemiCodificaFormComponent implements OnInit {
       .subscribe(
         response => {
           this.schemaCodificaRegole2 = response.data;
-          this.newRuleFormOpened = !(response.data.length > 0);
+          //this.newRuleFormOpened = !(response.data.length > 0);
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -252,6 +253,10 @@ export class SchemiCodificaFormComponent implements OnInit {
     // TODO Some warning?
     this.schemaCodificaService.deleteImage(this.id).subscribe(response => {
       this.getSchemaEsistente(this.id);
+      this.alertService.success('Immagine eliminata con successo!');
+    },
+    error => {
+      this.alertService.error('Error del server.');
     });
   }
 

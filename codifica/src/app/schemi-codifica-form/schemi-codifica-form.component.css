@@ -14,7 +14,6 @@
 
 .schema-type-label {
     margin-left: 9px;
-    margin-top: 20px;
     vertical-align: bottom;
 }
 
@@ -44,25 +43,36 @@
 
 .second-section {
     margin-top: 20px;
-    margin-left: 1%;
+    margin-left: 9px;
     width: 98%;
+    display: inline-block;
+}
+
+.second-section .spaced-button:first-child {
+    margin-left: 0;
 }
 
 .close-wrapper{
-    display:inline-block;
-    width: 74.5%;
+    display: inline-block;
+    width: 74%;
     text-align: right;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
     .close-wrapper{
         width: 81%;
     }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
     .close-wrapper{
         width: 86%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .close-wrapper{
+        width: 88%;
     }
 }
 
@@ -134,5 +144,45 @@
 }
 
 .spaced-button {
-    margin: 0 3px 0 3px;
+    margin: 0 4px;
 }
+
+@media (max-width: 768px){
+    .open-rule-form .spaced-button {
+        display:block;
+        margin: 10px 0 ;
+    }
+
+    .open-rule-form {
+        margin: 0 0 10px 0;
+    }
+}
+
+@media (max-width: 576px){
+    .second-section .spaced-button {
+        display:block;
+        margin: 10px 0 ;
+    }
+
+    .open-rule-form {
+        margin: 0 0 10px 0;
+    }
+}
+
+.mat-form-field {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px){
+    .mat-form-field {
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 576px){
+    .mat-form-field {
+        margin-bottom: 40px;
+    }
+}
+
+
