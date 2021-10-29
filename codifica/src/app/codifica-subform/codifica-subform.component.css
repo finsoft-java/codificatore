@@ -2,9 +2,16 @@
     margin-bottom: 10px;
 }
 
+.mat-form-field {
+    width: 50%
+}
+
 @media (max-width: 768px){
     .mat-form-field {
         margin-bottom: 25px;
+    }
+    .mat-form-field {
+        width: 100%
     }
 }
 

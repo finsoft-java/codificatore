@@ -33,7 +33,7 @@
         <mat-form-field appearance="fill">
             <mat-label>{{r.NOM_VARIABILE}}</mat-label>
             <mat-select name="Rule_{{r.NOM_VARIABILE}}" [required]="considerRequired && r.REQUIRED=='Y'" (selectionChange)="onChangeSottoschema(r.NOM_VARIABILE,$event)">
-                <mat-option *ngFor="let s of schemi" [value]="s.ID_SCHEMA">
+                <mat-option *ngFor="let s of r.SOTTOSCHEMI" [value]="s.ID_SOTTO_SCHEMA">
                     {{s.TITOLO}}
                 </mat-option>
             </mat-select>

@@ -68,6 +68,10 @@ export class SchemiCodificaRegolaComponent implements OnInit {
 
   saveRule() {
     if (this.creating) {
+      if (!/^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(this.regola.NOM_VARIABILE)) {
+        this.alertService.error('Nome variabile non valido.');
+        return;
+      }
       this.schemiCodificaRegolaService.create(this.regola).subscribe(
         response => {
           console.log(response.value);

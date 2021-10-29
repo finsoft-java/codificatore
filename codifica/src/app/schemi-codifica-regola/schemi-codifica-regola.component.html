@@ -1,8 +1,8 @@
 <div formclass="regola-container" *ngIf="regola">
     <mat-form-field appearance="fill">
         <mat-label>Nome variabile</mat-label>
-        <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput required  [disabled]="!creating">
-        <mat-hint>Es: "tipo_prod"</mat-hint>
+        <input [(ngModel)]="regola.NOM_VARIABILE" type="text" matInput pattern="[a-zA-Z_$][0-9a-zA-Z_$]*" required  [disabled]="!creating">
+        <mat-hint>Es: "tipo_prod". Non deve contenere spazi. Gli unici caratteri particolari ammessi sono _ e $.</mat-hint>
     </mat-form-field>
     <label class="rule-label">Globale</label>
     <mat-checkbox [checked]="regola.GLOBAL==='Y'" disabled></mat-checkbox>

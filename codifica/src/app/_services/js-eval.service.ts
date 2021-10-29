@@ -20,21 +20,26 @@ export class JsEvalService {
     if (!template) return '';
 
     const matches = template.match(/{{[^}]*}}/g);
-    console.log('Compongo il codice (o la descrizione) con questi parametri:', parametri);
+    console.log('Compongo il codice/la descrizione con questi parametri:', parametri);
 
     let finalResult = template;
     if (matches != null) {
-      let [parametriObj, parametriStr] = this.splitParameters(parametri);
+      let [stringhe, oggetti, attributi] = this.splitParameters(parametri);
       matches.forEach(mustache => {
 
         // A ogni ciclo, sostituisco un {{mustache}} con il suo valore calcolato
 
         let formula = '';
-        parametriObj.forEach(paramName => {
+        oggetti.forEach(paramName => {
           formula += `var ${paramName}={};`;
         });
-        parametriStr.forEach(paramName => {
-          formula += `var ${paramName}='${parametri[paramName]}';`;
+        attributi.forEach(paramName => {
+          let paramValue = this.escapeParamValue(parametri[paramName]);
+          formula += `${paramName}=${paramValue};`;
+        });
+        stringhe.forEach(paramName => {
+          let paramValue = this.escapeParamValue(parametri[paramName]);
+          formula += `var ${paramName}=${paramValue};`;
         });
 
         if (jsPrerender) {
@@ -48,45 +53,64 @@ export class JsEvalService {
         finalResult = finalResult.replace(mustache, mustacheEvaluated || '');
       });
     }
-
     return finalResult;
   }
 
-  /**
-   * Divide i parametri tra stringhe e oggetti
-   * Es. un parametr si chiama aa.bb.cc
-   * assumo che aa e bb siano oggetti, mentre cc sia una stringa
-   */
-  splitParameters (parametri: IHash) {
-    let parametriObj: string[] = [];
-    let parametriStr: string[] = [];
-    Object.keys(parametri).forEach(paramName => {
-      let [parametriObj1, parametriStr1] = this.splitParameter(paramName);
-      parametriObj1.forEach(element => {
-        if ((element !== undefined) && !(element in parametriObj)) {
-          parametriObj.push(element);
-        }
-      });
-      parametriStr1.forEach(element => {
-        if ((element !== undefined) && !(element in parametriStr)) {
-          parametriStr.push(element);
-        }
-      });
-    });
-    return [parametriObj, parametriStr];
+  escapeParamValue(value: any): string {
+    if (value === undefined) {
+      return 'undefined';
+    } else if (value === null) {
+      return 'null';
+    } else if (typeof(value) === 'number') {
+      return '' + value;
+    } else {
+      return "'" + value.replace("\r", "").replace("\n", "").replace("\\", "\\\\").replace("'", "\\'") + "'";
+    }
   }
 
   /**
-   * Divide una stringa (dot-notation) in token, separando l'ultimo livello dagli altri
-   * Es. dato 'aaa.bbb.ccc' restituisce [['aaa','bbb'],['ccc']]]
-  */
-  splitParameter(paramName: string) {
-    let tokens = paramName.split('.');
-    if (tokens.length == 1) {
-      return [[], [paramName]];
-    } else {
-      return [tokens, [tokens.pop()]];
+   * Restituisce tre liste: le variabili string, gli oggetti, gli attributi string
+   */
+  splitParameters (parametri: IHash) {
+    let stringhe: string[] = [];
+    let oggetti: string[] = [];
+    let attributi: string[] = [];
+    Object.keys(parametri).forEach(paramName => {
+      let [stringhe1, oggetti1, attributi1] = this.getAllParameters(paramName);
+      this.addAllIfNotPresent(oggetti1, oggetti);
+      this.addAllIfNotPresent(attributi1, attributi);
+      this.addAllIfNotPresent(stringhe1, stringhe);
+    });
+    return [stringhe, oggetti, attributi];
+  }
+
+  addAllIfNotPresent(src: any[], dest: any[]) {
+    src.forEach(x => this.addIfNotPresent(x, dest));
+  }
+
+  addIfNotPresent(x: any, list: any[]) {
+    if ((x !== undefined) && !(x in list)) {
+      list.push(x);
     }
+  }
+
+  /**
+   * Data una stringa, restituisce tre liste: le variabili string, gli oggetti, gli attributi string.
+   * Ad esempio, per 'aaa' restituisce [['aaa'],[],[]] perchè è una variabile semplice;
+   * per 'aa.bb.cc' restituisce [[],['aa','aa.bb'],['aa.bb.cc]]
+   * @param paramName 
+   */
+  getAllParameters(paramName: string) {
+    if (!paramName.includes('.')) {
+      return [[paramName], [], []];
+    }
+    let idx = 0;
+    let objects = [];
+    while ((idx = paramName.indexOf('.', idx)) >= 0) {
+      objects.push(paramName.substr(0, idx));
+      ++idx;
+    }
+    return [[], objects, [paramName]];
   }
 
 }
