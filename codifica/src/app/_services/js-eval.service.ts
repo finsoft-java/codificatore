@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { IHash } from '../_models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class JsEvalService {
-
   constructor() { }
 
-  
   /**
    * Compone una stringa template con i parametri presenti in this.parametri
    * @param template es. "Hello {{name.toUpperCase()}}!"
@@ -16,7 +12,7 @@ export class JsEvalService {
    * @param jsPrerender es. "name = 'Mr. ' + name"
    * @returns rendered template es. "Hello MR. GOOFY"
    */
-   componi(template: string, parametri: IHash, jsPrerender?: string|null): string {
+  componi(template: string, parametri: IHash, jsPrerender?: string|null): string {
     if (!template) return '';
 
     const matches = template.match(/{{[^}]*}}/g);
@@ -26,7 +22,6 @@ export class JsEvalService {
     if (matches != null) {
       let [stringhe, oggetti, attributi] = this.splitParameters(parametri);
       matches.forEach(mustache => {
-
         // A ogni ciclo, sostituisco un {{mustache}} con il suo valore calcolato
 
         let formula = '';
@@ -59,19 +54,20 @@ export class JsEvalService {
   escapeParamValue(value: any): string {
     if (value === undefined) {
       return 'undefined';
-    } else if (value === null) {
-      return 'null';
-    } else if (typeof(value) === 'number') {
-      return '' + value;
-    } else {
-      return "'" + value.replace("\r", "").replace("\n", "").replace("\\", "\\\\").replace("'", "\\'") + "'";
     }
+    if (value === null) {
+      return 'null';
+    }
+    if (typeof (value) === 'number') {
+      return '' + value;
+    }
+    return "'" + value.replace("\r", "").replace("\n", "").replace("\\", "\\\\").replace("'", "\\'") + "'";
   }
 
   /**
    * Restituisce tre liste: le variabili string, gli oggetti, gli attributi string
    */
-  splitParameters (parametri: IHash) {
+  splitParameters(parametri: IHash) {
     let stringhe: string[] = [];
     let oggetti: string[] = [];
     let attributi: string[] = [];
@@ -98,7 +94,7 @@ export class JsEvalService {
    * Data una stringa, restituisce tre liste: le variabili string, gli oggetti, gli attributi string.
    * Ad esempio, per 'aaa' restituisce [['aaa'],[],[]] perchè è una variabile semplice;
    * per 'aa.bb.cc' restituisce [[],['aa','aa.bb'],['aa.bb.cc]]
-   * @param paramName 
+   * @param paramName
    */
   getAllParameters(paramName: string) {
     if (!paramName.includes('.')) {
@@ -112,5 +108,4 @@ export class JsEvalService {
     }
     return [[], objects, [paramName]];
   }
-
 }

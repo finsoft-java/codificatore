@@ -88,4 +88,8 @@ export class CodificaComponent implements OnInit {
   setParametriObbligatori($event: boolean) {
     this.parametriObbligatoriSettati = $event;
   }
+
+  showError(error: string) {
+    this.alertService.error(error);
+  }
 }

@@ -32,6 +32,8 @@ export class CodificaSubformComponent implements OnInit {
   changeDatiCodifica: EventEmitter<IHash[]> = new EventEmitter<IHash[]>();
   @Output()
   changeParametriObbligatoriSettati: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output()
+  errorEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   schema?: SchemaCodifica;
   regole: SchemaCodificaRegole[] = [];
@@ -110,10 +112,20 @@ export class CodificaSubformComponent implements OnInit {
     if (!this.schema) return;
 
     if (this.schema.TPL_CODICE) {
-      this.codiceCalcolato = this.jsEvalService.componi(this.schema.TPL_CODICE, this.parametri, this.schema.PRE_RENDER_JS);
+      try {
+        this.codiceCalcolato = this.jsEvalService.componi(this.schema.TPL_CODICE, this.parametri, this.schema.PRE_RENDER_JS);
+      }
+      catch (exc: any) {
+        this.showError('Errore nel calcolo del codice: ' + exc.message);
+      }
     }
     if (this.schema.TPL_DESCRIZIONE) {
-      this.descrizioneCalcolata = this.jsEvalService.componi(this.schema.TPL_DESCRIZIONE, this.parametri, this.schema.PRE_RENDER_JS);
+      try {
+        this.descrizioneCalcolata = this.jsEvalService.componi(this.schema.TPL_DESCRIZIONE, this.parametri, this.schema.PRE_RENDER_JS);
+      }
+      catch (exc: any) {
+        this.showError('Errore nel calcolo della descrizione: ' + exc.message);
+      }
     }
 
     this.changeCodice.emit(this.codiceCalcolato);
@@ -128,9 +140,9 @@ export class CodificaSubformComponent implements OnInit {
   }
 
   controllaRegoleObbligatorie() {
-    const missing = this.regole.filter(x => x.REQUIRED == 'Y').find(x => {
+    const missing = this.regole.filter(x => x.REQUIRED === 'Y').find(x => {
       const value = this.parametri[x.NOM_VARIABILE];
-      return (value === undefined || value == null || value == '');
+      return (value === undefined || value == null || value === '');
     });
     this.parametriObbligatoriSettati = !missing;
     this.changeParametriObbligatoriSettati.emit(this.parametriObbligatoriSettati);
@@ -138,6 +150,10 @@ export class CodificaSubformComponent implements OnInit {
 
   changeParametriObbligatoriSottoschemi(nomVariabile: string, $event: boolean) {
     // TODO
-    console.log("Should recheck ParametriRquired", $event);
+    console.log("Should recheck ParametriRequired", $event);
+  }
+
+  showError(error: string) {
+    this.errorEmitter.emit(error);
   }
 }

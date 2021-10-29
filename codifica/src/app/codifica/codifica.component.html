@@ -2,46 +2,67 @@
 
 Selezionare lo schema di codifica:
 <mat-form-field class="select-schema">
-    <mat-select placeholder="Schema di codifica" [(ngModel)]="schemaScelto" (selectionChange)="onSelectSchema($event)" name="schema" [disabled]="schemaScelto !== undefined">
-        <mat-option *ngFor="let schema of schemi" [value]="schema">
-            {{schema.TITOLO}}
-        </mat-option>
-    </mat-select>
+  <mat-select
+    placeholder="Schema di codifica"
+    [(ngModel)]="schemaScelto"
+    (selectionChange)="onSelectSchema($event)"
+    name="schema"
+    [disabled]="schemaScelto !== undefined"
+  >
+    <mat-option *ngFor="let schema of schemi" [value]="schema">
+      {{ schema.TITOLO }}
+    </mat-option>
+  </mat-select>
 </mat-form-field>
 
 <div class="reset-wrapper">
-    <button (click)="reset()" mat-raised-button color="secondary" class="reset-button" [disabled]="schemaScelto === undefined">Reset</button>
+  <button
+    (click)="reset()"
+    mat-raised-button
+    color="secondary"
+    class="reset-button"
+    [disabled]="schemaScelto === undefined"
+  >
+    Reset
+  </button>
 </div>
 
 <div class="schema-main-section" *ngIf="schemaScelto !== undefined">
-    
-    <app-codifica-subform
-        [idSchema]="schemaScelto.ID_SCHEMA"
-        (changeCodice)="codiceCalcolato = $event"
-        (changeDescrizione)="descrizioneCalcolata = $event"
-        (changeDatiCodifica)="datiCodifica = $event"
-        (changeParametriObbligatoriSettati)="parametriObbligatoriSettati = $event"
-        >
-    </app-codifica-subform>
+  <app-codifica-subform
+    [idSchema]="schemaScelto.ID_SCHEMA"
+    (changeCodice)="codiceCalcolato = $event"
+    (changeDescrizione)="descrizioneCalcolata = $event"
+    (changeDatiCodifica)="datiCodifica = $event"
+    (changeParametriObbligatoriSettati)="parametriObbligatoriSettati = $event"
+    (errorEmitter)="showError($event)"
+  >
+  </app-codifica-subform>
 
-    <!-- Calcolo CODICE e DESCRIZIONE in tempo reale-->
-    <div *ngIf="parametriObbligatoriSettati">
-        <div class="area-evidenziata">
-            <p style="padding: 15px; padding-bottom: 0;">
-                <b>Codice</b>: {{codiceCalcolato}} 
-            </p>
-            <p style="padding: 15px;">
-                <b>Descrizione</b>: {{descrizioneCalcolata}} 
-            </p>
-        </div>
-
-        <app-tabellina-ricerca
-            [datiCodifica]="datiCodifica"
-            [searchEnabled]="parametriObbligatoriSettati"
-        ></app-tabellina-ricerca>
-
-        <div>
-            <button (click)="salvaCodifica()" mat-raised-button color="primary" [disabled]="codificaSalvata !== undefined">Salva questa codifica</button>
-        </div>
+  <!-- Calcolo CODICE e DESCRIZIONE in tempo reale-->
+  <div *ngIf="parametriObbligatoriSettati">
+    <div class="area-evidenziata">
+      <p style="padding: 15px; padding-bottom: 0">
+        <b>Codice</b>: {{ codiceCalcolato }}
+      </p>
+      <p style="padding: 15px">
+        <b>Descrizione</b>: {{ descrizioneCalcolata }}
+      </p>
     </div>
+
+    <app-tabellina-ricerca
+      [datiCodifica]="datiCodifica"
+      [searchEnabled]="parametriObbligatoriSettati"
+    ></app-tabellina-ricerca>
+
+    <div>
+      <button
+        (click)="salvaCodifica()"
+        mat-raised-button
+        color="primary"
+        [disabled]="codificaSalvata !== undefined"
+      >
+        Salva questa codifica
+      </button>
+    </div>
+  </div>
 </div>
