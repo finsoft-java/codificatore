@@ -5,38 +5,36 @@
 <div *ngFor="let r of regole">
   <div *ngIf="r.TIPO == 'text'">
     <mat-form-field appearance="fill">
-      <mat-label>{{ r.NOM_VARIABILE }}</mat-label>
+      <mat-label>{{ r.ETICHETTA }}</mat-label>
       <input
         matInput
-        name="Rule_{{ r.NOM_VARIABILE }}"
+        name="{{ r.ETICHETTA }}"
         [required]="considerRequired && r.REQUIRED == 'Y'"
-        [maxLength]="r.MAXLENGTH"
+        [maxLength]="r.MAXLENGTH && r.MAXLENGTH>0?r.MAXLENGTH:9999"
         [pattern]="r.PATTERN_REGEXP"
         (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
       />
-      <mat-hint>{{ r.ETICHETTA }}</mat-hint>
     </mat-form-field>
   </div>
   <div *ngIf="r.TIPO == 'number'">
     <mat-form-field appearance="fill">
-      <mat-label>{{ r.NOM_VARIABILE }}</mat-label>
+      <mat-label>{{ r.ETICHETTA }}</mat-label>
       <input
         matInput
         type="number"
-        name="Rule_{{ r.NOM_VARIABILE }}"
+        name="{{ r.ETICHETTA }}"
         [required]="considerRequired && r.REQUIRED == 'Y'"
         [min]="r.MIN"
         [max]="r.MAX"
         (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
       />
-      <mat-hint>{{ r.ETICHETTA }}</mat-hint>
     </mat-form-field>
   </div>
   <div *ngIf="r.TIPO == 'elenco'">
     <mat-form-field appearance="fill">
-      <mat-label>{{ r.NOM_VARIABILE }}</mat-label>
+      <mat-label>{{ r.ETICHETTA }}</mat-label>
       <mat-select
-        name="Rule_{{ r.NOM_VARIABILE }}"
+        name="{{ r.ETICHETTA }}"
         [required]="considerRequired && r.REQUIRED == 'Y'"
         (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE, $event)"
       >
@@ -44,15 +42,14 @@
           {{ opt.ETICHETTA }}
         </mat-option>
       </mat-select>
-      <mat-hint>{{ r.ETICHETTA }}</mat-hint>
     </mat-form-field>
   </div>
   <div *ngIf="r.TIPO == 'sottoschema'">
     <h5>{{ r.ETICHETTA }}</h5>
     <mat-form-field appearance="fill">
-      <mat-label>{{ r.NOM_VARIABILE }}</mat-label>
+      <mat-label>{{ r.ETICHETTA }}</mat-label>
       <mat-select
-        name="Rule_{{ r.NOM_VARIABILE }}"
+        name="{{ r.ETICHETTA }}"
         [required]="considerRequired && r.REQUIRED == 'Y'"
         (selectionChange)="onChangeSottoschema(r.NOM_VARIABILE, $event)"
       >
@@ -60,7 +57,6 @@
           {{ s.TITOLO }}
         </mat-option>
       </mat-select>
-      <mat-hint>{{ r.ETICHETTA }}</mat-hint>
     </mat-form-field>
 
     <app-codifica-subform
@@ -70,7 +66,7 @@
       (changeCodice)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'codice', $event)"
       (changeDescrizione)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'descrizione', $event)"
       (changeDatiCodifica)="parametriSottoSchemi = $event"
-      (changeParametriObbligatoriSettati)="changeParametriObbligatoriSottoschemi(r.NOM_VARIABILE, $event)"
+      (changeParametriObbligatoriSettati)="changeParametriObbligatoriSottoschemi($event)"
       (errorEmitter)="showError($event)"
     >
     </app-codifica-subform>

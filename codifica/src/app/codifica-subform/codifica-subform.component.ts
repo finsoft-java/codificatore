@@ -1,5 +1,6 @@
 /* eslint-disable no-eval */
 import { ThisReceiver } from '@angular/compiler';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { IHash, SchemaCodifica, SchemaCodificaRegole } from '../_models';
@@ -43,6 +44,7 @@ export class CodificaSubformComponent implements OnInit {
   descrizioneCalcolata = '';
   parametriSottoSchemi: IHash[] = [];
   parametriObbligatoriSettati = false;
+  parametriObbligatoriSottoschemiSettati = true;
 
   ngOnInit(): void {
     // Carico lo schema (ma serve??)
@@ -57,6 +59,7 @@ export class CodificaSubformComponent implements OnInit {
           this.parametri[r.NOM_VARIABILE + '.id'] = '';
           this.parametri[r.NOM_VARIABILE + '.codice'] = '';
           this.parametri[r.NOM_VARIABILE + '.descrizione'] = '';
+          this.parametriObbligatoriSottoschemiSettati = false; //setto a false in quanto non so se i figli avranno proprietà obbligatorie
         } else {
           this.parametri[r.NOM_VARIABILE] = '';
         }
@@ -77,7 +80,9 @@ export class CodificaSubformComponent implements OnInit {
   }
 
   onChangeInputRule(nomVariabile: string, evt: Event) {
-    this.parametri[nomVariabile] = (<HTMLInputElement>evt.target).value;
+    const element = <HTMLInputElement>evt.target;
+    this.checkValidity(evt);
+    this.parametri[nomVariabile] = element.value;
     this.controllaRegoleObbligatorie();
     this.componiCodiceDescrizione();
   }
@@ -114,16 +119,14 @@ export class CodificaSubformComponent implements OnInit {
     if (this.schema.TPL_CODICE) {
       try {
         this.codiceCalcolato = this.jsEvalService.componi(this.schema.TPL_CODICE, this.parametri, this.schema.PRE_RENDER_JS);
-      }
-      catch (exc: any) {
+      } catch (exc: any) {
         this.showError('Errore nel calcolo del codice: ' + exc.message);
       }
     }
     if (this.schema.TPL_DESCRIZIONE) {
       try {
         this.descrizioneCalcolata = this.jsEvalService.componi(this.schema.TPL_DESCRIZIONE, this.parametri, this.schema.PRE_RENDER_JS);
-      }
-      catch (exc: any) {
+      } catch (exc: any) {
         this.showError('Errore nel calcolo della descrizione: ' + exc.message);
       }
     }
@@ -142,15 +145,27 @@ export class CodificaSubformComponent implements OnInit {
   controllaRegoleObbligatorie() {
     const missing = this.regole.filter(x => x.REQUIRED === 'Y').find(x => {
       const value = this.parametri[x.NOM_VARIABILE];
-      return (value === undefined || value == null || value === '');
+      return (x.TIPO !== 'sottoschema' && (value === undefined || value == null || value === ''));
     });
     this.parametriObbligatoriSettati = !missing;
-    this.changeParametriObbligatoriSettati.emit(this.parametriObbligatoriSettati);
+    this.changeParametriObbligatoriSettati.emit(this.parametriObbligatoriSettati && this.parametriObbligatoriSottoschemiSettati);
   }
 
-  changeParametriObbligatoriSottoschemi(nomVariabile: string, $event: boolean) {
-    // TODO
-    console.log("Should recheck ParametriRequired", $event);
+  changeParametriObbligatoriSottoschemi($event: boolean) {
+    this.parametriObbligatoriSottoschemiSettati = $event;
+  }
+
+  checkValidity(event: Event) {
+    const element = <HTMLInputElement>event.target;
+    if (element) {
+      if (element.validity.patternMismatch) {
+        element.setCustomValidity('Valore inserito non corretto!');
+        element.reportValidity();
+      }
+      else {
+        element.setCustomValidity('');
+      }
+    }
   }
 
   showError(error: string) {
