@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
 import { ColumnDefinition } from '../mat-edit-table';
 import { SchemaCodifica } from '../_models';
 import { AlertService } from '../_services/alert.service';
@@ -17,6 +18,12 @@ export class SchemiCodificaComponent implements OnInit {
   alert: AlertService;
   routerFrontend: Router;
   schemaCodificaList: SchemaCodifica[] = [];
+  schemaCodificaListFiltered: SchemaCodifica[] = [];
+  types: {label: string, value: string}[] = [
+    { label: 'Seleziona una Tipologia', value: '' },
+    { label: 'Pubblico', value: 'P' },
+    { label: 'Privato', value: 'I' }];
+  filter: string = '';
 
   displayedColumns: string[] = ['TITOLO', 'DESCRIZIONE', 'TIPOLOGIA'];
   // commento
@@ -36,7 +43,7 @@ export class SchemiCodificaComponent implements OnInit {
       .subscribe(
         response => {
           this.schemaCodificaList = response.data;
-          console.log(this.schemaCodificaList);
+          this.schemaCodificaListFiltered = response.data;
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -48,5 +55,11 @@ export class SchemiCodificaComponent implements OnInit {
           // this.loading = false;
         }
       );
+  }
+  filterType(event: MatSelectChange) {
+    this.filter = event.value;
+    this.schemaCodificaListFiltered = this.filter
+      ? this.schemaCodificaList.filter(elm => elm.TIPOLOGIA === this.filter)
+      : this.schemaCodificaList;
   }
 }
