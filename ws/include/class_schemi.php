@@ -97,5 +97,17 @@ class SchemiManager {
         $sql = "UPDATE schemi_codifica SET immagine=NULL WHERE ID_SCHEMA = $idSchema";
         execute_update($sql);
     }
+
+    function getSchemiPadre($idSchema) {
+        $sql0 = "SELECT COUNT(*) AS cnt ";
+        $sql= "SELECT ID_SCHEMA,TITOLO,DESCRIZIONE,TIPOLOGIA,TPL_CODICE,TPL_DESCRIZIONE,PRE_RENDER_JS,IS_VALID,NOTE_INTERNE ";
+        $sql1= "FROM schemi_codifica  x WHERE x.ID_SCHEMA IN ( ".
+        "SELECT ID_SCHEMA FROM schemi_regole y where y.ID_REGOLA IN ( ".
+        "SELECT ID_REGOLA FROM regole_sottoschemi z WHERE z.ID_SOTTO_SCHEMA = $idSchema )) ";
+        $sql1 .= "ORDER BY x.titolo";
+        $count = select_single_value($sql0 . $sql1);
+        $objects = select_list($sql . $sql1);        
+        return [$objects, $count];
+    }
 }
 ?>

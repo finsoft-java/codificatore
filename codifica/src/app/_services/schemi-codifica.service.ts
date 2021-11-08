@@ -49,4 +49,8 @@ export class SchemiCodificaService implements HttpCrudService<SchemaCodifica> {
     console.log(formData.get('image'));
     return this.http.post<void>(environment.wsUrl + `SchemaImage.php?idSchema=${idSchemaCodifica}`, formData);
   }
+
+  getSchemiPadre(idSchema: number) {
+    return this.http.get<ListBean<SchemaCodifica>>(environment.wsUrl + `SchemiPadre.php?idSchema=${idSchema}`);
+  }
 }

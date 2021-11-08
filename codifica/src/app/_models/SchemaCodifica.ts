@@ -1,4 +1,3 @@
-
 export interface SchemaCodifica {
   ID_SCHEMA: number;
   TITOLO: string;
