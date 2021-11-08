@@ -1,5 +1,18 @@
         <div>
             <h2 class="first-section-header">Dati Iniziali</h2>
+            <div class="delete-button-wrapper">
+                <button class="spaced-button" mat-raised-button color="warn" (click)="deleteSchema()">{{this.eliminaLabel}}</button>
+            </div>
+            <div class="fathers-section" *ngIf="schemiPadre.length">
+                <table mat-table [dataSource]="schemiPadre" class="fathers-table" >
+                    <ng-container matColumnDef="TITOLO">
+                      <th mat-header-cell *matHeaderCellDef>Presente in:</th>
+                      <td mat-cell *matCellDef="let row">{{ row.TITOLO }}</td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="['TITOLO']"></tr>
+                    <tr mat-row *matRowDef="let row; columns: ['TITOLO']"></tr>
+                </table>
+            </div>
             <form class="schema-form">
                 <mat-form-field appearance="fill">
                     <mat-label>Titolo</mat-label>
@@ -8,7 +21,7 @@
                 <mat-radio-group
                 aria-labelledby="Tipologia Schema"
                 [(ngModel)]="schemaCodificaForm.TIPOLOGIA"
-                name="TIPOLOGIA">
+                name="TIPOLOGIA" [disabled]="schemiPadre.length>=1">
                     <label class="schema-type-label">Tipologia di Schema</label>
                     <mat-radio-button value="P">
                         Pubblico

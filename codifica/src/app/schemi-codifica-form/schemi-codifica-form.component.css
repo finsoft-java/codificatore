@@ -1,4 +1,5 @@
 .first-section-header {
+    display: inline-block;
     margin-left: 9px;
 }
 
@@ -116,25 +117,35 @@
     display: inline-block;
 }
 
-.open-rule-form {
+.open-rule-form, .delete-button-wrapper {
     display: inline-block;
     width: 100%;
     text-align: left;
-    margin: 0 0 30px 0;
+    margin: 0 0 30px 5px;
     vertical-align: super;
 }
 
 @media (min-width: 992px) {
     .open-rule-form {
-        width: 71.5%;
+        width: 70.9%;
         text-align: right;
+    }
+    .delete-button-wrapper{
+        width: 82%;
+        text-align: right;
+        margin-left: 0;
     }
 }
 
 @media (min-width: 1200px) {
     .open-rule-form {
-        width: 76%;
+        width: 75.5%;
         text-align: right;
+    }
+    .delete-button-wrapper{
+        width: 84.5%;
+        text-align: right;
+        margin-left: 0;
     }
 }
 
@@ -185,4 +196,20 @@
     }
 }
 
+.fathers-section {
+    float: left;
+    margin: 0 0 20px 12px;
+}
 
+.fathers-table {
+    text-align: center;
+    width: 100%;
+    background: transparent;
+}
+
+@media (min-width: 992px) {
+    .fathers-section {
+        float: right;
+        margin: 0 1% 20px 0;
+    }
+}

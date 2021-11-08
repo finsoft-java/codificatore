@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
+import { MatTable } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SchemaCodifica, SchemaCodificaOptions, SchemaCodificaRegole } from '../_models';
 import { SchemiCodificaOpzioniService } from '../_services/schemi-codifica-opzioni.service';
 import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
 import { AlertService } from '../_services/alert.service';
-import { MatTable } from '@angular/material/table';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-schemi-codifica-form',
@@ -34,6 +34,8 @@ export class SchemiCodificaFormComponent implements OnInit {
   id: number = -1;
   selectedImage: any;
   regolaGlobaleSelected: any;
+  eliminaLabel: string = '';
+  schemiPadre: SchemaCodifica[] = [];
 
   schemaCodificaForm: SchemaCodifica = {
     ID_SCHEMA: -1,
@@ -54,6 +56,7 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private alertService: AlertService,
     public fb: FormBuilder,
     public schemaCodificaService: SchemiCodificaService,
@@ -67,6 +70,7 @@ export class SchemiCodificaFormComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.id = params.id; // uguale a const id = params.id
       this.header = this.id ? 'Modifica Schema: ' + this.id : 'Nuovo Schema';
+      this.eliminaLabel = this.id ? 'Elimina' : 'Annulla';
     });
     if (this.id > 0) {
       this.getRegoleEsistenti(this.id);
@@ -82,6 +86,9 @@ export class SchemiCodificaFormComponent implements OnInit {
           console.log(this.schemaCodificaForm);
           this.imageSrc = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/*;base64,' + this.schemaCodificaForm.IMMAGINE_B64);
           console.log(this.imageSrc);
+          if (this.schemaCodificaForm.TIPOLOGIA === 'I') {
+            this.getSchemiPadre(this.id);
+          }
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -176,7 +183,7 @@ export class SchemiCodificaFormComponent implements OnInit {
       MAX: null,
       OPTIONS: [],
       SOTTOSCHEMI: []
-    }
+    };
     this.scegliRegoleGlobali = false;
     this.newRuleFormOpened = true;
   }
@@ -201,7 +208,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   }
 
   creaRegolaDaGlobale() {
-    let r = this.regoleGlobali.find(x => x.ID_REGOLA == this.regolaGlobaleSelected);
+    const r = this.regoleGlobali.find(x => x.ID_REGOLA == this.regolaGlobaleSelected);
     if (r) {
       this.openNewRuleGlobaleForm();
       this.nuovaRegola.ID_REGOLA = r.ID_REGOLA;
@@ -242,7 +249,7 @@ export class SchemiCodificaFormComponent implements OnInit {
         
         },
         (err) => {
-        
+
         })
     });
 
@@ -262,5 +269,28 @@ export class SchemiCodificaFormComponent implements OnInit {
 
   hasImage(): boolean {
     return this.schemaCodificaForm && this.schemaCodificaForm.IMMAGINE_B64 != null;
+  }
+
+  deleteSchema() {
+    console.log('qui elimino lo schema con id: ', this.schemaCodificaForm);
+    if (this.id) {
+      // this.schemaCodificaService.delete(this.schemaCodificaForm).subscribe(response => {
+      //   this.router.navigate(['schemi-codifica/crea']);
+      // },
+      // error => {
+      //   this.alertService.error('Errore durante l\'eliminazione dello schema');
+      // });
+    }
+    this.router.navigate(['schemi-codifica']);
+  }
+
+  getSchemiPadre(idSchema: number) {
+    this.schemaCodificaService.getSchemiPadre(idSchema).subscribe(response => {
+      this.schemiPadre = response.data;
+      console.log(this.schemiPadre);
+    },
+    error => {
+      this.alertService.error('Problema nell\'acquisizione degli schemi padre.');
+    });
   }
 }
