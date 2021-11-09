@@ -131,6 +131,7 @@ export class SchemiCodificaFormComponent implements OnInit {
           this.alertService.success('Schema creato con successo!');
           this.schemaCodificaForm = response.value;
           this.id = this.schemaCodificaForm.ID_SCHEMA;
+          this.eliminaLabel = 'Elimina';
         },
         error => {
           if (error.status === 401 || error.status === 403) {
@@ -272,16 +273,17 @@ export class SchemiCodificaFormComponent implements OnInit {
   }
 
   deleteSchema() {
-    console.log('qui elimino lo schema con id: ', this.schemaCodificaForm);
     if (this.id) {
-      // this.schemaCodificaService.delete(this.schemaCodificaForm).subscribe(response => {
-      //   this.router.navigate(['schemi-codifica/crea']);
-      // },
-      // error => {
-      //   this.alertService.error('Errore durante l\'eliminazione dello schema');
-      // });
+      this.schemaCodificaService.delete(this.schemaCodificaForm).subscribe(response => {
+        this.router.navigate(['schemi-codifica']);
+      },
+      error => {
+        this.alertService.error('Errore durante l\'eliminazione dello schema');
+      });
     }
-    this.router.navigate(['schemi-codifica']);
+    else {
+      this.router.navigate(['schemi-codifica']);
+    }
   }
 
   getSchemiPadre(idSchema: number) {
