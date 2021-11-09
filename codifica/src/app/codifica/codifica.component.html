@@ -17,6 +17,14 @@ Selezionare lo schema di codifica:
 
 <div class="reset-wrapper">
   <button
+    (click)="activateSubschemeCodification()"
+    mat-raised-button
+    [color]="subschemeCodificationIsActive?'primary':'secondary'"
+    class="subscheme-button"
+  >
+    Codifica Sottoschema
+  </button>
+  <button
     (click)="reset()"
     mat-raised-button
     color="secondary"
@@ -59,7 +67,7 @@ Selezionare lo schema di codifica:
         (click)="salvaCodifica()"
         mat-raised-button
         color="primary"
-        [disabled]="codificaSalvata !== undefined"
+        [disabled]="codificaSalvata !== undefined || subschemeCodificationIsActive"
       >
         Salva questa codifica
       </button>

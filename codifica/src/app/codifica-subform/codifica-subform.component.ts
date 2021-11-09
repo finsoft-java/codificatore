@@ -45,6 +45,7 @@ export class CodificaSubformComponent implements OnInit {
   parametriSottoSchemi: IHash[] = [];
   parametriObbligatoriSettati = false;
   parametriObbligatoriSottoschemiSettati = true;
+  parametriNonValidi: string[] = [];
 
   ngOnInit(): void {
     // Carico lo schema (ma serve??)
@@ -147,7 +148,11 @@ export class CodificaSubformComponent implements OnInit {
       const value = this.parametri[x.NOM_VARIABILE];
       return (x.TIPO !== 'sottoschema' && (value === undefined || value == null || value === ''));
     });
-    this.parametriObbligatoriSettati = !missing;
+    this.parametriObbligatoriSettati = !missing && this.parametriNonValidi.length === 0;
+    console.log("COMPONENT: ", this);
+    console.log(!missing?"primo a true":"primo a false");
+    console.log(this.parametriNonValidi.length === 0?"secondo a true":"secondo a false");
+    console.log(this.parametriNonValidi);
     this.changeParametriObbligatoriSettati.emit(this.parametriObbligatoriSettati && this.parametriObbligatoriSottoschemiSettati);
   }
 
@@ -158,14 +163,41 @@ export class CodificaSubformComponent implements OnInit {
   checkValidity(event: Event) {
     const element = <HTMLInputElement>event.target;
     if (element) {
-      if (element.validity.patternMismatch) {
+      if (!this.isInputValid(element)) {
         element.setCustomValidity('Valore inserito non corretto!');
         element.reportValidity();
+        if (this.parametriNonValidi.indexOf(element.name) < 0) {
+          this.parametriNonValidi.push(element.name);
+        }
       }
       else {
         element.setCustomValidity('');
+        if (this.parametriNonValidi.indexOf(element.name) >= 0) {
+          this.parametriNonValidi.splice(this.parametriNonValidi.indexOf(element.name), 1);
+        }
       }
     }
+  }
+
+  highlightInputIfInvalid(event: Event) {
+    const element = <HTMLInputElement>event.target;
+    if (element) {
+      // HTML5 E' BALORDO E MI RITORNA NULL COME STRINGA
+      if (!this.isInputValid(element)) {
+        element.parentElement?.parentElement?.classList.add('invalid-field');
+      }
+      else {
+        element.parentElement?.parentElement?.classList.remove('invalid-field');
+      }
+    }
+  }
+
+  isInputValid(element: HTMLInputElement) {
+    // HTML5 E' BALORDO E MI RITORNA NULL COME STRINGA 
+    if (element.validity.patternMismatch && element.pattern !== null && element.pattern !== 'null') {
+      return false;
+    }
+    return true;
   }
 
   showError(error: string) {

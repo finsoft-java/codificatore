@@ -21,6 +21,7 @@ export class CodificaComponent implements OnInit {
   schemi: SchemaCodifica[] = [];
   schemaScelto?: SchemaCodifica;
   parametriObbligatoriSettati = false;
+  subschemeCodificationIsActive = false;
   codiceCalcolato = '';
   descrizioneCalcolata = '';
   codificaSalvata?: Codifica;
@@ -91,5 +92,27 @@ export class CodificaComponent implements OnInit {
 
   showError(error: string) {
     this.alertService.error(error);
+  }
+
+  activateSubschemeCodification() {
+    this.reset();
+    if (this.subschemeCodificationIsActive) {
+      this.svc.getValidiPubblici().subscribe(response => {
+        this.schemi = response.data;
+        this.subschemeCodificationIsActive = false;
+      },
+      error => {
+        this.alertService.error('Errore nel caricare i dati');
+      });
+    }
+    else {
+      this.svc.getAll().subscribe(response => {
+        this.schemi = response.data;
+        this.subschemeCodificationIsActive = true;
+      },
+      error => {
+        this.alertService.error('Errore nel caricare i dati');
+      });
+    }
   }
 }

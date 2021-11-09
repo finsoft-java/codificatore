@@ -12,7 +12,9 @@
         [required]="considerRequired && r.REQUIRED == 'Y'"
         [maxLength]="r.MAXLENGTH && r.MAXLENGTH>0?r.MAXLENGTH:9999"
         [pattern]="r.PATTERN_REGEXP"
+        [title]="r.NOM_VARIABILE"
         (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
+        (focusout)="highlightInputIfInvalid($event)"
       />
     </mat-form-field>
   </div>
@@ -23,6 +25,7 @@
         matInput
         type="number"
         name="{{ r.ETICHETTA }}"
+        [title]="r.NOM_VARIABILE"
         [required]="considerRequired && r.REQUIRED == 'Y'"
         [min]="r.MIN"
         [max]="r.MAX"
@@ -35,6 +38,7 @@
       <mat-label>{{ r.ETICHETTA }}</mat-label>
       <mat-select
         name="{{ r.ETICHETTA }}"
+        [title]="r.NOM_VARIABILE"
         [required]="considerRequired && r.REQUIRED == 'Y'"
         (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE, $event)"
       >
@@ -50,6 +54,7 @@
       <mat-label>{{ r.ETICHETTA }}</mat-label>
       <mat-select
         name="{{ r.ETICHETTA }}"
+        [title]="r.NOM_VARIABILE"
         [required]="considerRequired && r.REQUIRED == 'Y'"
         (selectionChange)="onChangeSottoschema(r.NOM_VARIABILE, $event)"
       >

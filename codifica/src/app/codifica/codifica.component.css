@@ -17,6 +17,10 @@
     margin-bottom: 20px;
 }
 
+.subscheme-button {
+    margin-right: 5px;
+}
+
 @media(min-width: 765px){
     .reset-wrapper {
         text-align: right;
