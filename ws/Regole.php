@@ -14,6 +14,10 @@ $idSchema = isset($_GET['idSchema']) ? $con->escape_string($_GET['idSchema']) : 
 $nomVariabile = isset($_GET['nomVariabile']) ? $con->escape_string($_GET['nomVariabile']) : null;
 $soloGlobali = isset($_GET['soloGlobali']) ? $con->escape_string($_GET['soloGlobali']) == 'true' : false;
 
+//------
+$idRegola = isset($_GET['idRegola']) ? $con->escape_string($_GET['idRegola']) : null;
+//-----
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     if ($idSchema  !== null && $nomVariabile) {
@@ -55,30 +59,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (!$json_data) {
         print_error(400, "Missing JSON data");
     }
-    $object = $regoleManager->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE);
+    if (property_exists($json_data, 'ID_SCHEMA')) {
+        $object = $regoleManager->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE);
+    }
+    else {
+        $object = $regoleManager->getRegolaGlobale($json_data->ID_REGOLA);
+    }
     if (!$object) {
         print_error(404, 'Not found');
     }
     $regoleManager->aggiorna($json_data);
     
-    $object = $regoleManager->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE);
-    header('Content-Type: application/json');
+    if (property_exists($json_data, 'ID_SCHEMA')) {
+        $object = $regoleManager->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE);
+    }
+    else {
+        $object = $regoleManager->getRegolaGlobale($json_data->ID_REGOLA);
+    }    header('Content-Type: application/json');
     echo json_encode(['value' => $object]);
     
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     //==========================================================
-    if (!$idSchema) {
-        print_error(400, 'Missing idSchema');
+    if(!$idRegola){
+        if (!$idSchema) {
+            print_error(400, 'Missing idSchema');
+        }
+        if (!$nomVariabile) {
+            print_error(400, 'Missing nomVariabile');
+        }
+        $object = $regoleManager->getById($idSchema, $nomVariabile);
+        if (!$object) {
+            print_error(404, 'Not found');
+        }
+        
+        $regoleManager->elimina($idSchema, $nomVariabile);
     }
-    if (!$nomVariabile) {
-        print_error(400, 'Missing nomVariabile');
+    else {
+        $regoleManager->eliminaGenerale($idRegola);
     }
-    $object = $regoleManager->getById($idSchema, $nomVariabile);
-    if (!$object) {
-        print_error(404, 'Not found');
-    }
-    
-    $regoleManager->elimina($idSchema, $nomVariabile);
     
 } else {
     //==========================================================

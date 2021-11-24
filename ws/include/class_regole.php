@@ -20,7 +20,7 @@ class RegoleManager {
 
     function getAllGlobali() {
         $sql0 = "SELECT COUNT(*) AS cnt ";
-        $sql1 = "SELECT NULL AS IS_SCHEMA, NULL AS ORD_PREENTAZIONE, r.* ";
+        $sql1 = "SELECT NULL AS IS_SCHEMA, NULL AS ORD_PRESENTAZIONE, r.* ";
         $sql = "FROM regole r WHERE GLOBAL='Y' " .
                "ORDER BY r.NOM_VARIABILE ";
         $count = select_single_value($sql0 . $sql);
@@ -42,6 +42,15 @@ class RegoleManager {
         return $this->_completaRegola($o);
     }
 
+    function getRegolaGlobale($idRegola) {
+        $sql = "SELECT *" .
+                "FROM regole r " .
+                "WHERE r.ID_REGOLA=$idRegola ";
+        $o = select_single($sql);
+
+        return $this->_completaRegola($o);
+    }
+
     function _completaRegola(&$regola) {
         $sql = "SELECT * FROM regole_options " .
             "WHERE ID_REGOLA=$regola[ID_REGOLA] " .
@@ -51,17 +60,18 @@ class RegoleManager {
         $sql = "SELECT rs.*, s.TITOLO FROM regole_sottoschemi rs " .
             "JOIN schemi_codifica s ON s.ID_SCHEMA=rs.ID_SOTTO_SCHEMA " .
             "WHERE rs.ID_REGOLA=$regola[ID_REGOLA] " .
-            "ORDER BY s.TITOLO";
+            "ORDER BY rs.ORDINE";
         $regola["SOTTOSCHEMI"] = select_list($sql);
 
         return $regola;
     }
 
     function crea($json_data) {
-        global $con;
+        global $con; 
         $con->begin_transaction();
         try {
-            $sql = insert("regole", ["NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
+            if($con->escape_string($json_data->ID_REGOLA)<0){
+                $sql = insert("regole", ["NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
                                     "GLOBAL" => $con->escape_string($json_data->GLOBAL),
                                     "ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
                                     "REQUIRED" => $con->escape_string($json_data->REQUIRED),
@@ -72,14 +82,18 @@ class RegoleManager {
                                     "MIN" => $con->escape_string($json_data->MIN),
                                     "MAX" => $con->escape_string($json_data->MAX)
                                     ]);
-            execute_update($sql);
-            $idRegola = $con->insert_id;
-            $sql = insert("schemi_regole", ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
-                                    "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
-                                    "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE),
-                                    "ID_REGOLA" => $idRegola
-                                    ]);
-            execute_update($sql);
+                execute_update($sql);
+                $idRegola = $con->insert_id;
+            }
+            else $idRegola = $con->escape_string($json_data->ID_REGOLA);
+            if(property_exists($json_data, 'ID_SCHEMA') && $con->escape_string($json_data->ID_SCHEMA)!= null){
+                $sql = insert("schemi_regole", ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
+                    "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
+                    "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE),
+                    "ID_REGOLA" => $idRegola
+                    ]);
+                execute_update($sql);
+            }
 
             $con->commit();
         } catch (mysqli_sql_exception $exception) {
@@ -87,7 +101,9 @@ class RegoleManager {
 
             throw $exception;
         }
-        return $this->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE);
+        return property_exists($json_data, 'ID_SCHEMA' && $con->escape_string($json_data->ID_SCHEMA)!= null)
+            ?$this->getById($json_data->ID_SCHEMA, $json_data->NOM_VARIABILE)
+            :$this->getRegolaGlobale($idRegola);
     }
     
     function aggiorna($json_data) {     
@@ -95,10 +111,12 @@ class RegoleManager {
         $con->begin_transaction();
         try {
             // sulla tabella schemi_regole posso aggiornare solamente l'ordinamento
-            $sql = update("schemi_regole", ["ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE)], 
+            if(property_exists($json_data, 'ID_SCHEMA')){
+                $sql = update("schemi_regole", ["ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE)], 
                                     ["ID_SCHEMA" => $con->escape_string($json_data->ID_SCHEMA),
                                     "NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE)]);
-            execute_update($sql);
+                execute_update($sql);
+            }
 
             // sulla tabella regole *non * posso aggiornare GLOBAL, nè NOM_VARIABILE
             $sql = update("regole", ["ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
@@ -137,7 +155,8 @@ class RegoleManager {
                 foreach ($json_data->SOTTOSCHEMI as $o) {
                     if (!in_array($o->ID_SOTTO_SCHEMA, $giaInseriti)) {
                         $sql = insert("regole_sottoschemi", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
-                            "ID_SOTTO_SCHEMA" => $con->escape_string($o->ID_SOTTO_SCHEMA)
+                            "ID_SOTTO_SCHEMA" => $con->escape_string($o->ID_SOTTO_SCHEMA),
+                            "ORDINE" => $con->escape_string($o->ORDINE)
                             ]);
                         execute_update($sql);
                         $giaInseriti[] = $o->ID_SOTTO_SCHEMA;
@@ -170,6 +189,17 @@ class RegoleManager {
             $sql = "DELETE FROM regole WHERE ID_REGOLA=$idRegola ";
             execute_update($sql);
         }
+    }
+
+    function eliminaGenerale($idRegola) {
+        $sql = "DELETE FROM schemi_regole WHERE ID_REGOLA=$idRegola";
+        execute_update($sql);
+        $sql = "DELETE FROM regole_options WHERE ID_REGOLA=$idRegola";
+        execute_update($sql);
+        $sql = "DELETE FROM regole_sottoschemi WHERE ID_REGOLA=$idRegola";
+        execute_update($sql);
+        $sql = "DELETE FROM regole WHERE ID_REGOLA=$idRegola ";
+        execute_update($sql);
     }
 }
 ?>

@@ -1,0 +1,44 @@
+.first-section-header {
+    display: inline-block;
+}
+
+.open-rule-form{
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    margin: 0 0 30px 5px;
+    vertical-align: super;
+}
+
+@media (min-width: 992px) {
+    .open-rule-form {
+        width: 76.8%;
+        text-align: right;
+    }
+}
+
+@media (min-width: 1200px) {
+    .open-rule-form {
+        width: 80.6%;
+        text-align: right;
+    }
+}
+
+.clear-button {
+    margin-left: 10px;
+    background-color: transparent;
+    border: none;
+}
+
+.clear-button .mat-icon {
+    color: indianred;
+    vertical-align: middle;
+}
+
+.clear-button:hover {
+    background-color: indianred;
+}
+
+.clear-button:hover > .mat-icon {
+    color: white;
+}

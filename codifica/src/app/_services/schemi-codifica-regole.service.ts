@@ -35,4 +35,8 @@ export class SchemiCodificaRegoleService {
   delete(obj: SchemaCodificaRegole): Observable<void> {
     return this.http.delete<any>(environment.wsUrl + `Regole.php?idSchema=${obj.ID_SCHEMA}&nomVariabile=${obj.NOM_VARIABILE}`);
   }
+
+  deleteGlobale(obj: SchemaCodificaRegole): Observable<void> {
+    return this.http.delete<any>(environment.wsUrl + `Regole.php?idRegola=${obj.ID_REGOLA}`);
+  }
 }

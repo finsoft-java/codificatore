@@ -15,6 +15,9 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   regola!: SchemaCodificaRegole;
 
   @Input()
+  listaSchemiInterni!: SchemaCodifica[];
+
+  @Input()
   creating = false;
 
   @Output()
@@ -31,8 +34,6 @@ export class SchemiCodificaRegolaComponent implements OnInit {
     { label: 'Elenco', value: 'elenco' },
     { label: 'Sottoschema', value: 'sottoschema' }];
 
-  listaSchemiInterni : SchemaCodifica[] = [];
-
   constructor(
     public schemiCodificaRegolaService: SchemiCodificaRegoleService,
     public schemiCodificaService: SchemiCodificaService,
@@ -40,9 +41,11 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.schemiCodificaService.getValidiInterni().subscribe(response => {
-      this.listaSchemiInterni = response.data;
-    });
+    if (!this.listaSchemiInterni) {
+      this.schemiCodificaService.getValidiInterni().subscribe(response => {
+        this.listaSchemiInterni = response.data;
+      });
+    }
   }
 
   onChangeRequired(event: any) {
@@ -109,21 +112,38 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   }
 
   deleteRule() {
-    this.schemiCodificaRegolaService.delete(this.regola).subscribe(
-      response => {
-        console.log("ECCOMI QUI ORA EMETTO");
-        this.deleted.emit(this.regola);
-      },
-      error => {
-        if (error.status === 401 || error.status === 403) {
-          this.alertService.error('Errore del Server');
-        } else {
-          // Ad esempio: Impossibile conettersi al server PHP
-          this.alertService.error(error);
+    if (this.regola.ID_SCHEMA) {
+      this.schemiCodificaRegolaService.delete(this.regola).subscribe(
+        response => {
+          this.deleted.emit(this.regola);
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertService.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertService.error(error);
+          }
+          // this.loading = false;
         }
-        // this.loading = false;
-      }
-    );
+      );
+    }
+    else {
+      this.schemiCodificaRegolaService.deleteGlobale(this.regola).subscribe(
+        response => {
+          this.deleted.emit(this.regola);
+        },
+        error => {
+          if (error.status === 401 || error.status === 403) {
+            this.alertService.error('Errore del Server');
+          } else {
+            // Ad esempio: Impossibile conettersi al server PHP
+            this.alertService.error(error);
+          }
+          // this.loading = false;
+        }
+      );
+    }
   }
 
   addSubschema() {

@@ -39,6 +39,7 @@ import { SchemiCodificaRegolaComponent } from './schemi-codifica-regola/schemi-c
 import { CodificaSubformComponent } from './codifica-subform/codifica-subform.component';
 import { TabellinaRicercaComponent } from './tabellina-ricerca/tabellina-ricerca.component';
 import { ModaleParametriComponent } from './modale-parametri/modale-parametri.component';
+import { SchemaRegoleGlobaliComponent } from './schema-regole-globali/schema-regole-globali.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { ModaleParametriComponent } from './modale-parametri/modale-parametri.co
     SchemiCodificaRegolaComponent,
     CodificaSubformComponent,
     TabellinaRicercaComponent,
-    ModaleParametriComponent
+    ModaleParametriComponent,
+    SchemaRegoleGlobaliComponent
   ],
   imports: [
     HttpClientModule,

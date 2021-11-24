@@ -1,0 +1,25 @@
+<h2 class="first-section-header">Regole Globali</h2>
+<div  class="open-rule-form">
+    <button *ngIf="!this.newRuleFormOpened" class="spaced-button" mat-raised-button color="primary" (click)="toggleNewRuleForm()">Crea Regola</button>
+    <button *ngIf="this.newRuleFormOpened" (click)="this.newRuleFormOpened=!this.newRuleFormOpened " class="clear-button"><mat-icon class="mat-icon">clear</mat-icon></button>
+</div>
+<app-schemi-codifica-regola *ngIf="this.newRuleFormOpened" [regola]="nuovaRegola" [creating]="true" 
+    (saved)="newRegola('Regola salvata con successo.')" (deleted)="newRegola('Regola eliminata con successo.')" ></app-schemi-codifica-regola>    
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let regola of regoleByPage">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{regola.NOM_VARIABILE}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-schemi-codifica-regola [regola]="regola" [listaSchemiInterni]="listaSchemiInterni" [creating]="false" 
+            (saved)="refreshRegole('Regola salvata con successo.')" (deleted)="refreshRegole('Regola eliminata con successo.')"></app-schemi-codifica-regola>
+    </mat-expansion-panel>
+</mat-accordion> 
+<mat-paginator [length]="regoleGlobali.length"
+               [pageSize]="pageSize"
+               [pageIndex]="pageIndex"
+               [pageSizeOptions]="[10,20]"
+               (page)="changePage($event)"
+               aria-label="Select page">
+</mat-paginator>  

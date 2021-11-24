@@ -88,7 +88,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <button mat-raised-button color="primary" (click)="creaRegolaDaGlobale()" [disabled]="!regolaGlobaleSelected">Aggiungi</button>
+                    <button style="margin-bottom:15px;" mat-raised-button color="primary" (click)="creaRegolaDaGlobale()" [disabled]="!regolaGlobaleSelected">Aggiungi</button>
                 </div>
 
                 <app-schemi-codifica-regola *ngIf="!scegliRegoleGlobali" [regola]="nuovaRegola" [creating]="true" (saved)="refreshRegole()" (deleted)="refreshRegole()" ></app-schemi-codifica-regola>
