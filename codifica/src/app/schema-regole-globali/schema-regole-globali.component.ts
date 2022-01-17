@@ -78,6 +78,7 @@ export class SchemaRegoleGlobaliComponent implements OnInit {
       ID_SCHEMA: null,
       ID_REGOLA: -1, // deve essere settato server-side
       NOM_VARIABILE: '',
+      HINT: '',
       GLOBAL: 'Y',
       ORD_PRESENTAZIONE: 10,
       ETICHETTA: '',

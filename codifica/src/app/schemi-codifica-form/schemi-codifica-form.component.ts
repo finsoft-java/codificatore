@@ -172,6 +172,7 @@ export class SchemiCodificaFormComponent implements OnInit {
       ID_SCHEMA: this.schemaCodificaForm.ID_SCHEMA,
       ID_REGOLA: -1, // deve essere settato server-side
       NOM_VARIABILE: '',
+      HINT: '',
       GLOBAL: 'N',
       ORD_PRESENTAZIONE: newOrd,
       ETICHETTA: '',

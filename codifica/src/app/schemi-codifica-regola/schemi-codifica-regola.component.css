@@ -47,3 +47,18 @@
 .clear-button .mat-icon {
     vertical-align: bottom;
 }
+
+.option-table {
+    width: 100%;
+}
+
+::ng-deep .mat-column-ORDINE div.mat-form-field-infix {
+    width: 10%!important;
+}
+
+@media (max-width: 767px){
+    ::ng-deep .mat-column-ETICHETTA div.mat-form-field-infix,
+    ::ng-deep .mat-column-VALORE div.mat-form-field-infix {
+        width: 50%!important;
+    }
+}

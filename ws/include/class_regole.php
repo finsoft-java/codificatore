@@ -6,7 +6,7 @@ class RegoleManager {
     
     function getAllByIdSchema($idSchema) {
         $sql0 = "SELECT COUNT(*) AS cnt ";
-        $sql1 = "SELECT s.*,r.GLOBAL,r.ETICHETTA,r.REQUIRED,r.TIPO,r.MAXLENGTH,r.PATTERN_REGEXP,r.NUM_DECIMALI,r.MIN,r.MAX ";
+        $sql1 = "SELECT s.*,r.GLOBAL,r.HINT,r.ETICHETTA,r.REQUIRED,r.TIPO,r.MAXLENGTH,r.PATTERN_REGEXP,r.NUM_DECIMALI,r.MIN,r.MAX ";
         $sql = "FROM schemi_regole s JOIN regole r ON r.ID_REGOLA=s.ID_REGOLA WHERE ID_SCHEMA=$idSchema " .
                "ORDER BY s.ORD_PRESENTAZIONE ";
         $count = select_single_value($sql0 . $sql);
@@ -33,7 +33,7 @@ class RegoleManager {
     }
     
     function getById($idSchema, $nomVariabile) {
-        $sql = "SELECT s.*,r.GLOBAL,r.ETICHETTA,r.REQUIRED,r.TIPO,r.MAXLENGTH,r.PATTERN_REGEXP,r.NUM_DECIMALI,r.MIN,r.MAX " .
+        $sql = "SELECT s.*,r.GLOBAL,r.HINT,r.ETICHETTA,r.REQUIRED,r.TIPO,r.MAXLENGTH,r.PATTERN_REGEXP,r.NUM_DECIMALI,r.MIN,r.MAX " .
                 "FROM schemi_regole s JOIN regole r ON r.ID_REGOLA=s.ID_REGOLA " .
                 "WHERE s.ID_SCHEMA=$idSchema AND s.NOM_VARIABILE='$nomVariabile' " .
                 "ORDER BY s.ORD_PRESENTAZIONE ";
@@ -54,7 +54,7 @@ class RegoleManager {
     function _completaRegola(&$regola) {
         $sql = "SELECT * FROM regole_options " .
             "WHERE ID_REGOLA=$regola[ID_REGOLA] " .
-            "ORDER BY VALUE_OPTION";
+            "ORDER BY ORD_PRESENTAZIONE";
         $regola["OPTIONS"] = select_list($sql);
 
         $sql = "SELECT rs.*, s.TITOLO FROM regole_sottoschemi rs " .
@@ -74,6 +74,7 @@ class RegoleManager {
                 $sql = insert("regole", ["NOM_VARIABILE" => $con->escape_string($json_data->NOM_VARIABILE),
                                     "GLOBAL" => $con->escape_string($json_data->GLOBAL),
                                     "ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
+                                    "HINT" => $con->escape_string($json_data->HINT),
                                     "REQUIRED" => $con->escape_string($json_data->REQUIRED),
                                     "TIPO" => $con->escape_string($json_data->TIPO),
                                     "MAXLENGTH" => $con->escape_string($json_data->MAXLENGTH),
@@ -120,6 +121,7 @@ class RegoleManager {
 
             // sulla tabella regole *non * posso aggiornare GLOBAL, nè NOM_VARIABILE
             $sql = update("regole", ["ETICHETTA" => $con->escape_string($json_data->ETICHETTA),
+                                    "HINT" => $con->escape_string($json_data->HINT),
                                     "REQUIRED" => $con->escape_string($json_data->REQUIRED),
                                     "TIPO" => $con->escape_string($json_data->TIPO),
                                     "MAXLENGTH" => $con->escape_string($json_data->MAXLENGTH),

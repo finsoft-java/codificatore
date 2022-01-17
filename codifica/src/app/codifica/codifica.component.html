@@ -49,12 +49,12 @@ Selezionare lo schema di codifica:
   <!-- Calcolo CODICE e DESCRIZIONE in tempo reale-->
   <div *ngIf="parametriObbligatoriSettati">
     <div class="area-evidenziata">
-      <p style="padding: 15px; padding-bottom: 0">
-        <b>Codice</b>: {{ codiceCalcolato }}
-      </p>
-      <p style="padding: 15px">
-        <b>Descrizione</b>: {{ descrizioneCalcolata }}
-      </p>
+      <div style="padding: 15px; padding-bottom: 0">
+        <span class="codifica-label">Codice:</span> <span id="codice">{{ codiceCalcolato }}</span>
+      </div>
+      <div style="padding: 15px">
+        <span class="codifica-label">Descrizione:</span> <span id="descrizione">{{ descrizioneCalcolata }}</span>
+      </div>
     </div>
 
     <app-tabellina-ricerca

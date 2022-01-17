@@ -4,6 +4,7 @@ import { SchemaCodificaSottoschema } from './SchemaSottoschema';
 export interface SchemaCodificaRegole {
   ID_SCHEMA: number|null;
   NOM_VARIABILE: string;
+  HINT: string | null;
   ID_REGOLA: number;
   GLOBAL: 'Y'|'N';
   ORD_PRESENTAZIONE: number;

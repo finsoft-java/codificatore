@@ -25,3 +25,7 @@
     border: 1px solid red;
     box-shadow: 2px 2px 5px red;
 }
+
+.margin-hint {
+    margin-bottom: 25px;
+}

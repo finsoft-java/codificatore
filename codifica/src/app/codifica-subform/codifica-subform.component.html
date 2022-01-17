@@ -4,7 +4,7 @@
 
 <div *ngFor="let r of regole">
   <div *ngIf="r.TIPO == 'text'">
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
       <mat-label>{{ r.ETICHETTA }}</mat-label>
       <input
         matInput
@@ -16,10 +16,11 @@
         (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
         (focusout)="highlightInputIfInvalid($event)"
       />
+      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
     </mat-form-field>
   </div>
   <div *ngIf="r.TIPO == 'number'">
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
       <mat-label>{{ r.ETICHETTA }}</mat-label>
       <input
         matInput
@@ -31,10 +32,11 @@
         [max]="r.MAX"
         (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
       />
+      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
     </mat-form-field>
   </div>
   <div *ngIf="r.TIPO == 'elenco'">
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
       <mat-label>{{ r.ETICHETTA }}</mat-label>
       <mat-select
         name="{{ r.ETICHETTA }}"
@@ -46,11 +48,12 @@
           {{ opt.ETICHETTA }}
         </mat-option>
       </mat-select>
+      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
     </mat-form-field>
   </div>
   <div *ngIf="r.TIPO == 'sottoschema'">
     <h5>{{ r.ETICHETTA }}</h5>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
       <mat-label>{{ r.ETICHETTA }}</mat-label>
       <mat-select
         name="{{ r.ETICHETTA }}"
@@ -62,6 +65,7 @@
           {{ s.TITOLO }}
         </mat-option>
       </mat-select>
+      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
     </mat-form-field>
 
     <app-codifica-subform
