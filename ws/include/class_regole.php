@@ -135,17 +135,15 @@ class RegoleManager {
             $sql = "DELETE FROM regole_options WHERE ID_REGOLA = $json_data->ID_REGOLA ";
             execute_update($sql);
 
-            $giaInseriti = [];  // evito di inserire duplicati
             if (isset($json_data->OPTIONS)) {
                 foreach ($json_data->OPTIONS as $o) {
-                    if (!in_array($o->VALUE_OPTION, $giaInseriti)) {
-                        $sql = insert("regole_options", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
-                            "VALUE_OPTION" => $con->escape_string($o->VALUE_OPTION),
-                            "ETICHETTA" => $con->escape_string($o->ETICHETTA)
-                            ]);
-                        execute_update($sql);
-                        $giaInseriti[] = $o->VALUE_OPTION;
-                    }
+                    $sql = insert("regole_options", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
+                        "VALUE_OPTION" => $con->escape_string($o->VALUE_OPTION),
+                        "ETICHETTA" => $con->escape_string($o->ETICHETTA),
+                        "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE)
+                        ]);
+                    execute_update($sql);
+                    $giaInseriti[] = $o->VALUE_OPTION;
                 }
             }
 

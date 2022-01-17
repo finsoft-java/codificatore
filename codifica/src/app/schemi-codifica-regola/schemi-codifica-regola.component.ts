@@ -59,13 +59,14 @@ export class SchemiCodificaRegolaComponent implements OnInit {
     this.regola.OPTIONS!.unshift({
       ID_REGOLA: this.regola.ID_REGOLA,
       VALUE_OPTION: '',
-      ETICHETTA: ''
+      ETICHETTA: '',
+      ORD_PRESENTAZIONE: 10
     });
     this.optionsTable?.renderRows(); // force render
   }
 
   removeOption(option: SchemaCodificaOptions) {
-    this.regola.OPTIONS?.splice(this.regola.OPTIONS?.findIndex(x => x.ETICHETTA == option.ETICHETTA), 1);
+    this.regola.OPTIONS?.splice(this.regola.OPTIONS?.findIndex(x => x.ETICHETTA === option.ETICHETTA), 1);
     this.optionsTable?.renderRows(); // force render
   }
 
@@ -127,8 +128,7 @@ export class SchemiCodificaRegolaComponent implements OnInit {
           // this.loading = false;
         }
       );
-    }
-    else {
+    } else {
       this.schemiCodificaRegolaService.deleteGlobale(this.regola).subscribe(
         response => {
           this.deleted.emit(this.regola);
@@ -158,7 +158,7 @@ export class SchemiCodificaRegolaComponent implements OnInit {
   }
 
   removeSubschema(subschema: SchemaCodificaSottoschema) {
-    this.regola.SOTTOSCHEMI?.splice(this.regola.SOTTOSCHEMI?.findIndex(x => x.ID_SOTTO_SCHEMA == subschema.ID_SOTTO_SCHEMA), 1);
+    this.regola.SOTTOSCHEMI?.splice(this.regola.SOTTOSCHEMI?.findIndex(x => x.ID_SOTTO_SCHEMA === subschema.ID_SOTTO_SCHEMA), 1);
     this.subschemaTable?.renderRows(); // force render
   }
 }
