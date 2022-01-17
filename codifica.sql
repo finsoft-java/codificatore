@@ -29,6 +29,7 @@ CREATE TABLE `regole` (
   `NOM_VARIABILE` varchar(20) NOT NULL,
   `GLOBAL` char(1) NOT NULL,
   `ETICHETTA` varchar(255) NOT NULL,
+  `HINT` varchar(255) NOT NULL,
   `REQUIRED` char(1) NOT NULL,
   `TIPO` varchar(255) NOT NULL,
   `MAXLENGTH` int(11) DEFAULT NULL,
@@ -41,7 +42,8 @@ CREATE TABLE `regole` (
 CREATE TABLE `regole_options` (
   `ID_REGOLA` int(11) NOT NULL,
   `VALUE_OPTION` varchar(255) NOT NULL,
-  `ETICHETTA` varchar(255) NOT NULL
+  `ETICHETTA` varchar(255) NOT NULL,
+  `ORD_PRESENTAZIONE` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `regole_sottoschemi` (
