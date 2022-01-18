@@ -140,10 +140,9 @@ class RegoleManager {
                     $sql = insert("regole_options", ["ID_REGOLA" => $con->escape_string($o->ID_REGOLA),
                         "VALUE_OPTION" => $con->escape_string($o->VALUE_OPTION),
                         "ETICHETTA" => $con->escape_string($o->ETICHETTA),
-                        "ORD_PRESENTAZIONE" => $con->escape_string($json_data->ORD_PRESENTAZIONE)
+                        "ORD_PRESENTAZIONE" => $con->escape_string($o->ORD_PRESENTAZIONE)
                         ]);
                     execute_update($sql);
-                    $giaInseriti[] = $o->VALUE_OPTION;
                 }
             }
 
