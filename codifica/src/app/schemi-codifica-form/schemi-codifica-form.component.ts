@@ -270,7 +270,7 @@ export class SchemiCodificaFormComponent implements OnInit {
   }
 
   hasImage(): boolean {
-    return this.schemaCodificaForm && this.schemaCodificaForm.IMMAGINE_B64 != null;
+    return this.schemaCodificaForm && this.schemaCodificaForm.IMMAGINE_B64 != null && this.schemaCodificaForm.IMMAGINE_B64.length > 0;
   }
 
   deleteSchema() {

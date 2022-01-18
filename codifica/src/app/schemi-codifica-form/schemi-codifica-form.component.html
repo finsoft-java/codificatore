@@ -107,7 +107,7 @@
 
 <!-- ============================================================================================== -->
         <div *ngIf="this.id" class="second-section">
-            <img [src]="imageSrc" style="width: 100%; margin-bottom:20px;" *ngIf="hasImage()" />
+            <img [src]="imageSrc" style="display:block; max-width:100%; margin-bottom:20px;" *ngIf="hasImage()" />
             <button (click)="fileInput.click()" class="spaced-button" mat-raised-button color="primary">
                 <span>Carica un'immagine...</span>
                 <input #fileInput type="file" (change)="uploadImage($event)" accept="image/*" style="display:none;" />

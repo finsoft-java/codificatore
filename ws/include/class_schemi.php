@@ -88,8 +88,8 @@ class SchemiManager {
 
     function uploadImmagine($idSchema, $tmpFile) {
         // fix per percorsi Windows
-        $tmpFile = str_replace("\\", "/", $tmpFile);
-        $sql = "UPDATE schemi_codifica SET immagine=LOAD_FILE('$tmpFile') WHERE ID_SCHEMA = $idSchema";
+        $imgContent = addslashes(file_get_contents($tmpFile)); 
+        $sql = "UPDATE schemi_codifica SET immagine='$imgContent' WHERE ID_SCHEMA = $idSchema";
         execute_update($sql);
     }
 
