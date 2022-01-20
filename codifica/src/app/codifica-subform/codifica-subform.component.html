@@ -1,83 +1,89 @@
-<div *ngIf="regole.length == 0">
-  Nessuna regola configurata per questo schema.
-</div>
-
-<div *ngFor="let r of regole">
-  <div *ngIf="r.TIPO == 'text'">
-    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
-      <mat-label>{{ r.ETICHETTA }}</mat-label>
-      <input
-        matInput
-        name="{{ r.ETICHETTA }}"
-        [required]="considerRequired && r.REQUIRED == 'Y'"
-        [maxLength]="r.MAXLENGTH && r.MAXLENGTH>0?r.MAXLENGTH:9999"
-        [pattern]="r.PATTERN_REGEXP"
-        [title]="r.NOM_VARIABILE"
-        (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
-        (focusout)="highlightInputIfInvalid($event)"
-      />
-      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
-    </mat-form-field>
+<div class="container">
+  <div class="subform">  
+    <div *ngIf="regole.length == 0">
+      Nessuna regola configurata per questo schema.
+    </div>
+    <div *ngFor="let r of regole">
+      <div *ngIf="r.TIPO == 'text'">
+        <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
+          <mat-label>{{ r.ETICHETTA }}</mat-label>
+          <input
+            matInput
+            name="{{ r.ETICHETTA }}"
+            [required]="considerRequired && r.REQUIRED == 'Y'"
+            [maxLength]="r.MAXLENGTH && r.MAXLENGTH>0?r.MAXLENGTH:9999"
+            [pattern]="r.PATTERN_REGEXP"
+            [title]="r.NOM_VARIABILE"
+            (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
+            (focusout)="highlightInputIfInvalid($event)"
+          />
+          <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
+        </mat-form-field>
+      </div>
+      <div *ngIf="r.TIPO == 'number'">
+        <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
+          <mat-label>{{ r.ETICHETTA }}</mat-label>
+          <input
+            matInput
+            type="number"
+            name="{{ r.ETICHETTA }}"
+            [title]="r.NOM_VARIABILE"
+            [required]="considerRequired && r.REQUIRED == 'Y'"
+            [min]="r.MIN"
+            [max]="r.MAX"
+            (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
+          />
+          <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
+        </mat-form-field>
+      </div>
+      <div *ngIf="r.TIPO == 'elenco'">
+        <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
+          <mat-label>{{ r.ETICHETTA }}</mat-label>
+          <mat-select
+            name="{{ r.ETICHETTA }}"
+            [title]="r.NOM_VARIABILE"
+            [required]="considerRequired && r.REQUIRED == 'Y'"
+            (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE, $event)"
+          >
+            <mat-option *ngFor="let opt of r.OPTIONS" [value]="opt.VALUE_OPTION">
+              {{ opt.ETICHETTA }}
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
+        </mat-form-field>
+      </div>
+      <div *ngIf="r.TIPO == 'sottoschema'">
+        <h5>{{ r.ETICHETTA }}</h5>
+        <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
+          <mat-label>{{ r.ETICHETTA }}</mat-label>
+          <mat-select
+            name="{{ r.ETICHETTA }}"
+            [title]="r.NOM_VARIABILE"
+            [required]="considerRequired && r.REQUIRED == 'Y'"
+            (selectionChange)="onChangeSottoschema(r.NOM_VARIABILE, $event)"
+          >
+            <mat-option *ngFor="let s of r.SOTTOSCHEMI" [value]="s.ID_SOTTO_SCHEMA">
+              {{ s.TITOLO }}
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
+        </mat-form-field>
+  
+        <app-codifica-subform
+          *ngIf="parametri[r.NOM_VARIABILE + '.id'] !== ''"
+          [idSchema]="parseInt(parametri[r.NOM_VARIABILE + '.id'])"
+          [considerRequired]="considerRequired"
+          (changeCodice)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'codice', $event)"
+          (changeDescrizione)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'descrizione', $event)"
+          (changeDatiCodifica)="parametriSottoSchemi = $event"
+          (changeParametriObbligatoriSettati)="changeParametriObbligatoriSottoschemi($event)"
+          (errorEmitter)="showError($event)"
+        >
+        </app-codifica-subform>
+      </div>
+    </div>
   </div>
-  <div *ngIf="r.TIPO == 'number'">
-    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
-      <mat-label>{{ r.ETICHETTA }}</mat-label>
-      <input
-        matInput
-        type="number"
-        name="{{ r.ETICHETTA }}"
-        [title]="r.NOM_VARIABILE"
-        [required]="considerRequired && r.REQUIRED == 'Y'"
-        [min]="r.MIN"
-        [max]="r.MAX"
-        (input)="onChangeInputRule(r.NOM_VARIABILE, $event)"
-      />
-      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
-    </mat-form-field>
-  </div>
-  <div *ngIf="r.TIPO == 'elenco'">
-    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
-      <mat-label>{{ r.ETICHETTA }}</mat-label>
-      <mat-select
-        name="{{ r.ETICHETTA }}"
-        [title]="r.NOM_VARIABILE"
-        [required]="considerRequired && r.REQUIRED == 'Y'"
-        (selectionChange)="onChangeSelectRule(r.NOM_VARIABILE, $event)"
-      >
-        <mat-option *ngFor="let opt of r.OPTIONS" [value]="opt.VALUE_OPTION">
-          {{ opt.ETICHETTA }}
-        </mat-option>
-      </mat-select>
-      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
-    </mat-form-field>
-  </div>
-  <div *ngIf="r.TIPO == 'sottoschema'">
-    <h5>{{ r.ETICHETTA }}</h5>
-    <mat-form-field appearance="fill" [ngClass]="{'margin-hint': r.HINT!==''}">
-      <mat-label>{{ r.ETICHETTA }}</mat-label>
-      <mat-select
-        name="{{ r.ETICHETTA }}"
-        [title]="r.NOM_VARIABILE"
-        [required]="considerRequired && r.REQUIRED == 'Y'"
-        (selectionChange)="onChangeSottoschema(r.NOM_VARIABILE, $event)"
-      >
-        <mat-option *ngFor="let s of r.SOTTOSCHEMI" [value]="s.ID_SOTTO_SCHEMA">
-          {{ s.TITOLO }}
-        </mat-option>
-      </mat-select>
-      <mat-hint *ngIf="r.HINT">{{r.HINT}}</mat-hint>
-    </mat-form-field>
-
-    <app-codifica-subform
-      *ngIf="parametri[r.NOM_VARIABILE + '.id'] !== ''"
-      [idSchema]="parseInt(parametri[r.NOM_VARIABILE + '.id'])"
-      [considerRequired]="considerRequired"
-      (changeCodice)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'codice', $event)"
-      (changeDescrizione)="onChangeVariabileSottoschema(r.NOM_VARIABILE, 'descrizione', $event)"
-      (changeDatiCodifica)="parametriSottoSchemi = $event"
-      (changeParametriObbligatoriSettati)="changeParametriObbligatoriSottoschemi($event)"
-      (errorEmitter)="showError($event)"
-    >
-    </app-codifica-subform>
-  </div>
+  <div class="image-section" *ngIf="hasImage()">
+    <img [src]="imageSrc" class="image"/>
+  </div>  
 </div>

@@ -3,6 +3,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IHash, SchemaCodifica, SchemaCodificaRegole } from '../_models';
 import { JsEvalService } from '../_services/js-eval.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';
@@ -16,7 +17,8 @@ import { SchemiCodificaService } from '../_services/schemi-codifica.service';
 export class CodificaSubformComponent implements OnInit {
   constructor(private svcSchemi: SchemiCodificaService,
     private regoleSvc: SchemiCodificaRegoleService,
-    private jsEvalService: JsEvalService) { }
+    private jsEvalService: JsEvalService,
+    private _sanitizer: DomSanitizer) { }
 
   @Input()
   idSchema!: number;
@@ -46,11 +48,16 @@ export class CodificaSubformComponent implements OnInit {
   parametriObbligatoriSettati = false;
   parametriObbligatoriSottoschemiSettati = true;
   parametriNonValidi: string[] = [];
+  imageSrc: SafeResourceUrl|null = null;
 
   ngOnInit(): void {
     // Carico lo schema (ma serve??)
     this.svcSchemi.getById(this.idSchema).subscribe(response => {
       this.schema = response.value;
+      if (this.schema) {
+        console.log('dentro if');
+        this.imageSrc = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/*;base64,' + this.schema.IMMAGINE_B64);
+      }
     });
     // Carico le regole
     this.regoleSvc.getAll(this.idSchema).subscribe(response => {
@@ -202,5 +209,10 @@ export class CodificaSubformComponent implements OnInit {
 
   showError(error: string) {
     this.errorEmitter.emit(error);
+  }
+
+  hasImage(): boolean {
+    return typeof this.schema !== 'undefined' && this.schema
+            && this.schema.IMMAGINE_B64 != null && this.schema.IMMAGINE_B64.length > 0;
   }
 }

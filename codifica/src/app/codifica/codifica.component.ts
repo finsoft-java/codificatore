@@ -1,7 +1,7 @@
 /* eslint-disable no-eval */
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { Codifica, CodificaDati, IHash, SchemaCodifica, SchemaCodificaRegole } from '../_models';
+import { Codifica, CodificaDati, IHash, SchemaCodifica } from '../_models';
 import { AlertService } from '../_services/alert.service';
 import { CodificaService } from '../_services/codifica.service';
 import { SchemiCodificaRegoleService } from '../_services/schemi-codifica-regole.service';

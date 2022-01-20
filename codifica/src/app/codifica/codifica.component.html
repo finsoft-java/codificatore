@@ -37,12 +37,12 @@ Selezionare lo schema di codifica:
 
 <div class="schema-main-section" *ngIf="schemaScelto !== undefined">
   <app-codifica-subform
-    [idSchema]="schemaScelto.ID_SCHEMA"
-    (changeCodice)="codiceCalcolato = $event"
-    (changeDescrizione)="descrizioneCalcolata = $event"
-    (changeDatiCodifica)="datiCodifica = $event"
-    (changeParametriObbligatoriSettati)="parametriObbligatoriSettati = $event"
-    (errorEmitter)="showError($event)"
+  [idSchema]="schemaScelto.ID_SCHEMA"
+  (changeCodice)="codiceCalcolato = $event"
+  (changeDescrizione)="descrizioneCalcolata = $event"
+  (changeDatiCodifica)="datiCodifica = $event"
+  (changeParametriObbligatoriSettati)="parametriObbligatoriSettati = $event"
+  (errorEmitter)="showError($event)"
   >
   </app-codifica-subform>
 

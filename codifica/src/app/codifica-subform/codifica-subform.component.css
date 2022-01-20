@@ -3,15 +3,12 @@
 }
 
 .mat-form-field {
-    width: 50%
+    width: 100%
 }
 
 @media (max-width: 768px){
     .mat-form-field {
         margin-bottom: 25px;
-    }
-    .mat-form-field {
-        width: 100%
     }
 }
 
@@ -28,4 +25,44 @@
 
 .margin-hint {
     margin-bottom: 25px;
+}
+.container {
+    display:flex;
+    justify-content: space-between;
+    gap: 2%;
+    padding: 0;
+}
+
+@media (max-width: 768px){
+    .container {
+        display:block;
+        justify-content: unset;
+    }
+}
+
+.subform {
+    width: 50%;
+}
+
+@media (max-width: 768px){
+    .subform {
+        width: 100%;
+    }
+}
+
+.image-section {
+    max-width: 48%;
+    margin-top: 2%;
+    vertical-align: top;
+}
+
+@media (max-width: 768px){
+    .image-section {
+        max-width: 100%;
+        vertical-align: auto;
+    }
+}
+
+.image {
+    max-width:100%;
 }
